@@ -3,6 +3,7 @@
 #include "../include/Input.hxx"
 #include "../include/Tile.h"
 #include "../include/Common_libs.hxx"
+#include "../include/Common_functions.hxx"
 #include "../include/Map.h"
 #include "../include/tilemaps.hxx"
 #include "../include/Player.h"
