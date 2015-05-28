@@ -1,8 +1,8 @@
 #ifndef LTEXTURE_H
 #define LTEXTURE_H
-#include "Common_libs.hxx"
-#include "Map.h"
-#include "tilemaps.hxx"
+#include "../include/Common_libs.hxx"
+#include "../include/Map.h"
+#include "../include/tilemaps.hxx"
 
 class LTexture
 {

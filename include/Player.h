@@ -1,10 +1,10 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "Common_libs.hxx"
-#include "Tile.h"
-#include "Map.h"
-#include "LTexture.h"
-#include "Common_functions.hxx"
+#include "../include/Common_libs.hxx"
+#include "../include/Tile.h"
+#include "../include/Map.h"
+#include "../include/LTexture.h"
+#include "../include/Common_functions.hxx"
 
 class Player
 {

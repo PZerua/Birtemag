@@ -1,4 +1,4 @@
-#include "Common_functions.hxx"
+#include "../include/Common_functions.hxx"
 
 bool touchesWall( SDL_Rect box, Tile* tiles[], Map *gameMap)
 {

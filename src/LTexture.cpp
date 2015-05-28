@@ -1,4 +1,4 @@
-#include "LTexture.h"
+#include "../include/LTexture.h"
 #include "../include/window.h"
 LTexture::LTexture()
 {
