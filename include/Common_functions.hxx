@@ -1,9 +1,9 @@
 #ifndef COMMON_FUNC
 #define COMMON_FUNC
-#include "Common_libs.hxx"
-#include "Map.h"
-#include "tilemaps.hxx"
-#include "Tile.h"
+#include "../include/Common_libs.hxx"
+#include "../include/Map.h"
+#include "../include/tilemaps.hxx"
+#include "../include/Tile.h"
 
 class Tile;
 

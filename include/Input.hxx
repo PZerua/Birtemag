@@ -1,6 +1,6 @@
 #ifndef INPUT_H
 #define INPUT_H
-#include "Common_libs.hxx"
+#include "../include/Common_libs.hxx"
 
 class Input
 {

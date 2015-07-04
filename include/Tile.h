@@ -1,9 +1,9 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Common_functions.hxx"
-#include "Common_libs.hxx"
-#include "LTexture.h"
+#include "../include/Common_functions.hxx"
+#include "../include/Common_libs.hxx"
+#include "../include/LTexture.h"
 
 class Tile
 {
