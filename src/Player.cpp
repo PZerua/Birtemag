@@ -16,11 +16,14 @@ Player::Player()
 
 	_target = TARGET::IDLE;
 	_nextTarget = TARGET::IDLE;
-	_moved = 0;
+	_moved = 0.0;
 
     //Initialize the velocity
     mVelX = 0;
-    mVelY = 0;}
+    mVelY = 0;
+
+    keystate = SDL_GetKeyboardState(NULL);
+}
 
 Player::~Player()
 {
@@ -30,60 +33,43 @@ Player::~Player()
 void Player::handleEvent( SDL_Event& e )
 {
     //If a key was pressed+-
-	if( e.type == SDL_KEYDOWN )
+	if(keystate[SDL_SCANCODE_UP])
     {
-        //Adjust the velocity
-        switch( e.key.keysym.sym )
-        {
-            case SDLK_UP:
-            {
-                _UP = true;
-                break;
-            }
-            case SDLK_DOWN:
-            {
-                _DOWN = true;
-                break;
-            }
-            case SDLK_LEFT:
-            {
-                _LEFT = true;
-                break;
-            }
-            case SDLK_RIGHT:
-            {
-                _RIGHT = true;
-                break;
-            }
-        }
+        _UP = true;
+        _RIGHT = false;
+        _LEFT = false;
+        _DOWN = false;
     }
-    if( e.type == SDL_KEYUP)
+    else if (!keystate[SDL_SCANCODE_UP])
+        _UP = false;
+    if(keystate[SDL_SCANCODE_DOWN])
     {
-        //Adjust the velocity
-        switch( e.key.keysym.sym )
-        {
-            case SDLK_UP:
-            {
-                _UP = false;
-                break;
-            }
-            case SDLK_DOWN:
-            {
-                _DOWN = false;
-                break;
-            }
-            case SDLK_LEFT:
-            {
-                _LEFT = false;
-                break;
-            }
-            case SDLK_RIGHT:
-            {
-                _RIGHT = false;
-                break;
-            }
-        }
+        _DOWN = true;
+        _UP = false;
+        _LEFT = false;
+        _RIGHT = false;
     }
+    else if (!keystate[SDL_SCANCODE_DOWN])
+        _DOWN = false;
+    if(keystate[SDL_SCANCODE_LEFT])
+    {
+        _LEFT = true;
+        _RIGHT = false;
+        _UP = false;
+        _DOWN = false;
+    }
+    else if (!keystate[SDL_SCANCODE_LEFT])
+        _LEFT = false;
+    if(keystate[SDL_SCANCODE_RIGHT])
+    {
+        _RIGHT = true;
+        _LEFT = false;
+        _UP = false;
+        _DOWN = false;
+    }
+    else if (!keystate[SDL_SCANCODE_RIGHT])
+        _RIGHT = false;
+
 }
 
 void Player::move( Tile *tiles[], Map *gameMap)
@@ -105,7 +91,19 @@ void Player::move( Tile *tiles[], Map *gameMap)
         }
     }
 
-    cout<<_moved<<endl;
+    /*
+    if (_UP) cout<<"UP"<<endl;
+    if (_DOWN) cout<<"DOWN"<<endl;
+    if (_RIGHT) cout<<"RIGHT"<<endl;
+    if (_LEFT) cout<<"LEFT"<<endl;
+    */
+
+    /*
+    if (_nextTarget == TARGET::UP) cout<<"UP"<<endl;
+    else if (_nextTarget == TARGET::DOWN) cout<<"DOWN"<<endl;
+    else if (_nextTarget == TARGET::RIGHT) cout<<"RIGHT"<<endl;
+    else if (_nextTarget == TARGET::LEFT) cout<<"LEFT"<<endl;
+    */
 
     if (_target != TARGET::IDLE)
     {
@@ -150,7 +148,6 @@ void Player::move( Tile *tiles[], Map *gameMap)
             _target = TARGET::IDLE;
         }
     }
-
 }
 
 void Player::setCamera( SDL_Rect& camera, Map *gameMap)

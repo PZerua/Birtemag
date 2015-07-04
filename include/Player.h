@@ -42,12 +42,14 @@ class Player
         int _target;
         int _nextTarget;
 
-        int _moved;
+        float _moved;
 
         bool _UP;
         bool _DOWN;
         bool _LEFT;
         bool _RIGHT;
+
+        const Uint8* keystate;
 
         enum TARGET
         {
