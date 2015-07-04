@@ -30,7 +30,7 @@ Player::~Player()
 void Player::handleEvent( SDL_Event& e )
 {
     //If a key was pressed+-
-	if( e.type == SDL_KEYDOWN && _target == TARGET::IDLE)
+	if( e.type == SDL_KEYDOWN )
     {
         //Adjust the velocity
         switch( e.key.keysym.sym )
@@ -88,43 +88,69 @@ void Player::handleEvent( SDL_Event& e )
 
 void Player::move( Tile *tiles[], Map *gameMap)
 {
-    if (_UP) _target = TARGET::UP;
-    else if (_DOWN) _target = TARGET::DOWN;
-    if (_RIGHT) _target = TARGET::RIGHT;
-    else if (_LEFT) _target = TARGET::LEFT;
 
-    //Move the dot left or right
-    if(_moved < TILE_SIZE && _target != TARGET::IDLE)
+    if (_moved == 0)
     {
-        if(_target == TARGET::RIGHT) mBox.x += PLAYER_VEL;
-        else if(_target == TARGET::LEFT) mBox.x -= PLAYER_VEL;
-
-        //If the dot went too far to the left or right or touched a wall
-        if( ( mBox.x < 0 ) || ( mBox.x + TILE_SIZE > gameMap->LEVEL_WIDTH ) || touchesWall( mBox, tiles, gameMap ) )
+        if (_nextTarget != TARGET::IDLE)
         {
-            //move back
-            if(_target == TARGET::RIGHT) mBox.x -= PLAYER_VEL;
-            else if(_target == TARGET::LEFT) mBox.x += PLAYER_VEL;
+             _target = _nextTarget;
+             _nextTarget = TARGET::IDLE;
+        }
+        else
+        {
+            if (_UP) _target = TARGET::UP;
+            else if (_DOWN) _target = TARGET::DOWN;
+            else if (_RIGHT) _target = TARGET::RIGHT;
+            else if (_LEFT) _target = TARGET::LEFT;
+        }
+    }
+
+    cout<<_moved<<endl;
+
+    if (_target != TARGET::IDLE)
+    {
+        if (_moved > TILE_SIZE/2)
+        {
+            if (_UP) _nextTarget = TARGET::UP;
+            else if (_DOWN) _nextTarget = TARGET::DOWN;
+            else if (_RIGHT) _nextTarget = TARGET::RIGHT;
+            else if (_LEFT) _nextTarget = TARGET::LEFT;
         }
 
-        //Move the dot up or down
-        if(_target == TARGET::DOWN) mBox.y += PLAYER_VEL;
-        else if(_target == TARGET::UP) mBox.y -= PLAYER_VEL;
-
-        //If the dot went too far up or down or touched a wall
-        if( ( mBox.y < 0 ) || ( mBox.y + TILE_SIZE > gameMap->LEVEL_HEIGHT ) || touchesWall( mBox, tiles, gameMap) )
+        //Move the dot left or right
+        if(_moved < TILE_SIZE && _target != TARGET::IDLE)
         {
-            //move back
-            if(_target == TARGET::DOWN) mBox.y -= PLAYER_VEL;
-            else if(_target == TARGET::UP) mBox.y += PLAYER_VEL;
+            if(_target == TARGET::RIGHT) mBox.x += PLAYER_VEL;
+            else if(_target == TARGET::LEFT) mBox.x -= PLAYER_VEL;
+
+            //If the dot went too far to the left or right or touched a wall
+            if( ( mBox.x < 0 ) || ( mBox.x + TILE_SIZE > gameMap->LEVEL_WIDTH ) || touchesWall( mBox, tiles, gameMap ) )
+            {
+                //move back
+                if(_target == TARGET::RIGHT) mBox.x -= PLAYER_VEL;
+                else if(_target == TARGET::LEFT) mBox.x += PLAYER_VEL;
+            }
+
+            //Move the dot up or down
+            if(_target == TARGET::DOWN) mBox.y += PLAYER_VEL;
+            else if(_target == TARGET::UP) mBox.y -= PLAYER_VEL;
+
+            //If the dot went too far up or down or touched a wall
+            if( ( mBox.y < 0 ) || ( mBox.y + TILE_SIZE > gameMap->LEVEL_HEIGHT ) || touchesWall( mBox, tiles, gameMap) )
+            {
+                //move back
+                if(_target == TARGET::DOWN) mBox.y -= PLAYER_VEL;
+                else if(_target == TARGET::UP) mBox.y += PLAYER_VEL;
+            }
+            _moved += PLAYER_VEL;
         }
-        _moved += PLAYER_VEL;
+        if(_moved >= TILE_SIZE)
+        {
+            _moved = 0;
+            _target = TARGET::IDLE;
+        }
     }
-    if(_moved >= TILE_SIZE)
-    {
-        _moved = 0;
-        _target = TARGET::IDLE;
-    }
+
 }
 
 void Player::setCamera( SDL_Rect& camera, Map *gameMap)
