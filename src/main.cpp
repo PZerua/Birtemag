@@ -8,9 +8,7 @@
 #include "../include/tilemaps.hxx"
 #include "../include/Player.h"
 
-SDL_Rect gTileClips[ TOTAL_TILE_SPRITES ];
-
-bool setTiles( Tile* tiles[], Map gameMap )
+bool setTiles( Tile* tiles[], Map &gameMap )
 {
     //Success flag
     bool tilesLoaded = true;
@@ -19,7 +17,7 @@ bool setTiles( Tile* tiles[], Map gameMap )
     int x = 0, y = 0;
 
     //Open the map
-    std::ifstream map( "bitmaps/test.map" );
+    std::ifstream map( "bitmaps/prueba.map" );
 
     //If the map couldn't be loaded
     if( map == NULL )
@@ -47,7 +45,7 @@ bool setTiles( Tile* tiles[], Map gameMap )
             }
 
             //If the number is a valid tile number
-            if( ( tileType >= 0 ) && ( tileType < Tile_prueba::TOTAL_TILE_SPRITES ) )
+            if( ( tileType >= 0 ) && ( tileType < gameMap.getTilemap()[0].getTotalTiles() ) )
             {
                 tiles[ i ] = new Tile( x, y, tileType );
             }
@@ -71,70 +69,6 @@ bool setTiles( Tile* tiles[], Map gameMap )
                 //Move to the next row
                 y += TILE_SIZE;
             }
-        }
-        //Clip the sprite sheet
-        if( tilesLoaded )
-        {
-
-            gTileClips[ Tile_prueba::TILE_RED ].x = 0;
-            gTileClips[ Tile_prueba::TILE_RED ].y = 0;
-            gTileClips[ Tile_prueba::TILE_RED ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_RED ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_GREEN ].x = 0;
-            gTileClips[ Tile_prueba::TILE_GREEN ].y = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_GREEN ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_GREEN ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_BLUE ].x = 0;
-            gTileClips[ Tile_prueba::TILE_BLUE ].y = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_BLUE ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_BLUE ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_TOPLEFT ].x = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_TOPLEFT ].y = 0;
-            gTileClips[ Tile_prueba::TILE_TOPLEFT ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_TOPLEFT ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_LEFT ].x = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_LEFT ].y = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_LEFT ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_LEFT ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_BOTTOMLEFT ].x = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_BOTTOMLEFT ].y = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_BOTTOMLEFT ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_BOTTOMLEFT ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_TOP ].x = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_TOP ].y = 0;
-            gTileClips[ Tile_prueba::TILE_TOP ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_TOP ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_CENTER ].x = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_CENTER ].y = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_CENTER ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_CENTER ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_BOTTOM ].x = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_BOTTOM ].y = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_BOTTOM ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_BOTTOM ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_TOPRIGHT ].x = TILE_SIZE*3;
-            gTileClips[ Tile_prueba::TILE_TOPRIGHT ].y = 0;
-            gTileClips[ Tile_prueba::TILE_TOPRIGHT ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_TOPRIGHT ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_RIGHT ].x = TILE_SIZE*3;
-            gTileClips[ Tile_prueba::TILE_RIGHT ].y = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_RIGHT ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_RIGHT ].h = TILE_SIZE;
-
-            gTileClips[ Tile_prueba::TILE_BOTTOMRIGHT ].x = TILE_SIZE*3;
-            gTileClips[ Tile_prueba::TILE_BOTTOMRIGHT ].y = TILE_SIZE*2;
-            gTileClips[ Tile_prueba::TILE_BOTTOMRIGHT ].w = TILE_SIZE;
-            gTileClips[ Tile_prueba::TILE_BOTTOMRIGHT ].h = TILE_SIZE;
         }
     }
 
@@ -166,10 +100,7 @@ int main(int argc, char** argv){
     }
 
 	//Load tile texture
-	if( !gTileTexture.loadFromFile( "tilesets/tile1.png" ) )
-	{
-		cout<<"Failed to load tile set texture!\n"<<endl;
-	}
+	gameMap->getTilemap()[0].initTilemap("tilesets/tile1.png");
 
 	Tile* tileSet[ gameMap->TOTAL_TILES ];
 
@@ -183,7 +114,7 @@ int main(int argc, char** argv){
 
 	for(int i = 0; i < gameMap->TOTAL_TILES; ++i)
     {
-        tileSet[ i ]->setTexture(&gTileTexture);
+        tileSet[ i ]->setTexture(gameMap->getTilemap()[0].getTexture());
     }
 
     //Our event structure
@@ -195,7 +126,7 @@ int main(int argc, char** argv){
 		//Event Polling
 		SDL_PollEvent(&e);
         //input.checkControls(&e);
-        player.handleEvent(e);
+        player.handleEvent();
 
         //LOGIC
         player.move( tileSet, gameMap);
@@ -207,7 +138,7 @@ int main(int argc, char** argv){
 
         for( int i = 0; i < gameMap->TOTAL_TILES; ++i )
         {
-            tileSet[ i ]->render( camera, gTileClips );
+            tileSet[ i ]->render( camera, gameMap->getTilemap()[0].getClips() );
         }
 
         player.render(camera);

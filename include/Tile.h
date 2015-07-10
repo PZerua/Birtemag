@@ -22,6 +22,8 @@ class Tile
         //Get the collision box
         SDL_Rect getBox();
 
+        bool hasCollision();
+
     private:
         //The attributes of the tile
         SDL_Rect mBox;
@@ -29,6 +31,9 @@ class Tile
         LTexture *gTileTexture;
         //The tile type
         int mType;
+
+        bool _hasCollision;
+
 };
 
 #endif // TILE_H

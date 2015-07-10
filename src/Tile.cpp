@@ -12,6 +12,10 @@ Tile::Tile( int x, int y, int tileType )
 
     //Get the tile type
     mType = tileType;
+
+    if (mType > 2)
+        _hasCollision = true;
+    else _hasCollision = false;
 }
 
 void Tile::render( SDL_Rect& camera , SDL_Rect *gTileClips)
@@ -37,4 +41,9 @@ SDL_Rect Tile::getBox()
 void Tile::setTexture(LTexture *gTexture)
 {
     gTileTexture = gTexture;
+}
+
+bool Tile::hasCollision()
+{
+    return _hasCollision;
 }

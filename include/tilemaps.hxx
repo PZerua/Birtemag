@@ -1,21 +1,5 @@
 #ifndef TILE_MAPS_H
 #define TILE_MAPS_H
 
-enum Tile_prueba
-{
-    TILE_RED,
-    TILE_GREEN,
-    TILE_BLUE,
-    TILE_CENTER,
-    TILE_TOP,
-    TILE_TOPRIGHT,
-    TILE_RIGHT,
-    TILE_BOTTOMRIGHT,
-    TILE_BOTTOM,
-    TILE_BOTTOMLEFT,
-    TILE_LEFT,
-    TILE_TOPLEFT,
-    TOTAL_TILE_SPRITES
-};
 
 #endif

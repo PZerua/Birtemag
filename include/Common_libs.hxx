@@ -1,5 +1,3 @@
-using namespace std;
-
 #include "SDL.h"
 #include <string>
 #include <iostream>
@@ -14,3 +12,5 @@ using namespace std;
 #define TILE_SIZE 64
 #define SCREEN_WIDTH 768
 #define SCREEN_HEIGHT 608
+
+using namespace std;

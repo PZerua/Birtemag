@@ -12,19 +12,19 @@ class Player
         Player();
         virtual ~Player();
 
-        //Maximum axis velocity of the dot
+        //Maximum axis velocity of the player
         static const int PLAYER_VEL = 4;
 
-        //Takes key presses and adjusts the dot's velocity
-        void handleEvent( SDL_Event& e );
+        //Takes key presses and adjusts the player's velocity
+        void handleEvent();
 
-        //Moves the dot and check collision against tiles
+        //Moves the player and check collision against tiles
         void move( Tile *tiles[], Map *gameMap);
 
-        //Centers the camera over the dot
+        //Centers the camera over the player
         void setCamera( SDL_Rect& camera, Map *gameMap);
 
-        //Shows the dot on the screen
+        //Shows the player on the screen
         void render( SDL_Rect& camera );
 
         LTexture gPlayerTexture;
@@ -33,16 +33,13 @@ class Player
         unsigned int _life;
         string _name;
 
-        //Collision box of the dot
+        //Collision box of the player
         SDL_Rect mBox;
-
-        //The velocity of the dot
-        int mVelX, mVelY;
 
         int _target;
         int _nextTarget;
 
-        float _moved;
+        int _moved;
 
         bool _UP;
         bool _DOWN;

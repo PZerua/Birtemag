@@ -57,6 +57,7 @@
 		<Unit filename="include/Map.h" />
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/Tile.h" />
+		<Unit filename="include/Tilemap.hxx" />
 		<Unit filename="include/tilemaps.hxx" />
 		<Unit filename="include/timer.h" />
 		<Unit filename="include/window.h" />
@@ -66,6 +67,7 @@
 		<Unit filename="src/Map.cpp" />
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/Tile.cpp" />
+		<Unit filename="src/Tilemap.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/timer.cpp" />
 		<Unit filename="src/window.cpp" />

@@ -18,10 +18,6 @@ Player::Player()
 	_nextTarget = TARGET::IDLE;
 	_moved = 0.0;
 
-    //Initialize the velocity
-    mVelX = 0;
-    mVelY = 0;
-
     keystate = SDL_GetKeyboardState(NULL);
 }
 
@@ -30,7 +26,7 @@ Player::~Player()
     //dtor
 }
 
-void Player::handleEvent( SDL_Event& e )
+void Player::handleEvent()
 {
     //If a key was pressed+-
 	if(keystate[SDL_SCANCODE_UP])
@@ -79,7 +75,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
     {
         if (_nextTarget != TARGET::IDLE)
         {
-             _target = _nextTarget;
+             if (_target != _nextTarget) _target = _nextTarget;
              _nextTarget = TARGET::IDLE;
         }
         else
@@ -109,6 +105,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
     {
         if (_moved > TILE_SIZE/2)
         {
+            // TODO: Fix movement (when pressing two keys at once)
             if (_UP) _nextTarget = TARGET::UP;
             else if (_DOWN) _nextTarget = TARGET::DOWN;
             else if (_RIGHT) _nextTarget = TARGET::RIGHT;
