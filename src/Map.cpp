@@ -1,14 +1,12 @@
 #include "../include/Map.h"
 
-Map::Map(string path, int Width, int Height)
+Map::Map(string path)
 {
-    LEVEL_WIDTH = Width;
+    LEVEL_WIDTH = 0;
 
-    LEVEL_HEIGHT = Height;
+    LEVEL_HEIGHT = 0;
 
-    TOTAL_TILES = (LEVEL_WIDTH/TILE_SIZE) * (LEVEL_HEIGHT/TILE_SIZE);
-
-    _tileSet = new Tile*[TOTAL_TILES];
+    TOTAL_TILES = 0;
 
     _tilemaps = new Tilemap;
 
@@ -44,6 +42,24 @@ bool Map::setTiles()
     }
     else
     {
+        int width = -1;
+        int height = -1;
+
+        map >> width;
+        map >> height;
+
+        if (width == -1 || height == -1)
+        {
+            cout<<"Error reading map size"<<endl;
+            return false;
+        }
+
+        LEVEL_WIDTH = width * TILE_SIZE;
+        LEVEL_HEIGHT = height * TILE_SIZE;
+        TOTAL_TILES = width * height;
+
+        _tileSet = new Tile*[TOTAL_TILES];
+
         //Initialize the tiles
         for( int i = 0; i < TOTAL_TILES; ++i )
         {
@@ -51,7 +67,6 @@ bool Map::setTiles()
             int tileType = -1;
             //Read tile from map file
             map >> tileType;
-
             //If the was a problem in reading the map
             if( map.fail() )
             {

@@ -10,7 +10,7 @@ class Map
 {
     public:
 
-        Map(string path, int Width, int Height);
+        Map(string path);
 
         virtual ~Map();
 

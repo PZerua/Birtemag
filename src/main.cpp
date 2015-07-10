@@ -20,7 +20,7 @@ int main(int argc, char** argv){
 
     LTexture gTileTexture;
     Player player;
-    Map *gameMap = new Map("bitmaps/prueba.map", 16*64, 12*64);
+    Map *gameMap = new Map("bitmaps/prueba.map");
 
     if ( !player.gPlayerTexture.loadFromFile("sprites/player.png"))
     {
