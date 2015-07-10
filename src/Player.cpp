@@ -119,7 +119,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
             else if(_target == TARGET::LEFT) mBox.x -= PLAYER_VEL;
 
             //If the dot went too far to the left or right or touched a wall
-            if( ( mBox.x < 0 ) || ( mBox.x + TILE_SIZE > gameMap->LEVEL_WIDTH ) || touchesWall( mBox, tiles, gameMap ) )
+            if( ( mBox.x < 0 ) || ( mBox.x + TILE_SIZE > gameMap->LEVEL_WIDTH ) || gameMap->touchesWall( mBox) )
             {
                 //move back
                 if(_target == TARGET::RIGHT) mBox.x -= PLAYER_VEL;
@@ -131,7 +131,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
             else if(_target == TARGET::UP) mBox.y -= PLAYER_VEL;
 
             //If the dot went too far up or down or touched a wall
-            if( ( mBox.y < 0 ) || ( mBox.y + TILE_SIZE > gameMap->LEVEL_HEIGHT ) || touchesWall( mBox, tiles, gameMap) )
+            if( ( mBox.y < 0 ) || ( mBox.y + TILE_SIZE > gameMap->LEVEL_HEIGHT ) || gameMap->touchesWall( mBox) )
             {
                 //move back
                 if(_target == TARGET::DOWN) mBox.y -= PLAYER_VEL;

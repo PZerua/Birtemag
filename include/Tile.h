@@ -24,6 +24,7 @@ class Tile
 
         bool hasCollision();
 
+
     private:
         //The attributes of the tile
         SDL_Rect mBox;

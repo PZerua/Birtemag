@@ -1,24 +1,5 @@
 #include "../include/Common_functions.hxx"
 
-bool touchesWall( SDL_Rect box, Tile* tiles[], Map *gameMap)
-{
-    //Go through the tiles
-    for( int i = 0; i < gameMap->TOTAL_TILES; ++i )
-    {
-        //If the tile is a wall type tile
-        if( tiles[ i ]->hasCollision() )
-        {
-            //If the collision box touches the wall tile
-            if( checkCollision( box, tiles[ i ]->getBox() ) )
-            {
-                return true;
-            }
-        }
-    }
-
-    //If no wall tiles were touched
-    return false;
-}
 
 bool checkCollision( SDL_Rect a, SDL_Rect b )
 {

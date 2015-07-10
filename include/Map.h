@@ -2,12 +2,15 @@
 #define MAP_H
 #include "../include/Common_libs.hxx"
 #include "../include/Tilemap.hxx"
+#include "../include/Tile.h"
+
+class Tile;
 
 class Map
 {
     public:
 
-        Map(int Width, int Height);
+        Map(string path, int Width, int Height);
 
         virtual ~Map();
 
@@ -19,12 +22,24 @@ class Map
 
         Tilemap *getTilemap();
 
+        bool setTiles();
+
+        Tile **getTileSet();
+
+        bool touchesWall( SDL_Rect box);
+
+        void renderMap(SDL_Rect &camera);
+
     protected:
 
     private:
         string _name;
 
+        string _mapPath;
+
         Tilemap *_tilemaps;
+
+        Tile** _tileSet;
 
 };
 #endif // MAP_H
