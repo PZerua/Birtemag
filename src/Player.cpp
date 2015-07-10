@@ -19,6 +19,11 @@ Player::Player()
 	_moved = 0.0;
 
     keystate = SDL_GetKeyboardState(NULL);
+
+    _clip.x = TILE_SIZE;
+    _clip.y = 0;
+    _clip.h = TILE_SIZE;
+    _clip.w = TILE_SIZE;
 }
 
 Player::~Player()
@@ -127,7 +132,13 @@ void Player::move( Tile *tiles[], Map *gameMap)
             }
 
             //Move the dot up or down
-            if(_target == TARGET::DOWN) mBox.y += PLAYER_VEL;
+            if(_target == TARGET::DOWN)
+            {
+                mBox.y += PLAYER_VEL;
+                if (_moved < TILE_SIZE / 2) _clip.x = 0;
+                if (_moved < TILE_SIZE && _moved > TILE_SIZE / 2) _clip.x = 2 * TILE_SIZE;
+
+            }
             else if(_target == TARGET::UP) mBox.y -= PLAYER_VEL;
 
             //If the dot went too far up or down or touched a wall
@@ -143,6 +154,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
         {
             _moved = 0;
             _target = TARGET::IDLE;
+            _clip.x = TILE_SIZE;
         }
     }
 }
@@ -175,5 +187,5 @@ void Player::setCamera( SDL_Rect& camera, Map *gameMap)
 void Player::render( SDL_Rect& camera )
 {
     //Show the dot
-    gPlayerTexture.render( mBox.x - camera.x, mBox.y - camera.y );
+    gPlayerTexture.render( mBox.x - camera.x, mBox.y - camera.y, &_clip );
 }

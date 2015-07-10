@@ -35,6 +35,7 @@ class Player
 
         //Collision box of the player
         SDL_Rect mBox;
+        SDL_Rect _clip;
 
         int _target;
         int _nextTarget;
