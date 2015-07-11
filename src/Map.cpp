@@ -8,8 +8,6 @@ Map::Map(string path)
 
     TOTAL_TILES = 0;
 
-    _tilemaps = new Tilemap;
-
     _mapPath = path;
 }
 
@@ -20,7 +18,7 @@ Map::~Map()
 
 Tilemap *Map::getTilemap()
 {
-    return _tilemaps;
+    return _tilemaps[0];
 }
 
 bool Map::setTiles()
@@ -108,7 +106,7 @@ bool Map::setTiles()
 
     for(int i = 0; i < TOTAL_TILES; ++i)
     {
-        _tileSet[ i ]->setTexture(_tilemaps[0].getTexture());
+        _tileSet[ i ]->setTexture(_tilemaps[0]->getTexture());
     }
 
     //Close the file
@@ -147,6 +145,16 @@ void Map::renderMap(SDL_Rect &camera)
 {
     for( int i = 0; i < TOTAL_TILES; ++i )
     {
-        _tileSet[ i ]->render( camera, _tilemaps[0].getClips() );
+        _tileSet[ i ]->render( camera, _tilemaps[0]->getClips() );
     }
 }
+
+void Map::addTile(string tilePath)
+{
+    Tilemap *tile;
+    tile = new Tilemap();
+    tile->initTilemap(tilePath);
+
+    _tilemaps.push_back(tile);
+}
+

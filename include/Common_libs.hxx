@@ -6,6 +6,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <vector>
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 

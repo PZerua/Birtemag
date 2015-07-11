@@ -30,6 +30,8 @@ class Map
 
         void renderMap(SDL_Rect &camera);
 
+        void addTile(string tilePath);
+
     protected:
 
     private:
@@ -37,7 +39,7 @@ class Map
 
         string _mapPath;
 
-        Tilemap *_tilemaps;
+        vector<Tilemap *> _tilemaps;
 
         Tile** _tileSet;
 

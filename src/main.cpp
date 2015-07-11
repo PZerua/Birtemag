@@ -18,7 +18,6 @@ int main(int argc, char** argv){
         return -1;
     }
 
-    LTexture gTileTexture;
     Player player;
     Map *gameMap = new Map("bitmaps/prueba.map");
 
@@ -28,7 +27,7 @@ int main(int argc, char** argv){
     }
 
 	//Load tile texture
-	gameMap->getTilemap()[0].initTilemap("tilesets/tile1.png");
+	gameMap->addTile("tilesets/tile1.png");
 
 	//Load tile map
 	if( !gameMap->setTiles() )
