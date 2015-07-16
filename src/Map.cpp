@@ -121,7 +121,7 @@ Tile **Map::getTileSet()
     return _tileSet;
 }
 
-bool Map::touchesWall( SDL_Rect box)
+bool Map::touchesWall( SDL_Rect box )
 {
     //Go through the tiles
     for( int i = 0; i < TOTAL_TILES; ++i )
@@ -158,3 +158,7 @@ void Map::addTile(string tilePath)
     _tilemaps.push_back(tile);
 }
 
+string Map::getPath()
+{
+    return _mapPath;
+}

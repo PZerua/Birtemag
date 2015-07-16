@@ -6,6 +6,7 @@
 #include "../include/Common_functions.hxx"
 #include "../include/Map.h"
 #include "../include/Player.h"
+#include "../include/Editor.hxx"
 
 int main(int argc, char** argv){
     //Start our window
@@ -45,6 +46,14 @@ int main(int argc, char** argv){
 	while (!input._quit && e.type != SDL_QUIT){
 		//Event Polling
 		SDL_PollEvent(&e);
+        input.checkControls(&e);
+		if (input._f2)
+        {
+            cout<<"f2"<<endl;
+            input._f2 = false;
+            Editor gameEditor;
+            gameEditor.init(input, e);
+        }
         //input.checkControls(&e);
         player.handleEvent();
 

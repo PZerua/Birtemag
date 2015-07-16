@@ -32,6 +32,8 @@ class Map
 
         void addTile(string tilePath);
 
+        string getPath();
+
     protected:
 
     private:

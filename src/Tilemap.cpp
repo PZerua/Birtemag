@@ -24,7 +24,7 @@ bool Tilemap::loadTexture(string imagPath)
         return false;
     }
 
-    _totalTiles = (_tileTexture->getHeight() / 64 ) * (_tileTexture->getWidth() / 64);
+    _totalTiles = (_tileTexture->getHeight() / TILE_SIZE ) * (_tileTexture->getWidth() / TILE_SIZE);
 
     return true;
 

@@ -10,11 +10,10 @@ class Input
         //void Player_Control();
         void checkControls(SDL_Event *events);
 
-        bool _moveUp;
-        bool _moveDown;
-        bool _moveRight;
-        bool _moveLeft;
         bool _quit;
+        bool _mouseClick;
+        bool _f2;
+        bool _f3;
 
     private:
 
