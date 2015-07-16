@@ -47,7 +47,7 @@ int main(int argc, char** argv){
 		//Event Polling
 		SDL_PollEvent(&e);
         input.checkControls(&e);
-		if (input._f2)
+        if (input._f2)
         {
             cout<<"f2"<<endl;
             input._f2 = false;

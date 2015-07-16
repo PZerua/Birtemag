@@ -29,6 +29,8 @@ class Player
 
         LTexture gPlayerTexture;
 
+        void nextXClip();
+
     private:
         unsigned int _life;
         string _name;
@@ -41,6 +43,7 @@ class Player
         int _nextTarget;
 
         int _moved;
+        int _lastClip;
 
         bool _UP;
         bool _DOWN;

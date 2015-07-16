@@ -17,6 +17,7 @@ Player::Player()
 	_target = TARGET::IDLE;
 	_nextTarget = TARGET::IDLE;
 	_moved = 0.0;
+	_lastClip = 0;
 
     keystate = SDL_GetKeyboardState(NULL);
 
@@ -135,8 +136,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
             if(_target == TARGET::DOWN)
             {
                 mBox.y += PLAYER_VEL;
-                if (_moved < TILE_SIZE / 2) _clip.x = 0;
-                if (_moved < TILE_SIZE && _moved > TILE_SIZE / 2) _clip.x = 2 * TILE_SIZE;
+                if (_moved % 32 == 0) nextXClip();
 
             }
             else if(_target == TARGET::UP) mBox.y -= PLAYER_VEL;
@@ -188,4 +188,18 @@ void Player::render( SDL_Rect& camera )
 {
     //Show the dot
     gPlayerTexture.render( mBox.x - camera.x, mBox.y - camera.y, &_clip );
+}
+
+void Player::nextXClip()
+{
+    if (_clip.x == TILE_SIZE)
+    {
+        if (_lastClip == 0)
+            _clip.x = 2 * TILE_SIZE;
+        else if (_lastClip == 2 * TILE_SIZE)
+            _clip.x = 0;
+        _lastClip = _clip.x;
+    }
+    else if (_clip.x == TILE_SIZE * 2) _clip.x = TILE_SIZE;
+    else if (_clip.x == 0) _clip.x = TILE_SIZE;
 }
