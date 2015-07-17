@@ -6,6 +6,10 @@ Input::Input()
     _mouseClick = false;
     _f2 = false;
     _f3 = false;
+    _right = false;
+    _left = false;
+    _up = false;
+    _down = false;
 }
 
 Input::~Input()
@@ -30,6 +34,18 @@ void Input::checkControls(SDL_Event *event)
         case SDLK_F3:
             _f3 = true;
             break;
+        case SDLK_RIGHT:
+            _right = true;
+            break;
+        case SDLK_LEFT:
+            _left = true;
+            break;
+        case SDLK_UP:
+            _up = true;
+            break;
+        case SDLK_DOWN:
+            _down = true;
+            break;
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
@@ -46,6 +62,18 @@ void Input::checkControls(SDL_Event *event)
             break;
         case SDLK_F3:
             _f3 = false;
+            break;
+        case SDLK_RIGHT:
+            _right = false;
+            break;
+        case SDLK_LEFT:
+            _left = false;
+            break;
+        case SDLK_UP:
+            _up = false;
+            break;
+        case SDLK_DOWN:
+            _down = false;
             break;
         }
         break;

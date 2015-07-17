@@ -11,7 +11,7 @@
 int main(int argc, char** argv){
     //Start our window
     try {
-        Window::Init("Game");
+        Window::Init("Birtemag");
     }
     catch (const std::runtime_error &e){
         std::cout << e.what() << std::endl;
@@ -51,7 +51,8 @@ int main(int argc, char** argv){
         {
             cout<<"f2"<<endl;
             input._f2 = false;
-            Editor gameEditor;
+            Editor gameEditor(camera);
+            gameEditor.setMap(gameMap);
             gameEditor.init(input, e);
         }
         //input.checkControls(&e);

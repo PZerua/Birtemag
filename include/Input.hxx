@@ -14,6 +14,10 @@ class Input
         bool _mouseClick;
         bool _f2;
         bool _f3;
+        bool _right;
+        bool _left;
+        bool _up;
+        bool _down;
 
     private:
 
