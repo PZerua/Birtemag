@@ -49,7 +49,6 @@ int main(int argc, char** argv){
         input.checkControls(&e);
         if (input._f2)
         {
-            cout<<"f2"<<endl;
             input._f2 = false;
             Editor gameEditor(camera);
             gameEditor.setMap(gameMap);

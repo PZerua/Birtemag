@@ -21,6 +21,11 @@ Tilemap *Map::getTilemap()
     return _tilemaps[0];
 }
 
+Tile **Map::getTileSet()
+{
+    return _tileSet;
+}
+
 bool Map::setTiles()
 {
     //Success flag
@@ -114,11 +119,6 @@ bool Map::setTiles()
 
     //If the map was loaded fine
     return tilesLoaded;
-}
-
-Tile **Map::getTileSet()
-{
-    return _tileSet;
 }
 
 bool Map::touchesWall( SDL_Rect box )

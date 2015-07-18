@@ -3,7 +3,10 @@
 Editor::Editor(SDL_Rect &camera)
 {
     _camera = camera;
-    _camVel = 6;
+    _camVel = 8;
+
+    // TODO: Read all tile paths from file or something
+    addTile("tilesets/tile1.png");
 }
 
 Editor::~Editor()
@@ -11,7 +14,7 @@ Editor::~Editor()
     //dtor
 }
 
-void Editor::put_tile( Tile *tiles[], int tileType)
+void Editor::put_tile()
 {
     //Mouse offsets
     int x = 0, y = 0;
@@ -27,32 +30,46 @@ void Editor::put_tile( Tile *tiles[], int tileType)
     for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
     {
         //Get tile's collision box
-        SDL_Rect box = tiles[ t ]->getBox();
+        SDL_Rect box = _currentMap->getTileSet()[ t ]->getBox();
 
         //If the mouse is inside the tile
         if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
         {
             //Get rid of old tile
-            delete tiles[ t ];
+            delete _currentMap->getTileSet()[ t ];
 
             //Replace it with new one
-            tiles[ t ] = new Tile( box.x, box.y, tileType );
+            _currentMap->getTileSet()[ t ] = new Tile( box.x, box.y, 0 );
+            _currentMap->getTileSet()[ t ]->setTexture(_tilemaps[0]->getTexture());
         }
     }
 }
 
-void Editor::save_tiles( Tile *tiles[] )
+void Editor::save_tiles( )
 {
+
     //Open the map
     std::ofstream map( _currentMap->getPath() );
+
+    map << _currentMap->LEVEL_WIDTH / TILE_SIZE << " " << _currentMap->LEVEL_HEIGHT / TILE_SIZE << "\n";
 
     //Go through the tiles
     for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
     {
-        if ( (t % _currentMap->LEVEL_WIDTH) == 0)
+        if ( (t % (_currentMap->LEVEL_WIDTH / TILE_SIZE)) == 0 && t != 0)
+        {
             map << "\n";
-        //Write tile type to file
-        map << tiles[ t ]->getType() << " ";
+
+            cout<<t<<": new line"<<endl;
+        }
+
+        if (_currentMap->getTileSet()[ t ]->getType() < 10)
+        {
+            //Write tile type to file
+            map << 0 << _currentMap->getTileSet()[ t ]->getType() << " ";
+        }
+        else map << _currentMap->getTileSet()[ t ]->getType() << " ";
+
     }
 
     //Close the file
@@ -71,6 +88,7 @@ void Editor::setCamera(Input &input)
     if (input._left)    _camera.x -= _camVel;
     if (input._up)      _camera.y -= _camVel;
     if (input._down)    _camera.y += _camVel;
+
     if( _camera.x < 0 )
     {
         _camera.x = 0;
@@ -89,13 +107,25 @@ void Editor::setCamera(Input &input)
     }
 }
 
+void Editor::addTile(string tilePath)
+{
+    Tilemap *tile;
+    tile = new Tilemap();
+    tile->initTilemap(tilePath);
+
+    _tilemaps.push_back(tile);
+}
+
 void Editor::init(Input &input, SDL_Event &e)
 {
     while(!input._f3 && e.type != SDL_QUIT)
     {
         if (input._mouseClick)
             if (e.button.button == SDL_BUTTON_LEFT)
-                cout<<"Works"<<endl;
+            {
+                put_tile();
+                save_tiles();
+            }
 
         SDL_PollEvent(&e);
         input.checkControls(&e);

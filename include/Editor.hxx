@@ -11,11 +11,12 @@ class Editor
         Editor( SDL_Rect &camera );
         virtual ~Editor();
 
-        void put_tile( Tile *tiles[], int tileType);
-        void save_tiles( Tile *tiles[] );
+        void put_tile();
+        void save_tiles();
         void setMap(Map *gameMap);
         void init(Input &input, SDL_Event &e);
         void setCamera(Input &input);
+        void addTile(string tilePath);
 
     protected:
     private:
@@ -23,6 +24,8 @@ class Editor
         Map *_currentMap;
         SDL_Rect _camera;
         int _camVel;
+        vector<Tilemap *> _tilemaps;
+
 };
 
 #endif // EDITOR_H
