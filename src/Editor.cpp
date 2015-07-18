@@ -14,7 +14,7 @@ Editor::~Editor()
     //dtor
 }
 
-void Editor::put_tile(Window &gWindow)
+void Editor::putTile(Window &gWindow)
 {
     if (gWindow.hasMouseFocus())
     {
@@ -48,7 +48,7 @@ void Editor::put_tile(Window &gWindow)
     }
 }
 
-void Editor::save_tiles( )
+void Editor::saveTiles( )
 {
 
     //Open the map
@@ -129,8 +129,8 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         if (input._mouseClick)
             if (e.button.button == SDL_BUTTON_LEFT)
             {
-                put_tile(gWindows[Screen::mainScreen]);
-                save_tiles();
+                putTile(gWindows[Screen::mainScreen]);
+                saveTiles();
             }
 
         SDL_PollEvent(&e);

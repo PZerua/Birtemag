@@ -51,6 +51,8 @@ int main(int argc, char** argv){
             gameEditor.addTile(gWindows, "tilesets/tile1.png");
             gameEditor.setMap(gameMap);
             gameEditor.init(gWindows, input, e);
+            if (!gWindows[Screen::editScreen].isClosed())
+                gWindows[Screen::editScreen].free();
             if (gWindows[Screen::mainScreen].isClosed())
                 break;
         }

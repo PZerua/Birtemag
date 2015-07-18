@@ -11,8 +11,8 @@ class Editor
         Editor( SDL_Rect &camera );
         virtual ~Editor();
 
-        void put_tile(Window &gWindow);
-        void save_tiles();
+        void putTile(Window &gWindow);
+        void saveTiles();
         void setMap(Map *gameMap);
         void init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
         void setCamera(Input &input);

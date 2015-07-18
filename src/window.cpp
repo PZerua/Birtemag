@@ -212,7 +212,6 @@ bool Window::isClosed()
 	return mClosed;
 }
 
-
 SDL_Renderer *Window::getRender()
 {
     return mRenderer;
