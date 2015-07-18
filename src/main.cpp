@@ -18,7 +18,7 @@ int main(int argc, char** argv){
     Player player;
     Map *gameMap = new Map("bitmaps/prueba.map");
 
-    if ( !player.gPlayerTexture.loadFromFile(gWindows[0], "sprites/player.png"))
+    if ( !player.gPlayerTexture.loadFromFile(gWindows[Screen::mainScreen], "sprites/player.png"))
     {
         cout<<"Failed to load sprite texture!\n"<<endl;
     }
@@ -47,7 +47,8 @@ int main(int argc, char** argv){
         {
             input._f2 = false;
             Editor gameEditor(camera);
-            gameEditor.addTile(gWindows[Screen::mainScreen], "tilesets/tile1.png");
+            gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
+            gameEditor.addTile(gWindows, "tilesets/tile1.png");
             gameEditor.setMap(gameMap);
             gameEditor.init(gWindows, input, e);
         }

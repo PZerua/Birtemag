@@ -51,7 +51,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="include/Buttom.h" />
+		<Unit filename="include/Button.h" />
 		<Unit filename="include/Common_functions.hxx" />
 		<Unit filename="include/Common_libs.hxx" />
 		<Unit filename="include/Editor.hxx" />
@@ -63,7 +63,7 @@
 		<Unit filename="include/Tilemap.hxx" />
 		<Unit filename="include/timer.h" />
 		<Unit filename="include/window.h" />
-		<Unit filename="src/Buttom.cpp" />
+		<Unit filename="src/Button.cpp" />
 		<Unit filename="src/Common_functions.cxx" />
 		<Unit filename="src/Editor.cpp" />
 		<Unit filename="src/Input.cpp" />

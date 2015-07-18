@@ -33,6 +33,7 @@ bool Window::init(string screenTitle, int xPos, int yPos)
 
 		//Create renderer for window
 		mRenderer = SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+		printf(SDL_GetError());
 		if( mRenderer == NULL )
 		{
 			printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );

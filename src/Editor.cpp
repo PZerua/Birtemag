@@ -14,33 +14,36 @@ Editor::~Editor()
     //dtor
 }
 
-void Editor::put_tile()
+void Editor::put_tile(Window &gWindow)
 {
-    //Mouse offsets
-    int x = 0, y = 0;
-
-    //Get mouse offsets
-    SDL_GetMouseState( &x, &y );
-
-    //Adjust to _camera
-    x += _camera.x;
-    y += _camera.y;
-
-    //Go through tiles
-    for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
+    if (gWindow.hasMouseFocus())
     {
-        //Get tile's collision box
-        SDL_Rect box = _currentMap->getTileSet()[ t ]->getBox();
+        //Mouse offsets
+        int x = 0, y = 0;
 
-        //If the mouse is inside the tile
-        if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
+        //Get mouse offsets
+        SDL_GetMouseState( &x, &y );
+
+        //Adjust to _camera
+        x += _camera.x;
+        y += _camera.y;
+
+        //Go through tiles
+        for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
         {
-            //Get rid of old tile
-            delete _currentMap->getTileSet()[ t ];
+            //Get tile's collision box
+            SDL_Rect box = _currentMap->getTileSet()[ t ]->getBox();
 
-            //Replace it with new one
-            _currentMap->getTileSet()[ t ] = new Tile( box.x, box.y, 0 );
-            _currentMap->getTileSet()[ t ]->setTexture(_tilemaps[0]->getTexture());
+            //If the mouse is inside the tile
+            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
+            {
+                //Get rid of old tile
+                delete _currentMap->getTileSet()[ t ];
+
+                //Replace it with new one
+                _currentMap->getTileSet()[ t ] = new Tile( box.x, box.y, 0 );
+                _currentMap->getTileSet()[ t ]->setTexture(_tilemapsM[0]->getTexture());
+            }
         }
     }
 }
@@ -105,25 +108,28 @@ void Editor::setCamera(Input &input)
     }
 }
 
-void Editor::addTile(Window &gWindow, string tilePath)
+void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
 {
-    Tilemap *tile;
-    tile = new Tilemap();
-    tile->initTilemap(gWindow, tilePath);
+    Tilemap *tileM;
+    tileM = new Tilemap();
+    tileM->initTilemap(gWindows[Screen::mainScreen], tilePath);
+    _tilemapsM.push_back(tileM);
 
-    _tilemaps.push_back(tile);
+
+    Tilemap *tileE;
+    tileE = new Tilemap();
+    tileE->initTilemap(gWindows[Screen::editScreen], tilePath);
+    _tilemapsE.push_back(tileE);
 }
 
 void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
 {
-    gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
-
     while(!input._f3 && e.type != SDL_QUIT)
     {
         if (input._mouseClick)
             if (e.button.button == SDL_BUTTON_LEFT)
             {
-                put_tile();
+                put_tile(gWindows[Screen::mainScreen]);
                 save_tiles();
             }
 
@@ -138,10 +144,13 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         setCamera(input);
 
         gWindows[Screen::mainScreen].Clear();
+        gWindows[Screen::editScreen].Clear();
 
-        _currentMap->renderMap(gWindows[0], _camera);
+        _currentMap->renderMap(gWindows[Screen::mainScreen], _camera);
+        _tilemapsE[0]->getTexture()->render(gWindows[Screen::editScreen], 0, SCREEN_HEIGHT - _tilemapsE[0]->getTexture()->getHeight());
 
         gWindows[Screen::mainScreen].Present();
+        gWindows[Screen::editScreen].Present();
     }
 }
 
