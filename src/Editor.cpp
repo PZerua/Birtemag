@@ -124,7 +124,7 @@ void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
 
 void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
 {
-    while(!input._f3 && e.type != SDL_QUIT)
+    while(!input._f3 && e.type != SDL_QUIT && !gWindows[Screen::editScreen].isClosed() && !gWindows[Screen::mainScreen].isClosed())
     {
         if (input._mouseClick)
             if (e.button.button == SDL_BUTTON_LEFT)
@@ -143,14 +143,18 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
 
         setCamera(input);
 
-        gWindows[Screen::mainScreen].Clear();
-        gWindows[Screen::editScreen].Clear();
+        for( int i = 0; i < Screen::totalScreens; ++i )
+        {
+            gWindows[ i ].Clear();
+        }
 
         _currentMap->renderMap(gWindows[Screen::mainScreen], _camera);
         _tilemapsE[0]->getTexture()->render(gWindows[Screen::editScreen], 0, SCREEN_HEIGHT - _tilemapsE[0]->getTexture()->getHeight());
 
-        gWindows[Screen::mainScreen].Present();
-        gWindows[Screen::editScreen].Present();
+        for( int i = 0; i < Screen::totalScreens; ++i )
+        {
+            gWindows[ i ].Present();
+        }
     }
 }
 

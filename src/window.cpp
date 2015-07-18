@@ -14,6 +14,7 @@ Window::Window()
 	mKeyboardFocus = false;
 	mFullScreen = false;
 	mShown = false;
+	mClosed = false;
 	mWindowID = -1;
 
 	mWidth = 0;
@@ -33,7 +34,6 @@ bool Window::init(string screenTitle, int xPos, int yPos)
 
 		//Create renderer for window
 		mRenderer = SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
-		printf(SDL_GetError());
 		if( mRenderer == NULL )
 		{
 			printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
@@ -126,7 +126,8 @@ void Window::handleEvent( SDL_Event& e )
 
 			//Hide on close
 			case SDL_WINDOWEVENT_CLOSE:
-			SDL_HideWindow( mWindow );
+			free();
+			mClosed = true;
 			break;
 		}
 	}
@@ -205,6 +206,12 @@ bool Window::isShown()
 {
 	return mShown;
 }
+
+bool Window::isClosed()
+{
+	return mClosed;
+}
+
 
 SDL_Renderer *Window::getRender()
 {

@@ -36,6 +36,7 @@ class Window
 		bool hasKeyboardFocus();
 		bool isMinimized();
 		bool isShown();
+		bool isClosed();
 		SDL_Renderer *getRender();
 
 	private:
@@ -54,6 +55,7 @@ class Window
 		bool mFullScreen;
 		bool mMinimized;
 		bool mShown;
+		bool mClosed;
 };
 
 #endif
