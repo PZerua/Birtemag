@@ -18,13 +18,13 @@ Tile::Tile( int x, int y, int tileType )
     else _hasCollision = false;
 }
 
-void Tile::render( SDL_Rect& camera , SDL_Rect *gTileClips)
+void Tile::render( Window &gWindow, SDL_Rect& camera , SDL_Rect *gTileClips)
 {
     //If the tile is on screen
     if( checkCollision( camera, mBox ) )
     {
         //Show the tile
-        gTileTexture->render( mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ mType ] );
+        gTileTexture->render( gWindow, mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ mType ] );
     }
 }
 

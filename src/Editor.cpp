@@ -6,7 +6,7 @@ Editor::Editor(SDL_Rect &camera)
     _camVel = 8;
 
     // TODO: Read all tile paths from file or something
-    addTile("tilesets/tile1.png");
+
 }
 
 Editor::~Editor()
@@ -59,8 +59,6 @@ void Editor::save_tiles( )
         if ( (t % (_currentMap->LEVEL_WIDTH / TILE_SIZE)) == 0 && t != 0)
         {
             map << "\n";
-
-            cout<<t<<": new line"<<endl;
         }
 
         if (_currentMap->getTileSet()[ t ]->getType() < 10)
@@ -107,17 +105,19 @@ void Editor::setCamera(Input &input)
     }
 }
 
-void Editor::addTile(string tilePath)
+void Editor::addTile(Window &gWindow, string tilePath)
 {
     Tilemap *tile;
     tile = new Tilemap();
-    tile->initTilemap(tilePath);
+    tile->initTilemap(gWindow, tilePath);
 
     _tilemaps.push_back(tile);
 }
 
-void Editor::init(Input &input, SDL_Event &e)
+void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
 {
+    gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
+
     while(!input._f3 && e.type != SDL_QUIT)
     {
         if (input._mouseClick)
@@ -130,13 +130,18 @@ void Editor::init(Input &input, SDL_Event &e)
         SDL_PollEvent(&e);
         input.checkControls(&e);
 
+        for( int i = 0; i < Screen::totalScreens; ++i )
+        {
+            gWindows[ i ].handleEvent(e);
+        }
+
         setCamera(input);
 
-        Window::Clear();
+        gWindows[Screen::mainScreen].Clear();
 
-        _currentMap->renderMap(_camera);
+        _currentMap->renderMap(gWindows[0], _camera);
 
-        Window::Present();
+        gWindows[Screen::mainScreen].Present();
     }
 }
 

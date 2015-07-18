@@ -141,19 +141,19 @@ bool Map::touchesWall( SDL_Rect box )
     return false;
 }
 
-void Map::renderMap(SDL_Rect &camera)
+void Map::renderMap(Window &gWindow, SDL_Rect &camera)
 {
     for( int i = 0; i < TOTAL_TILES; ++i )
     {
-        _tileSet[ i ]->render( camera, _tilemaps[0]->getClips() );
+        _tileSet[ i ]->render( gWindow, camera, _tilemaps[0]->getClips() );
     }
 }
 
-void Map::addTile(string tilePath)
+void Map::addTile(Window &gWindow, string tilePath)
 {
     Tilemap *tile;
     tile = new Tilemap();
-    tile->initTilemap(tilePath);
+    tile->initTilemap(gWindow, tilePath);
 
     _tilemaps.push_back(tile);
 }

@@ -3,6 +3,8 @@
 
 #include "../include/Common_libs.hxx"
 #include "../include/LTexture.h"
+#include "../include/window.h"
+
 
 class Tilemap
 {
@@ -12,11 +14,11 @@ class Tilemap
 
         ~Tilemap();
 
-        bool loadTexture(string imagPath);
+        bool loadTexture(Window &gWindow, string imagPath);
 
         void setClips();
 
-        void initTilemap(string imagPath);
+        void initTilemap(Window &gWindow, string imagPath);
 
         LTexture *getTexture();
 

@@ -9,26 +9,22 @@
 #include "../include/Editor.hxx"
 
 int main(int argc, char** argv){
+
+    Window gWindows[ Screen::totalScreens ];
+
     //Start our window
-    try {
-        Window::Init("Birtemag");
-    }
-    catch (const std::runtime_error &e){
-        std::cout << e.what() << std::endl;
-        Window::Quit();
-        return -1;
-    }
+    gWindows[Screen::mainScreen].init("Birtemag", 300, 300);
 
     Player player;
     Map *gameMap = new Map("bitmaps/prueba.map");
 
-    if ( !player.gPlayerTexture.loadFromFile("sprites/player.png"))
+    if ( !player.gPlayerTexture.loadFromFile(gWindows[0], "sprites/player.png"))
     {
         cout<<"Failed to load sprite texture!\n"<<endl;
     }
 
 	//Load tile texture
-	gameMap->addTile("tilesets/tile1.png");
+	gameMap->addTile(gWindows[Screen::mainScreen], "tilesets/tile1.png");
 
 	//Load tile map
 	if( !gameMap->setTiles() )
@@ -51,9 +47,12 @@ int main(int argc, char** argv){
         {
             input._f2 = false;
             Editor gameEditor(camera);
+            gameEditor.addTile(gWindows[Screen::mainScreen], "tilesets/tile1.png");
             gameEditor.setMap(gameMap);
-            gameEditor.init(input, e);
+            gameEditor.init(gWindows, input, e);
         }
+
+        gWindows[Screen::mainScreen].handleEvent(e);
         //input.checkControls(&e);
         player.handleEvent();
 
@@ -62,17 +61,22 @@ int main(int argc, char** argv){
         player.setCamera( camera, gameMap );
 
         //RENDERING
-        SDL_SetRenderDrawColor( Window::mRenderer.get(), 0xFF, 0xFF, 0xFF, 0xFF );
-        Window::Clear();
+        gWindows[Screen::mainScreen].Clear();
 
-        gameMap->renderMap(camera);
+        gameMap->renderMap(gWindows[Screen::mainScreen], camera);
 
-        player.render(camera);
+        player.render(gWindows[Screen::mainScreen], camera);
 
-        Window::Present();
+        gWindows[Screen::mainScreen].Present();
     }
 
-    Window::Quit();
+    for( int i = 0; i < Screen::totalScreens; ++i )
+	{
+		gWindows[ i ].free();
+	}
+
+	//Quit SDL subsystems
+	SDL_Quit();
 
     return 0;
 }

@@ -3,6 +3,7 @@
 #include "../include/Common_libs.hxx"
 #include "../include/Tilemap.hxx"
 #include "../include/Tile.h"
+#include "../include/window.h"
 
 class Tile;
 
@@ -28,9 +29,9 @@ class Map
 
         bool touchesWall( SDL_Rect box);
 
-        void renderMap(SDL_Rect &camera);
+        void renderMap(Window &gWindow, SDL_Rect &camera);
 
-        void addTile(string tilePath);
+        void addTile(Window &gWindow, string tilePath);
 
         string getPath();
 

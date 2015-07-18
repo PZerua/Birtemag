@@ -14,9 +14,9 @@ Tilemap::~Tilemap()
 
 }
 
-bool Tilemap::loadTexture(string imagPath)
+bool Tilemap::loadTexture(Window &gWindow, string imagPath)
 {
-    _tileTexture->loadFromFile( imagPath );
+    _tileTexture->loadFromFile( gWindow, imagPath );
 
     if( _tileTexture->getWidth() % TILE_SIZE != 0 || _tileTexture->getHeight() % TILE_SIZE != 0)
     {
@@ -56,9 +56,9 @@ void Tilemap::setClips()
     else cout<<"Error cliping, there is no texture loaded"<<endl;
 }
 
-void Tilemap::initTilemap(string imagPath)
+void Tilemap::initTilemap(Window &gWindow, string imagPath)
 {
-    if(loadTexture(imagPath))
+    if(loadTexture(gWindow, imagPath))
     {
         _tileClips = new SDL_Rect[_totalTiles];
         setClips();

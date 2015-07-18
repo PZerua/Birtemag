@@ -4,59 +4,208 @@
 
 #include "../include/window.h"
 
-//Initialize the unique_ptr's deleters here
-std::unique_ptr<SDL_Window, void (*)(SDL_Window*)> Window::mWindow
-	= std::unique_ptr<SDL_Window, void (*)(SDL_Window*)>(nullptr, SDL_DestroyWindow);
-std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer*)> Window::mRenderer
-	= std::unique_ptr<SDL_Renderer, void (*)(SDL_Renderer*)>(nullptr, SDL_DestroyRenderer);
-//other static members
-SDL_Rect Window::mBox;
+Window::Window()
+{
+	//Initialize non-existant window
+	mWindow = NULL;
+	mRenderer = NULL;
 
-Window::Window(){
-}
-Window::~Window(){
-}
-void Window::Init(std::string title){
-    //initialize all SDL subsystems
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		throw std::runtime_error("SDL Init Failed");
-    if (TTF_Init() == -1)
-		throw std::runtime_error("TTF Init Failed");
+	mMouseFocus = false;
+	mKeyboardFocus = false;
+	mFullScreen = false;
+	mShown = false;
+	mWindowID = -1;
 
-    //Create our window
-    mWindow.reset(SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN));
-    //Make sure it created ok
-    if (mWindow == nullptr)
-        throw std::runtime_error("Failed to create window");
-    //Set texture filtering to linear
-    if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
+	mWidth = 0;
+	mHeight = 0;
+}
+
+bool Window::init(string screenTitle, int xPos, int yPos)
+{
+	//Create window
+	mWindow = SDL_CreateWindow( screenTitle.c_str(), xPos, yPos, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+	if( mWindow != NULL )
+	{
+		mMouseFocus = true;
+		mKeyboardFocus = true;
+		mWidth = SCREEN_WIDTH;
+		mHeight = SCREEN_HEIGHT;
+
+		//Create renderer for window
+		mRenderer = SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+		if( mRenderer == NULL )
+		{
+			printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+			SDL_DestroyWindow( mWindow );
+			mWindow = NULL;
+		}
+		else
+		{
+			//Initialize renderer color
+			SDL_SetRenderDrawColor( mRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+
+			//Grab window identifier
+			mWindowID = SDL_GetWindowID( mWindow );
+
+			//Flag as opened
+			mShown = true;
+		}
+	}
+	else
+	{
+		printf( "Window could not be created! SDL Error: %s\n", SDL_GetError() );
+	}
+
+	return mWindow != NULL && mRenderer != NULL;
+}
+
+void Window::handleEvent( SDL_Event& e )
+{
+	//If an event was detected for this window
+	if( e.type == (unsigned) SDL_WINDOWEVENT && e.window.windowID == (unsigned) mWindowID )
+	{
+		switch( e.window.event )
+		{
+			//Window appeared
+			case SDL_WINDOWEVENT_SHOWN:
+			mShown = true;
+			break;
+
+			//Window disappeared
+			case SDL_WINDOWEVENT_HIDDEN:
+			mShown = false;
+			break;
+
+			//Get new dimensions and repaint
+			case SDL_WINDOWEVENT_SIZE_CHANGED:
+			mWidth = e.window.data1;
+			mHeight = e.window.data2;
+			SDL_RenderPresent( mRenderer );
+			break;
+
+			//Repaint on expose
+			case SDL_WINDOWEVENT_EXPOSED:
+			SDL_RenderPresent( mRenderer );
+			break;
+
+			//Mouse enter
+			case SDL_WINDOWEVENT_ENTER:
+			mMouseFocus = true;
+			break;
+
+			//Mouse exit
+			case SDL_WINDOWEVENT_LEAVE:
+			mMouseFocus = false;
+			break;
+
+			//Keyboard focus gained
+			case SDL_WINDOWEVENT_FOCUS_GAINED:
+			mKeyboardFocus = true;
+			break;
+
+			//Keyboard focus lost
+			case SDL_WINDOWEVENT_FOCUS_LOST:
+			mKeyboardFocus = false;
+			break;
+
+			//Window minimized
+			case SDL_WINDOWEVENT_MINIMIZED:
+            mMinimized = true;
+            break;
+
+			//Window maxized
+			case SDL_WINDOWEVENT_MAXIMIZED:
+			mMinimized = false;
+            break;
+
+			//Window restored
+			case SDL_WINDOWEVENT_RESTORED:
+			mMinimized = false;
+            break;
+
+			//Hide on close
+			case SDL_WINDOWEVENT_CLOSE:
+			SDL_HideWindow( mWindow );
+			break;
+		}
+	}
+}
+
+void Window::focus()
+{
+	//Restore window if needed
+	if( !mShown )
+	{
+		SDL_ShowWindow( mWindow );
+	}
+
+	//Move window forward
+	SDL_RaiseWindow( mWindow );
+}
+
+void Window::Present()
+{
+	if( !mMinimized )
+	{
+		//Update screen
+		SDL_RenderPresent( mRenderer );
+	}
+}
+
+void Window::Clear()
+{
+    if ( !mMinimized )
     {
-        std::cout<<"Warning: Linear texture filtering not enabled!"<<std::endl;
-    }
-
-    //Create the renderer
-    mRenderer.reset(SDL_CreateRenderer(mWindow.get(), -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));
-    //Make sure it created ok
-    if (mRenderer == nullptr)
-        throw std::runtime_error("Failed to create renderer");
-    //Initialize renderer color
-    SDL_SetRenderDrawColor( mRenderer.get(), 0xFF, 0xFF, 0xFF, 0xFF );
-
-    //Initialize PNG loading
-    int imgFlags = IMG_INIT_PNG;
-    if( !( IMG_Init( imgFlags ) & imgFlags ) )
-    {
-        printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
+        //Clear screen
+        SDL_SetRenderDrawColor( mRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+        SDL_RenderClear( mRenderer );
     }
 }
-void Window::Quit(){
-    TTF_Quit();
-    SDL_Quit();
+
+void Window::free()
+{
+	if( mWindow != NULL )
+	{
+		SDL_DestroyWindow( mWindow );
+	}
+
+	mMouseFocus = false;
+	mKeyboardFocus = false;
+	mWidth = 0;
+	mHeight = 0;
 }
-void Window::Clear(){
-    SDL_RenderClear(mRenderer.get());
+
+int Window::getWidth()
+{
+	return mWidth;
 }
-void Window::Present(){
-    SDL_RenderPresent(mRenderer.get());
+
+int Window::getHeight()
+{
+	return mHeight;
+}
+
+bool Window::hasMouseFocus()
+{
+	return mMouseFocus;
+}
+
+bool Window::hasKeyboardFocus()
+{
+	return mKeyboardFocus;
+}
+
+bool Window::isMinimized()
+{
+	return mMinimized;
+}
+
+bool Window::isShown()
+{
+	return mShown;
+}
+
+SDL_Renderer *Window::getRender()
+{
+    return mRenderer;
 }

@@ -184,10 +184,10 @@ void Player::setCamera( SDL_Rect& camera, Map *gameMap)
     }
 }
 
-void Player::render( SDL_Rect& camera )
+void Player::render( Window &gWindow, SDL_Rect& camera )
 {
     //Show the dot
-    gPlayerTexture.render( mBox.x - camera.x, mBox.y - camera.y, &_clip );
+    gPlayerTexture.render( gWindow, mBox.x - camera.x, mBox.y - camera.y, &_clip );
 }
 
 void Player::nextXClip()

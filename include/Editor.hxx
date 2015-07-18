@@ -14,9 +14,9 @@ class Editor
         void put_tile();
         void save_tiles();
         void setMap(Map *gameMap);
-        void init(Input &input, SDL_Event &e);
+        void init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
         void setCamera(Input &input);
-        void addTile(string tilePath);
+        void addTile(Window &gWindow, string tilePath);
 
     protected:
     private:

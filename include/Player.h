@@ -5,6 +5,7 @@
 #include "../include/Map.h"
 #include "../include/LTexture.h"
 #include "../include/Common_functions.hxx"
+#include "../include/window.h"
 
 class Player
 {
@@ -25,7 +26,7 @@ class Player
         void setCamera( SDL_Rect& camera, Map *gameMap);
 
         //Shows the player on the screen
-        void render( SDL_Rect& camera );
+        void render( Window &gWindow, SDL_Rect& camera );
 
         LTexture gPlayerTexture;
 

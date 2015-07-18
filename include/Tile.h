@@ -4,6 +4,7 @@
 #include "../include/Common_functions.hxx"
 #include "../include/Common_libs.hxx"
 #include "../include/LTexture.h"
+#include "../include/window.h"
 
 class Tile
 {
@@ -12,7 +13,7 @@ class Tile
         Tile( int x, int y, int tileType );
 
         //Shows the tile
-        void render( SDL_Rect& camera , SDL_Rect *gTileClips);
+        void render( Window &gWindow, SDL_Rect& camera , SDL_Rect *gTileClips);
 
         void setTexture(LTexture *gTexture);
 

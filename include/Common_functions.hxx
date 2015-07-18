@@ -8,4 +8,11 @@ class Tile;
 
 bool checkCollision( SDL_Rect a, SDL_Rect b );
 
+enum Screen
+{
+    mainScreen,
+    editScreen,
+    totalScreens
+};
+
 #endif // COMMON_FUNC
