@@ -13,7 +13,7 @@ Map::Map(string path)
 
 Map::~Map()
 {
-    //dtor
+
 }
 
 Tilemap *Map::getTilemap()

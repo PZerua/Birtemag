@@ -19,6 +19,7 @@ class Button
         void setState(int state);
         SDL_Rect getBox();
         void activate(Editor &editor);
+        void free();
 
     protected:
     private:

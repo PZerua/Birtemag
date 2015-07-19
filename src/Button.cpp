@@ -10,6 +10,8 @@ Button::Button(Window &gWindow, int behaviour)
     color.b = 0;
     _actualState = 0;
     _behaviour = behaviour;
+    mBox.x = 0;
+    mBox.y = 0;
 
     _text.loadFromRenderedText(gWindow, "Colision", color, 24);
     _hoverState.loadFromFile(gWindow, "utils/hoverButton.png");
@@ -22,7 +24,7 @@ Button::Button(Window &gWindow, int behaviour)
 
 Button::~Button()
 {
-    //dtor
+
 }
 
 void Button::render(Window &gWindow)
@@ -52,4 +54,12 @@ void Button::setState(int state)
 SDL_Rect Button::getBox()
 {
     return mBox;
+}
+
+void Button::free()
+{
+    _normalState.free();
+    _hoverState.free();
+    _clickState.free();
+    _text.free();
 }

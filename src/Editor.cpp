@@ -19,10 +19,20 @@ Editor::Editor(SDL_Rect &camera, Window gWindows[Screen::totalScreens])
 
 Editor::~Editor()
 {
-    for(vector<Button *>::iterator it = _buttons.begin(); it != _buttons.end(); ++it)
+    for(vector<Button *>::iterator it = _buttons.begin(); it < _buttons.end(); ++it)
+    {
+        (*it)->free();
+        delete(*it);
+        it = _buttons.erase(it);
+    }
+    for(vector<Tilemap *>::iterator it = _tilemapsE.begin(); it < _tilemapsE.end(); ++it)
     {
         delete(*it);
+        it = _tilemapsE.erase(it);
     }
+
+    _collision.free();
+
 }
 
 void Editor::putTile(Window &gWindow)
@@ -48,12 +58,8 @@ void Editor::putTile(Window &gWindow)
             //If the mouse is inside the tile
             if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
             {
-                //Get rid of old tile
-                delete _currentMap->getTileSet()[ t ];
-
                 //Replace it with new one
-                _currentMap->getTileSet()[ t ] = new Tile( box.x, box.y, _tileType );
-                _currentMap->getTileSet()[ t ]->setTexture(_tilemapsM[0]->getTexture());
+                _currentMap->getTileSet()[ t ]->setType(_tileType);
             }
         }
     }
@@ -121,12 +127,6 @@ void Editor::setCamera(Input &input)
 
 void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
 {
-    Tilemap *tileM;
-    tileM = new Tilemap();
-    tileM->initTilemap(gWindows[Screen::mainScreen], tilePath);
-    _tilemapsM.push_back(tileM);
-
-
     Tilemap *tileE;
     tileE = new Tilemap();
     tileE->initTilemap(gWindows[Screen::editScreen], tilePath);

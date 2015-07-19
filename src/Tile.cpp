@@ -17,6 +17,11 @@ Tile::Tile( int x, int y, int tileType )
 
 }
 
+Tile::~Tile()
+{
+
+}
+
 void Tile::render( Window &gWindow, SDL_Rect& camera , SDL_Rect *gTileClips)
 {
     //If the tile is on screen
@@ -25,6 +30,16 @@ void Tile::render( Window &gWindow, SDL_Rect& camera , SDL_Rect *gTileClips)
         //Show the tile
         gTileTexture->render( gWindow, mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ mType ] );
     }
+}
+
+void Tile::free()
+{
+    gTileTexture->free();
+}
+
+void Tile::setType(int type)
+{
+    mType = type;
 }
 
 int Tile::getType()

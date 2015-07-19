@@ -11,6 +11,7 @@ class Tile
     public:
         //Initializes position and type
         Tile( int x, int y, int tileType );
+        ~Tile();
 
         //Shows the tile
         void render( Window &gWindow, SDL_Rect& camera , SDL_Rect *gTileClips);
@@ -26,6 +27,10 @@ class Tile
         bool hasCollision();
 
         void setCollision(bool coliss = true);
+
+        void free();
+
+        void setType(int type);
 
     private:
         //The attributes of the tile

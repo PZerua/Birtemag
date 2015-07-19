@@ -54,16 +54,17 @@ int main(int argc, char** argv){
         {
             input._f2 = false;
             gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
-            Editor gameEditor(camera, gWindows);
-            gameEditor.addTile(gWindows, "tilesets/tile1.png");
-            gameEditor.setMap(gameMap);
-            gameEditor.init(gWindows, input, e);
+            Editor *gameEditor;
+            gameEditor = new Editor(camera, gWindows);
+            gameEditor->addTile(gWindows, "tilesets/tile1.png");
+            gameEditor->setMap(gameMap);
+            gameEditor->init(gWindows, input, e);
+            delete(gameEditor);
             if (!gWindows[Screen::editScreen].isClosed())
                 gWindows[Screen::editScreen].free();
             if (gWindows[Screen::mainScreen].isClosed())
                 break;
         }
-
         gWindows[Screen::mainScreen].handleEvent(e);
         //input.checkControls(&e);
         player.handleEvent();
@@ -80,6 +81,7 @@ int main(int argc, char** argv){
         player.render(gWindows[Screen::mainScreen], camera);
 
         gWindows[Screen::mainScreen].Present();
+
     }
 
     for( int i = 0; i < Screen::totalScreens; ++i )
@@ -87,6 +89,7 @@ int main(int argc, char** argv){
 		gWindows[ i ].free();
 	}
 
+    delete gameMap;
 	//Quit SDL subsystems
 	SDL_Quit();
 

@@ -34,7 +34,6 @@ class Editor
         Map *_currentMap;
         SDL_Rect _camera;
         int _camVel;
-        vector<Tilemap *> _tilemapsM;
         vector<Tilemap *> _tilemapsE;
         vector<Button *> _buttons;
         LTexture Selector;
