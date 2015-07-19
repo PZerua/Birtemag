@@ -34,16 +34,16 @@ void Input::checkControls(SDL_Event *event)
         case SDLK_F3:
             _f3 = true;
             break;
-        case SDLK_RIGHT:
+        case SDLK_d:
             _right = true;
             break;
-        case SDLK_LEFT:
+        case SDLK_a:
             _left = true;
             break;
-        case SDLK_UP:
+        case SDLK_w:
             _up = true;
             break;
-        case SDLK_DOWN:
+        case SDLK_s:
             _down = true;
             break;
         }
@@ -63,16 +63,16 @@ void Input::checkControls(SDL_Event *event)
         case SDLK_F3:
             _f3 = false;
             break;
-        case SDLK_RIGHT:
+        case SDLK_d:
             _right = false;
             break;
-        case SDLK_LEFT:
+        case SDLK_a:
             _left = false;
             break;
-        case SDLK_UP:
+        case SDLK_w:
             _up = false;
             break;
-        case SDLK_DOWN:
+        case SDLK_s:
             _down = false;
             break;
         }

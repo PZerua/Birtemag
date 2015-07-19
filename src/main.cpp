@@ -46,8 +46,8 @@ int main(int argc, char** argv){
         if (input._f2)
         {
             input._f2 = false;
-            Editor gameEditor(camera);
             gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
+            Editor gameEditor(camera, gWindows[Screen::editScreen]);
             gameEditor.addTile(gWindows, "tilesets/tile1.png");
             gameEditor.setMap(gameMap);
             gameEditor.init(gWindows, input, e);

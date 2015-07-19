@@ -1,9 +1,11 @@
 #include "Editor.hxx"
 
-Editor::Editor(SDL_Rect &camera)
+Editor::Editor(SDL_Rect &camera, Window &gWindow)
 {
     _camera = camera;
     _camVel = 8;
+    Selector.loadFromFile(gWindow, "utils/Selector.png");
+    _tileType = 0;
 
     // TODO: Read all tile paths from file or something
 
@@ -41,7 +43,7 @@ void Editor::putTile(Window &gWindow)
                 delete _currentMap->getTileSet()[ t ];
 
                 //Replace it with new one
-                _currentMap->getTileSet()[ t ] = new Tile( box.x, box.y, 0 );
+                _currentMap->getTileSet()[ t ] = new Tile( box.x, box.y, _tileType );
                 _currentMap->getTileSet()[ t ]->setTexture(_tilemapsM[0]->getTexture());
             }
         }
@@ -122,9 +124,49 @@ void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
     _tilemapsE.push_back(tileE);
 }
 
+void Editor::handleTilemap(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
+{
+
+    //Mouse offsets
+    int x = 0, y = 0;
+
+    SDL_Rect temp;
+
+    //Get mouse offsets
+    SDL_GetMouseState( &x, &y );
+
+    int posX = SCREEN_WIDTH/2 - _tilemapsE[0]->getTexture()->getWidth() / 2;
+    int posY = SCREEN_HEIGHT/2 - _tilemapsE[0]->getTexture()->getHeight() / 2;
+
+    _tilemapsE[0]->getTexture()->render(gWindows[Screen::editScreen], posX, posY);
+
+
+    for(int i = 0; i < _tilemapsE[0]->getTotalTiles(); i++)
+    {
+        temp.x = _tilemapsE[0]->getClips()[i].x + posX;
+        temp.y = _tilemapsE[0]->getClips()[i].y + posY;
+        temp.w = TILE_SIZE;
+        temp.h = TILE_SIZE;
+
+        if (!gWindows[Screen::mainScreen].hasMouseFocus())
+        {
+            if( ( x > temp.x ) && ( x < temp.x + temp.w ) && ( y > temp.y ) && ( y < temp.y + temp.h ) )
+            {
+                Selector.render(gWindows[Screen::editScreen], temp.x, temp.y);
+                if (input._mouseClick)
+                    if (e.button.button == SDL_BUTTON_LEFT)
+                    {
+                        _tileType = i;
+                    }
+            }
+        }
+    }
+
+}
+
 void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
 {
-    while(!input._f3 && e.type != SDL_QUIT && !gWindows[Screen::editScreen].isClosed() && !gWindows[Screen::mainScreen].isClosed())
+    while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindows[Screen::editScreen].isClosed() && !gWindows[Screen::mainScreen].isClosed())
     {
         if (input._mouseClick)
             if (e.button.button == SDL_BUTTON_LEFT)
@@ -149,7 +191,7 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         }
 
         _currentMap->renderMap(gWindows[Screen::mainScreen], _camera);
-        _tilemapsE[0]->getTexture()->render(gWindows[Screen::editScreen], 0, SCREEN_HEIGHT - _tilemapsE[0]->getTexture()->getHeight());
+        handleTilemap(gWindows, input, e);
 
         for( int i = 0; i < Screen::totalScreens; ++i )
         {
