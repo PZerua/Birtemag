@@ -12,6 +12,13 @@ int main(int argc, char** argv){
 
     Window gWindows[ Screen::totalScreens ];
 
+    if (TTF_Init() != 0)
+    {
+        cerr << "TTF_Init() Failed: " << TTF_GetError() << endl;
+        SDL_Quit();
+        exit(1);
+    }
+
     //Start our window
     gWindows[Screen::mainScreen].init("Birtemag", 300, 300);
 
@@ -47,7 +54,7 @@ int main(int argc, char** argv){
         {
             input._f2 = false;
             gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
-            Editor gameEditor(camera, gWindows[Screen::editScreen]);
+            Editor gameEditor(camera, gWindows);
             gameEditor.addTile(gWindows, "tilesets/tile1.png");
             gameEditor.setMap(gameMap);
             gameEditor.init(gWindows, input, e);

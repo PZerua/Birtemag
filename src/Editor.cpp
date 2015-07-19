@@ -1,11 +1,17 @@
 #include "Editor.hxx"
 
-Editor::Editor(SDL_Rect &camera, Window &gWindow)
+Editor::Editor(SDL_Rect &camera, Window gWindows[Screen::totalScreens])
 {
     _camera = camera;
     _camVel = 8;
-    Selector.loadFromFile(gWindow, "utils/Selector.png");
+    Selector.loadFromFile(gWindows[Screen::editScreen], "utils/Selector.png");
     _tileType = 0;
+    addButton(gWindows[Screen::editScreen]);
+    _collision.loadFromFile(gWindows[Screen::mainScreen], "utils/Collision.png");
+    _collision.setAlpha(150);
+    _changing = false;
+    _changingCol = false;
+    _showCollision = false;
 
     // TODO: Read all tile paths from file or something
 
@@ -13,7 +19,10 @@ Editor::Editor(SDL_Rect &camera, Window &gWindow)
 
 Editor::~Editor()
 {
-    //dtor
+    for(vector<Button *>::iterator it = _buttons.begin(); it != _buttons.end(); ++it)
+    {
+        delete(*it);
+    }
 }
 
 void Editor::putTile(Window &gWindow)
@@ -124,6 +133,14 @@ void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
     _tilemapsE.push_back(tileE);
 }
 
+void Editor::addButton(Window &gWindow)
+{
+    Button *button;
+    button = new Button(gWindow, Behaviour::collision);
+    _buttons.push_back(button);
+
+}
+
 void Editor::handleTilemap(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
 {
 
@@ -161,19 +178,109 @@ void Editor::handleTilemap(Window gWindows[Screen::totalScreens], Input &input, 
             }
         }
     }
+}
 
+void Editor::handleButtons(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
+{
+    //Mouse offsets
+    int x = 0, y = 0;
+
+    //Get mouse offsets
+    SDL_GetMouseState( &x, &y );
+
+    for(vector<Button *>::iterator it = _buttons.begin(); it != _buttons.end(); ++it)
+    {
+        (*it)->render(gWindows[Screen::editScreen]);
+
+        if (!gWindows[Screen::mainScreen].hasMouseFocus())
+        {
+            if( ( x > (*it)->getBox().x ) && ( x < (*it)->getBox().x + (*it)->getBox().w ) && ( y > (*it)->getBox().y ) && ( y < (*it)->getBox().y + (*it)->getBox().h ) )
+            {
+                (*it)->setState(ButtonState::hover);
+                if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT && !_changing)
+                {
+                    _changing = true;
+                    (*it)->setState(ButtonState::click);
+                    (*it)->activate(*this);
+                }
+                else (*it)->setState(ButtonState::hover);
+            }
+            else (*it)->setState(ButtonState::normal);
+        }
+    }
+    if (!input._mouseClick)
+        _changing = false;
+}
+
+void Editor::showCollision(Window &gWindow)
+{
+    if (_showCollision)
+    {
+        for (int i = 0; i < _currentMap->TOTAL_TILES; i++)
+        {
+            if(_currentMap->getTileSet()[i]->hasCollision())
+            {
+                _collision.render(gWindow, _currentMap->getTileSet()[i]->getBox().x - _camera.x , _currentMap->getTileSet()[i]->getBox().y - _camera.y);
+            }
+        }
+    }
+}
+
+void Editor::changeCollision()
+{
+    if (_showCollision == true)
+        _showCollision = false;
+    else _showCollision = true;
+}
+
+void Editor::putCollision(Window &gWindow)
+{
+    if (gWindow.hasMouseFocus())
+    {
+        //Mouse offsets
+        int x = 0, y = 0;
+
+        //Get mouse offsets
+        SDL_GetMouseState( &x, &y );
+
+        //Adjust to _camera
+        x += _camera.x;
+        y += _camera.y;
+
+        //Go through tiles
+        for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
+        {
+            //Get tile's collision box
+            SDL_Rect box = _currentMap->getTileSet()[ t ]->getBox();
+
+            //If the mouse is inside the tile
+            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) && !_changingCol)
+            {
+                _changingCol = true;
+                if (_currentMap->getTileSet()[ t ]->hasCollision())
+                    _currentMap->getTileSet()[ t ]->setCollision(false);
+                else _currentMap->getTileSet()[ t ]->setCollision(true);
+            }
+        }
+    }
 }
 
 void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)
 {
     while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindows[Screen::editScreen].isClosed() && !gWindows[Screen::mainScreen].isClosed())
     {
-        if (input._mouseClick)
-            if (e.button.button == SDL_BUTTON_LEFT)
+        if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT)
+        {
+            if (_showCollision)
+                putCollision(gWindows[Screen::mainScreen]);
+            else
             {
                 putTile(gWindows[Screen::mainScreen]);
                 saveTiles();
             }
+        }
+        else if (!input._mouseClick)
+            _changingCol = false;
 
         SDL_PollEvent(&e);
         input.checkControls(&e);
@@ -192,6 +299,8 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
 
         _currentMap->renderMap(gWindows[Screen::mainScreen], _camera);
         handleTilemap(gWindows, input, e);
+        handleButtons(gWindows, input, e);
+        showCollision(gWindows[Screen::mainScreen]);
 
         for( int i = 0; i < Screen::totalScreens; ++i )
         {

@@ -11,7 +11,6 @@ Tilemap::Tilemap()
 Tilemap::~Tilemap()
 {
 
-
 }
 
 bool Tilemap::loadTexture(Window &gWindow, string imagPath)
@@ -39,10 +38,10 @@ void Tilemap::setClips()
     {
         for(int i = 0; i < _totalTiles; i++)
         {
-            if (yMult == _tileTexture->getHeight() / 64)
+            if (xMult == _tileTexture->getWidth() / 64)
             {
-                xMult++;
-                yMult = 0;
+                yMult++;
+                xMult = 0;
             }
 
             _tileClips[i].x = xMult * TILE_SIZE;
@@ -50,7 +49,7 @@ void Tilemap::setClips()
             _tileClips[i].h = TILE_SIZE;
             _tileClips[i].w = TILE_SIZE;
 
-            yMult++;
+            xMult++;
         }
     }
     else cout<<"Error cliping, there is no texture loaded"<<endl;

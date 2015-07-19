@@ -16,7 +16,7 @@ class LTexture
 		bool loadFromFile( Window &gWindow, std::string path );
 
 		//Creates image from font string
-		bool loadFromRenderedText( Window &gWindow, std::string textureText, SDL_Color textColor );
+		bool loadFromRenderedText( Window &gWindow, std::string textureText, SDL_Color textColor, int fontSize );
 
 		//Deallocates texture
 		void free();
@@ -36,6 +36,8 @@ class LTexture
 		//Gets image dimensions
 		int getWidth();
 		int getHeight();
+
+		SDL_Texture *getTexture();
 
 	private:
 		//The actual hardware texture

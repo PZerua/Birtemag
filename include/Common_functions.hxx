@@ -15,4 +15,16 @@ enum Screen
     totalScreens
 };
 
+enum ButtonState
+{
+    normal,
+    hover,
+    click
+};
+
+enum Behaviour
+{
+    collision
+};
+
 #endif // COMMON_FUNC

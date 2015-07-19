@@ -55,14 +55,15 @@ bool LTexture::loadFromFile( Window &gWindow, std::string path )
 	return mTexture != NULL;
 }
 
-bool LTexture::loadFromRenderedText( Window &gWindow, std::string textureText, SDL_Color textColor )
+bool LTexture::loadFromRenderedText( Window &gWindow, std::string textureText, SDL_Color textColor, int fontSize )
 {
 	//Get rid of preexisting texture
 	free();
 
-    TTF_Font *gFont = TTF_OpenFont("fonts/sample.ttf", 12);
+    TTF_Font *gFont = TTF_OpenFont("fonts/MOZART_0.ttf", fontSize);
+    //TTF_SetFontStyle(gFont, TTF_STYLE_BOLD);
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor );
+	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor);
 	if( textSurface != NULL )
 	{
 		//Create texture from surface pixels
@@ -145,4 +146,9 @@ int LTexture::getWidth()
 int LTexture::getHeight()
 {
 	return mHeight;
+}
+
+SDL_Texture *LTexture::getTexture()
+{
+    return mTexture;
 }

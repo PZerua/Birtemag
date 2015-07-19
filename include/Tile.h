@@ -25,6 +25,7 @@ class Tile
 
         bool hasCollision();
 
+        void setCollision(bool coliss = true);
 
     private:
         //The attributes of the tile

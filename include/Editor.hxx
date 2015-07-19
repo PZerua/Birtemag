@@ -5,11 +5,14 @@
 #include "../include/Input.hxx"
 #include "../include/window.h"
 #include "../include/LTexture.h"
+#include "../include/Button.h"
+
+class Button;
 
 class Editor
 {
     public:
-        Editor( SDL_Rect &camera , Window &gWindow);
+        Editor( SDL_Rect &camera , Window gWindow[Screen::totalScreens]);
         virtual ~Editor();
 
         void putTile(Window &gWindow);
@@ -19,6 +22,11 @@ class Editor
         void setCamera(Input &input);
         void addTile(Window gWindows[Screen::totalScreens], string tilePath);
         void handleTilemap(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
+        void handleButtons(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
+        void addButton(Window &gWindow);
+        void showCollision(Window &gWindow);
+        void changeCollision();
+        void putCollision(Window &gWindow);
 
     protected:
     private:
@@ -28,8 +36,14 @@ class Editor
         int _camVel;
         vector<Tilemap *> _tilemapsM;
         vector<Tilemap *> _tilemapsE;
+        vector<Button *> _buttons;
         LTexture Selector;
         int _tileType;
+        LTexture _collision;
+        bool _showCollision;
+        bool _changing;
+        bool _changingCol;
+
 
 };
 
