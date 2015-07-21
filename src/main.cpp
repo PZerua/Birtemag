@@ -31,7 +31,7 @@ int main(int argc, char** argv){
     }
 
 	//Load tile texture
-	gameMap->addTile(gWindows[Screen::mainScreen], "tilesets/tile1.png");
+	gameMap->addTilemap(gWindows[Screen::mainScreen], "tilesets/tile1.png");
 
 	//Load tile map
 	if( !gameMap->setTiles() )

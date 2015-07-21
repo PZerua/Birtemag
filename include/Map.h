@@ -31,7 +31,7 @@ class Map
 
         void renderMap(Window &gWindow, SDL_Rect &camera);
 
-        void addTile(Window &gWindow, string tilePath);
+        void addTilemap(Window &gWindow, string tilePath);
 
         string getPath();
 

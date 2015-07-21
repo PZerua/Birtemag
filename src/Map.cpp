@@ -149,7 +149,7 @@ void Map::renderMap(Window &gWindow, SDL_Rect &camera)
     }
 }
 
-void Map::addTile(Window &gWindow, string tilePath)
+void Map::addTilemap(Window &gWindow, string tilePath)
 {
     Tilemap *tile;
     tile = new Tilemap();
