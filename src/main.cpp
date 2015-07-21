@@ -16,7 +16,6 @@ int main(int argc, char** argv){
     {
         cerr << "TTF_Init() Failed: " << TTF_GetError() << endl;
         SDL_Quit();
-        exit(1);
     }
 
     //Start our window
