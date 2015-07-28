@@ -41,7 +41,8 @@ class Editor
         LTexture _collision;
         bool _showCollision;
         bool _changing;
-        bool _changingCol;
+        bool _changeCollision;
+        bool _collisionState;
 
 
 };

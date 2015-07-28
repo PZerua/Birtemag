@@ -38,7 +38,7 @@ void Tilemap::setClips()
     {
         for(int i = 0; i < _totalTiles; i++)
         {
-            if (xMult == _tileTexture->getWidth() / 64)
+            if (xMult == _tileTexture->getWidth() / TILE_SIZE)
             {
                 yMult++;
                 xMult = 0;

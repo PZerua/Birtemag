@@ -10,7 +10,7 @@ Editor::Editor(SDL_Rect &camera, Window gWindows[Screen::totalScreens])
     _collision.loadFromFile(gWindows[Screen::mainScreen], "utils/Collision.png");
     _collision.setAlpha(150);
     _changing = false;
-    _changingCol = false;
+    _changeCollision = false;
     _showCollision = false;
 
     // TODO: Read all tile paths from file or something
@@ -254,12 +254,20 @@ void Editor::putCollision(Window &gWindow)
             SDL_Rect box = _currentMap->getTileSet()[ t ]->getBox();
 
             //If the mouse is inside the tile
-            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) && !_changingCol)
+            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ))
             {
-                _changingCol = true;
-                if (_currentMap->getTileSet()[ t ]->hasCollision())
+                if (!_changeCollision)
+                {
+                    if (_currentMap->getTileSet()[ t ]->hasCollision())
+                        _collisionState = false;
+                    else _collisionState = true;
+
+                    _changeCollision = true;
+                }
+                if (_collisionState)
+                    _currentMap->getTileSet()[ t ]->setCollision(true);
+                else
                     _currentMap->getTileSet()[ t ]->setCollision(false);
-                else _currentMap->getTileSet()[ t ]->setCollision(true);
             }
         }
     }
@@ -280,7 +288,7 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
             }
         }
         else if (!input._mouseClick)
-            _changingCol = false;
+            _changeCollision = false;
 
         SDL_PollEvent(&e);
         input.checkControls(&e);

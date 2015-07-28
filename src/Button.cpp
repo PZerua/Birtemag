@@ -13,7 +13,7 @@ Button::Button(Window &gWindow, int behaviour)
     mBox.x = 0;
     mBox.y = 0;
 
-    _text.loadFromRenderedText(gWindow, "Colision", color, 24);
+    _text.loadFromRenderedText(gWindow, "Colisión", color, 24);
     _hoverState.loadFromFile(gWindow, "utils/hoverButton.png");
     _clickState.loadFromFile(gWindow, "utils/clickButton.png");
     _normalState.loadFromFile(gWindow, "utils/normalButton.png");
