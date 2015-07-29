@@ -10,7 +10,7 @@ class Tile
 {
     public:
         //Initializes position and type
-        Tile( int x, int y, int tileType );
+        Tile( int x, int y, int tileType, bool collision );
         ~Tile();
 
         //Shows the tile

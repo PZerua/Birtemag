@@ -1,6 +1,6 @@
 #include "../include/Tile.h"
 
-Tile::Tile( int x, int y, int tileType )
+Tile::Tile( int x, int y, int tileType, bool collision )
 {
     //Get the offsets
     mBox.x = x;
@@ -13,7 +13,7 @@ Tile::Tile( int x, int y, int tileType )
     //Get the tile type
     mType = tileType;
 
-    _hasCollision = false;
+    _hasCollision = collision;
 
 }
 

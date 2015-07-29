@@ -33,6 +33,8 @@ bool Map::setTiles()
 
     //The tile offsets
     int x = 0, y = 0;
+    char temp;
+    bool collision = false;
 
     //Open the map
     ifstream map( _mapPath );
@@ -69,7 +71,7 @@ bool Map::setTiles()
             //Determines what kind of tile will be made
             int tileType = -1;
             //Read tile from map file
-            map >> tileType;
+            map >> tileType >> temp >> collision;
             //If the was a problem in reading the map
             if( map.fail() )
             {
@@ -82,7 +84,7 @@ bool Map::setTiles()
             //If the number is a valid tile number
             if( ( tileType >= 0 ) && ( tileType < getTilemap()[0].getTotalTiles() ) )
             {
-                _tileSet[ i ] = new Tile( x, y, tileType );
+                _tileSet[ i ] = new Tile( x, y, tileType, collision );
             }
             //If we don't recognize the tile type
             else

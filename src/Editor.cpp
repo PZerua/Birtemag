@@ -84,7 +84,7 @@ void Editor::saveTiles( )
         if (_currentMap->getTileSet()[ t ]->getType() < 10)
         {
             //Write tile type to file
-            map << 0 << _currentMap->getTileSet()[ t ]->getType() << " ";
+            map << 0 << _currentMap->getTileSet()[ t ]->getType() << ":" << _currentMap->getTileSet()[ t ]->hasCollision() << " ";
         }
         else map << _currentMap->getTileSet()[ t ]->getType() << " ";
 
@@ -284,8 +284,8 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
             else
             {
                 putTile(gWindows[Screen::mainScreen]);
-                saveTiles();
             }
+            saveTiles();
         }
         else if (!input._mouseClick)
             _changeCollision = false;
