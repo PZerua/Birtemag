@@ -86,7 +86,7 @@ void Editor::saveTiles( )
             //Write tile type to file
             map << 0 << _currentMap->getTileSet()[ t ]->getType() << ":" << _currentMap->getTileSet()[ t ]->hasCollision() << " ";
         }
-        else map << _currentMap->getTileSet()[ t ]->getType() << " ";
+        else map << _currentMap->getTileSet()[ t ]->getType() << ":" << _currentMap->getTileSet()[ t ]->hasCollision() << " ";
 
     }
 
