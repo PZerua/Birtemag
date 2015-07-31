@@ -6,12 +6,15 @@ Editor::Editor(SDL_Rect &camera, Window gWindows[Screen::totalScreens])
     _camVel = 8;
     Selector.loadFromFile(gWindows[Screen::editScreen], "utils/Selector.png");
     _tileType = 0;
-    addButton(gWindows[Screen::editScreen]);
+    addButton(gWindows[Screen::editScreen], "Colisión", Behaviour::collision);
+    addButton(gWindows[Screen::editScreen], "Nuevo Mapa", Behaviour::newMap);
     _collision.loadFromFile(gWindows[Screen::mainScreen], "utils/Collision.png");
     _collision.setAlpha(150);
     _changing = false;
     _changeCollision = false;
     _showCollision = false;
+
+    setButtonPos();
 
     // TODO: Read all tile paths from file or something
 
@@ -33,6 +36,25 @@ Editor::~Editor()
 
     _collision.free();
 
+}
+
+void Editor::setButtonPos()
+{
+    int xMult = 0;
+    int yMult = 0;
+
+    for (unsigned int i = 0; i < _buttons.size() ; i++)
+    {
+        if (xMult == SCREEN_WIDTH)
+        {
+            xMult = 0;
+            yMult += TILE_SIZE * 2;
+        }
+
+        _buttons[i]->setPos(xMult, yMult);
+
+        xMult += TILE_SIZE * 2;
+    }
 }
 
 void Editor::putTile(Window &gWindow)
@@ -125,7 +147,7 @@ void Editor::setCamera(Input &input)
     }
 }
 
-void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
+void Editor::addTilemap(Window gWindows[Screen::totalScreens], string tilePath)
 {
     Tilemap *tileE;
     tileE = new Tilemap();
@@ -133,10 +155,10 @@ void Editor::addTile(Window gWindows[Screen::totalScreens], string tilePath)
     _tilemapsE.push_back(tileE);
 }
 
-void Editor::addButton(Window &gWindow)
+void Editor::addButton(Window &gWindow, string name, int behaviour)
 {
     Button *button;
-    button = new Button(gWindow, Behaviour::collision);
+    button = new Button(gWindow, behaviour, name);
     _buttons.push_back(button);
 
 }
@@ -271,6 +293,18 @@ void Editor::putCollision(Window &gWindow)
             }
         }
     }
+}
+
+void Editor::newMap()
+{
+    int width, height;
+    cout << "Set width: ";
+    cin >> width;
+    cout << endl << "Set height: ";
+    cin >> height;
+    cout << endl;
+
+
 }
 
 void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e)

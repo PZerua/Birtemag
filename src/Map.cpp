@@ -9,11 +9,16 @@ Map::Map(string path)
     TOTAL_TILES = 0;
 
     _mapPath = path;
+
 }
 
 Map::~Map()
 {
-
+    for(vector<Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
+    {
+        delete(*it);
+        it = _tilemaps.erase(it);
+    }
 }
 
 Tilemap *Map::getTilemap()

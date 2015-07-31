@@ -7,10 +7,14 @@
 #include "../include/Map.h"
 #include "../include/Player.h"
 #include "../include/Editor.hxx"
+#include "../include/World.h"
 
 int main(int argc, char** argv){
 
     Window gWindows[ Screen::totalScreens ];
+
+    //Start our window
+    gWindows[Screen::mainScreen].init("Birtemag", 300, 300);
 
     if (TTF_Init() != 0)
     {
@@ -18,25 +22,7 @@ int main(int argc, char** argv){
         SDL_Quit();
     }
 
-    //Start our window
-    gWindows[Screen::mainScreen].init("Birtemag", 300, 300);
-
-    Player player;
-    Map *gameMap = new Map("bitmaps/prueba.map");
-
-    if ( !player.gPlayerTexture.loadFromFile(gWindows[Screen::mainScreen], "sprites/player.png"))
-    {
-        cout<<"Failed to load sprite texture!\n"<<endl;
-    }
-
-	//Load tile texture
-	gameMap->addTilemap(gWindows[Screen::mainScreen], "tilesets/tile1.png");
-
-	//Load tile map
-	if( !gameMap->setTiles() )
-	{
-		cout<<"Failed to load tile set!\n"<<endl;
-	}
+    World world(gWindows[Screen::mainScreen]);
 
 	SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 
@@ -55,8 +41,8 @@ int main(int argc, char** argv){
             gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
             Editor *gameEditor;
             gameEditor = new Editor(camera, gWindows);
-            gameEditor->addTile(gWindows, "tilesets/tile1.png");
-            gameEditor->setMap(gameMap);
+            gameEditor->addTilemap(gWindows, "tilesets/tile1.png");
+            gameEditor->setMap(world.getCurrentMap());
             gameEditor->init(gWindows, input, e);
             delete(gameEditor);
             if (!gWindows[Screen::editScreen].isClosed())
@@ -65,22 +51,16 @@ int main(int argc, char** argv){
                 break;
         }
         gWindows[Screen::mainScreen].handleEvent(e);
-        //input.checkControls(&e);
-        player.handleEvent();
 
-        //LOGIC
-        player.move( gameMap->getTileSet(), gameMap);
-        player.setCamera( camera, gameMap );
+        //PLAYER EVENT AND LOGIC
+        world.handlePlayer(camera);
 
         //RENDERING
         gWindows[Screen::mainScreen].Clear();
 
-        gameMap->renderMap(gWindows[Screen::mainScreen], camera);
-
-        player.render(gWindows[Screen::mainScreen], camera);
+        world.render(gWindows[Screen::mainScreen], camera);
 
         gWindows[Screen::mainScreen].Present();
-
     }
 
     for( int i = 0; i < Screen::totalScreens; ++i )
@@ -88,7 +68,6 @@ int main(int argc, char** argv){
 		gWindows[ i ].free();
 	}
 
-    delete gameMap;
 	//Quit SDL subsystems
 	SDL_Quit();
 

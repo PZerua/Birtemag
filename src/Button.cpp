@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(Window &gWindow, int behaviour)
+Button::Button(Window &gWindow, int behaviour, string name)
 {
 
     SDL_Color color;
@@ -10,10 +10,8 @@ Button::Button(Window &gWindow, int behaviour)
     color.b = 0;
     _actualState = 0;
     _behaviour = behaviour;
-    mBox.x = 0;
-    mBox.y = 0;
 
-    _text.loadFromRenderedText(gWindow, "Colisión", color, 24);
+    _text.loadFromRenderedText(gWindow, name, color, 24);
     _hoverState.loadFromFile(gWindow, "utils/hoverButton.png");
     _clickState.loadFromFile(gWindow, "utils/clickButton.png");
     _normalState.loadFromFile(gWindow, "utils/normalButton.png");
@@ -35,7 +33,13 @@ void Button::render(Window &gWindow)
         _hoverState.render(gWindow, mBox.x, mBox.y);
     else if (_actualState == ButtonState::click)
         _clickState.render(gWindow, mBox.x, mBox.y);
-    _text.render(gWindow, mBox.w / 2 - mTextBox.w / 2, mBox.h / 2 - mTextBox.h / 2);
+    _text.render(gWindow, mBox.x + mBox.w / 2 - mTextBox.w / 2, mBox.y + mBox.h / 2 - mTextBox.h / 2);
+}
+
+void Button::setPos(int x, int y)
+{
+    mBox.x = x;
+    mBox.y = y;
 }
 
 void Button::activate(Editor &editor)
@@ -43,6 +47,10 @@ void Button::activate(Editor &editor)
     if (_behaviour == Behaviour::collision)
     {
         editor.changeCollision();
+    }
+    else if (_behaviour == Behaviour::newMap)
+    {
+        //editor.newMap();
     }
 }
 

@@ -12,7 +12,7 @@ class Editor;
 class Button
 {
     public:
-        Button(Window &gWindow, int behaviour);
+        Button(Window &gWindow, int behaviour, string name);
         virtual ~Button();
 
         void render(Window &gWindow);
@@ -20,6 +20,7 @@ class Button
         SDL_Rect getBox();
         void activate(Editor &editor);
         void free();
+        void setPos(int x, int y);
 
     protected:
     private:

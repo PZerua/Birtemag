@@ -63,6 +63,7 @@
 		<Unit filename="include/Player.h" />
 		<Unit filename="include/Tile.h" />
 		<Unit filename="include/Tilemap.hxx" />
+		<Unit filename="include/World.h" />
 		<Unit filename="include/timer.h" />
 		<Unit filename="include/window.h" />
 		<Unit filename="src/Button.cpp" />
@@ -74,6 +75,7 @@
 		<Unit filename="src/Player.cpp" />
 		<Unit filename="src/Tile.cpp" />
 		<Unit filename="src/Tilemap.cpp" />
+		<Unit filename="src/World.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Unit filename="src/timer.cpp" />
 		<Unit filename="src/window.cpp" />

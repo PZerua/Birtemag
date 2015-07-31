@@ -20,13 +20,15 @@ class Editor
         void setMap(Map *gameMap);
         void init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
         void setCamera(Input &input);
-        void addTile(Window gWindows[Screen::totalScreens], string tilePath);
+        void addTilemap(Window gWindows[Screen::totalScreens], string tilePath);
         void handleTilemap(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
         void handleButtons(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
-        void addButton(Window &gWindow);
+        void addButton(Window &gWindow, string name, int behaviour);
         void showCollision(Window &gWindow);
         void changeCollision();
         void putCollision(Window &gWindow);
+        void setButtonPos();
+        void newMap();
 
     protected:
     private:
