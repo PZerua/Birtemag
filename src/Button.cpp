@@ -42,7 +42,7 @@ void Button::setPos(int x, int y)
     mBox.y = y;
 }
 
-void Button::activate(Editor &editor)
+void Button::activate(Editor &editor, Window gWindows[Screen::totalScreens])
 {
     if (_behaviour == Behaviour::collision)
     {
@@ -50,7 +50,7 @@ void Button::activate(Editor &editor)
     }
     else if (_behaviour == Behaviour::newMap)
     {
-        //editor.newMap();
+        editor.newMap(gWindows[Screen::mainScreen]);
     }
 }
 

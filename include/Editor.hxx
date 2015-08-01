@@ -17,7 +17,7 @@ class Editor
 
         void putTile(Window &gWindow);
         void saveTiles();
-        void setMap(Map *gameMap);
+        void setMap(vector<Map *> &worldMaps, Map *gameMap);
         void init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
         void setCamera(Input &input);
         void addTilemap(Window gWindows[Screen::totalScreens], string tilePath);
@@ -28,7 +28,7 @@ class Editor
         void changeCollision();
         void putCollision(Window &gWindow);
         void setButtonPos();
-        void newMap();
+        void newMap(Window &gWindow);
 
     protected:
     private:
@@ -38,6 +38,7 @@ class Editor
         int _camVel;
         vector<Tilemap *> _tilemapsE;
         vector<Button *> _buttons;
+        vector<Map *> _worldMaps;
         LTexture Selector;
         int _tileType;
         LTexture _collision;

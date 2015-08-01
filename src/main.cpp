@@ -24,8 +24,6 @@ int main(int argc, char** argv){
 
     World world(gWindows[Screen::mainScreen]);
 
-	SDL_Rect camera = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-
     //Our event structure
 	SDL_Event e;
 	//Our input instance
@@ -40,9 +38,9 @@ int main(int argc, char** argv){
             input._f2 = false;
             gWindows[Screen::editScreen].init("Editor", 320 + SCREEN_WIDTH, 300);
             Editor *gameEditor;
-            gameEditor = new Editor(camera, gWindows);
+            gameEditor = new Editor(world.getCamera(), gWindows);
             gameEditor->addTilemap(gWindows, "tilesets/tile1.png");
-            gameEditor->setMap(world.getCurrentMap());
+            gameEditor->setMap(world.getMaps(), world.getCurrentMap());
             gameEditor->init(gWindows, input, e);
             delete(gameEditor);
             if (!gWindows[Screen::editScreen].isClosed())
@@ -53,12 +51,12 @@ int main(int argc, char** argv){
         gWindows[Screen::mainScreen].handleEvent(e);
 
         //PLAYER EVENT AND LOGIC
-        world.handlePlayer(camera);
+        world.handlePlayer();
 
         //RENDERING
         gWindows[Screen::mainScreen].Clear();
 
-        world.render(gWindows[Screen::mainScreen], camera);
+        world.render(gWindows[Screen::mainScreen]);
 
         gWindows[Screen::mainScreen].Present();
     }

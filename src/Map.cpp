@@ -12,12 +12,41 @@ Map::Map(string path)
 
 }
 
+Map::Map(int width, int height, string name)
+{
+    LEVEL_WIDTH = width * TILE_SIZE;
+    LEVEL_HEIGHT = height * TILE_SIZE;
+    TOTAL_TILES = width * height;
+    _name = name;
+    _mapPath = "bitmaps\\" + name + ".map";
+    createMap();
+}
+
 Map::~Map()
 {
     for(vector<Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
     {
         delete(*it);
         it = _tilemaps.erase(it);
+    }
+}
+
+void Map::createMap()
+{
+    ofstream newMap(_mapPath);
+
+    int width, height;
+
+    width = LEVEL_WIDTH / TILE_SIZE;
+    height = LEVEL_HEIGHT / TILE_SIZE;
+
+    newMap << width << " " << height << "\n";
+
+    for (int i = 0; i < TOTAL_TILES; i++)
+    {
+        if ( (i % width) == 0 && i != 0)
+            newMap << "\n";
+        newMap << "00:0 ";
     }
 }
 

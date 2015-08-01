@@ -12,6 +12,7 @@ class Map
     public:
 
         Map(string path);
+        Map(int width, int height, string name);
 
         virtual ~Map();
 
@@ -34,6 +35,8 @@ class Map
         void addTilemap(Window &gWindow, string tilePath);
 
         string getPath();
+
+        void createMap();
 
     protected:
 

@@ -14,16 +14,18 @@ class World
 
         void addMap(string mapPath);
         Map *getCurrentMap();
-        vector <Map *> getMaps();
+        vector <Map *> &getMaps();
         Player *getPlayer();
-        void handlePlayer(SDL_Rect &camera);
-        void render(Window &gWindow, SDL_Rect &camera);
+        void handlePlayer();
+        void render(Window &gWindow);
+        SDL_Rect &getCamera();
 
     protected:
     private:
         vector <Map *> _worldMaps;
         Map *_currentMap;
         Player *_player;
+        SDL_Rect camera;
 
 };
 

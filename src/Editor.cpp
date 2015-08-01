@@ -43,7 +43,7 @@ void Editor::setButtonPos()
     int xMult = 0;
     int yMult = 0;
 
-    for (unsigned int i = 0; i < _buttons.size() ; i++)
+    for (unsigned int i = 0; i < _buttons.size(); i++)
     {
         if (xMult == SCREEN_WIDTH)
         {
@@ -116,8 +116,9 @@ void Editor::saveTiles( )
     map.close();
 }
 
-void Editor::setMap(Map *gameMap)
+void Editor::setMap(vector <Map *> &worldMaps, Map *gameMap)
 {
+    _worldMaps = worldMaps;
     _currentMap = gameMap;
 }
 
@@ -223,7 +224,7 @@ void Editor::handleButtons(Window gWindows[Screen::totalScreens], Input &input, 
                 {
                     _changing = true;
                     (*it)->setState(ButtonState::click);
-                    (*it)->activate(*this);
+                    (*it)->activate(*this, gWindows);
                 }
                 else (*it)->setState(ButtonState::hover);
             }
@@ -295,15 +296,21 @@ void Editor::putCollision(Window &gWindow)
     }
 }
 
-void Editor::newMap()
+void Editor::newMap(Window &gWindow)
 {
-    int width, height;
+    /*int width, height;
     cout << "Set width: ";
     cin >> width;
     cout << endl << "Set height: ";
     cin >> height;
-    cout << endl;
+    cout << endl;*/
 
+    Map *newMap;
+    newMap = new Map(20, 20, "test");
+    newMap->addTilemap(gWindow, "tilesets/empty.png");
+    newMap->setTiles();
+    _worldMaps.push_back(newMap);
+    _currentMap = newMap;
 
 }
 

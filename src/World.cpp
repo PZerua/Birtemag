@@ -3,6 +3,11 @@
 World::World(Window &gWindow)
 {
 
+    camera.x = 0;
+    camera.y = 0;
+    camera.w = SCREEN_WIDTH;
+    camera.h = SCREEN_HEIGHT;
+
     _player = new Player();
     addMap("bitmaps/prueba.map");
     _worldMaps[0]->addTilemap(gWindow, "tilesets/tile1.png");
@@ -40,7 +45,7 @@ Map *World::getCurrentMap()
     return _currentMap;
 }
 
-vector <Map *> World::getMaps()
+vector<Map *> &World::getMaps()
 {
     return _worldMaps;
 }
@@ -50,7 +55,7 @@ Player *World::getPlayer()
     return _player;
 }
 
-void World::handlePlayer(SDL_Rect &camera)
+void World::handlePlayer()
 {
     //EVENT
     _player->handleEvent();
@@ -60,9 +65,14 @@ void World::handlePlayer(SDL_Rect &camera)
     _player->setCamera(camera, _currentMap);
 }
 
-void World::render(Window &gWindow, SDL_Rect &camera)
+void World::render(Window &gWindow)
 {
     _currentMap->renderMap(gWindow, camera);
 
     _player->render(gWindow, camera);
+}
+
+SDL_Rect &World::getCamera()
+{
+    return camera;
 }

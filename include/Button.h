@@ -6,6 +6,7 @@
 #include "window.h"
 #include "Common_functions.hxx"
 #include "Editor.hxx"
+#include "window.h"
 
 class Editor;
 
@@ -18,7 +19,7 @@ class Button
         void render(Window &gWindow);
         void setState(int state);
         SDL_Rect getBox();
-        void activate(Editor &editor);
+        void activate(Editor &editor, Window gWindows[Screen::totalScreens]);
         void free();
         void setPos(int x, int y);
 
