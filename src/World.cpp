@@ -31,6 +31,8 @@ World::~World()
         delete(*it);
         it = _worldMaps.erase(it);
     }
+
+    delete _player;
 }
 
 void World::addMap(string mapPath)

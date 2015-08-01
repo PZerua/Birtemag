@@ -216,3 +216,8 @@ SDL_Renderer *Window::getRender()
 {
     return mRenderer;
 }
+
+void Window::setFocus(bool focus)
+{
+    mMouseFocus = focus;
+}

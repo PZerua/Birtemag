@@ -14,7 +14,7 @@ LTexture::~LTexture()
 	free();
 }
 
-bool LTexture::loadFromFile( Window &gWindow, std::string path )
+bool LTexture::loadFromFile( Window &gWindow, string path )
 {
 	//Get rid of preexisting texture
 	free();

@@ -11,7 +11,7 @@ Button::Button(Window &gWindow, int behaviour, string name)
     _actualState = 0;
     _behaviour = behaviour;
 
-    _text.loadFromRenderedText(gWindow, name, color, 24);
+    _text.loadFromRenderedText(gWindow, name, color, 25);
     _hoverState.loadFromFile(gWindow, "utils/hoverButton.png");
     _clickState.loadFromFile(gWindow, "utils/clickButton.png");
     _normalState.loadFromFile(gWindow, "utils/normalButton.png");

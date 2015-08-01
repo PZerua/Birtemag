@@ -27,11 +27,13 @@ class Window
 		//Deallocates internals
 		void free();
 
+		void setFocus(bool focus);
+
 		//Window dimensions
 		int getWidth();
 		int getHeight();
 
-		//Window focii
+		//Window focus
 		bool hasMouseFocus();
 		bool hasKeyboardFocus();
 		bool isMinimized();

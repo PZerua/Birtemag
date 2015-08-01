@@ -6,6 +6,8 @@
 #include "../include/window.h"
 #include "../include/LTexture.h"
 #include "../include/Button.h"
+#include "../include/InfoPanel.h"
+
 
 class Button;
 
@@ -15,7 +17,7 @@ class Editor
         Editor( SDL_Rect &camera , Window gWindow[Screen::totalScreens]);
         virtual ~Editor();
 
-        void putTile(Window &gWindow);
+        void putTile(Window &gWindow, Input &input, SDL_Event &e);
         void saveTiles();
         void setMap(vector<Map *> &worldMaps, Map *gameMap);
         void init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
@@ -36,12 +38,14 @@ class Editor
         Map *_currentMap;
         SDL_Rect _camera;
         int _camVel;
+        int _tileType;
         vector<Tilemap *> _tilemapsE;
         vector<Button *> _buttons;
         vector<Map *> _worldMaps;
-        LTexture Selector;
-        int _tileType;
         LTexture _collision;
+        LTexture _selector;
+        LTexture _mainSelector;
+        InfoPanel _infoPanel;
         bool _showCollision;
         bool _changing;
         bool _changeCollision;
