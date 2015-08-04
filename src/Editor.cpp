@@ -361,7 +361,11 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         {
             if (_showCollision)
                 putCollision(gWindows[Screen::mainScreen]);
-            else putTile(gWindows[Screen::mainScreen], input, e);
+            else
+            {
+                putTile(gWindows[Screen::mainScreen], input, e);
+            }
+            saveTiles();
         }
         else if (!input._mouseClick)
             _changeCollision = false;
