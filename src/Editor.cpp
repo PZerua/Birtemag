@@ -95,7 +95,35 @@ void Editor::putTile(Window &gWindow, Input &input, SDL_Event &e)
             }
         }
     }
-    saveTiles();
+}
+
+void Editor::renderMainSelector(Window &gWindow, Input &input, SDL_Event &e)
+{
+    if (gWindow.hasMouseFocus())
+    {
+        //Mouse offsets
+        int x = 0, y = 0;
+
+        //Get mouse offsets
+        SDL_GetMouseState( &x, &y );
+
+        //Adjust to _camera
+        x += _camera.x;
+        y += _camera.y;
+
+        //Go through tiles
+        for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
+        {
+            //Get tile's collision box
+            SDL_Rect box = _currentMap->getTileSet()[ t ]->getBox();
+
+            //If the mouse is inside the tile
+            if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
+            {
+                _mainSelector.render(gWindow, box.x, box.y);
+            }
+        }
+    }
 }
 
 void Editor::saveTiles( )
@@ -305,7 +333,6 @@ void Editor::putCollision(Window &gWindow)
             }
         }
     }
-    saveTiles();
 }
 
 void Editor::newMap(Window &gWindow)
@@ -334,6 +361,7 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         {
             if (_showCollision)
                 putCollision(gWindows[Screen::mainScreen]);
+            else putTile(gWindows[Screen::mainScreen], input, e);
         }
         else if (!input._mouseClick)
             _changeCollision = false;
@@ -354,9 +382,9 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         }
 
         _currentMap->renderMap(gWindows[Screen::mainScreen], _camera);
-        putTile(gWindows[Screen::mainScreen], input, e);
         handleTilemap(gWindows, input, e);
         handleButtons(gWindows, input, e);
+        renderMainSelector(gWindows[Screen::mainScreen], input, e);
         _infoPanel.render(gWindows[Screen::editScreen]);
         showCollision(gWindows[Screen::mainScreen]);
 

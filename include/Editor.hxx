@@ -31,6 +31,7 @@ class Editor
         void putCollision(Window &gWindow);
         void setButtonPos();
         void newMap(Window &gWindow);
+        void renderMainSelector(Window &gWindow, Input &input, SDL_Event &e);
 
     protected:
     private:
