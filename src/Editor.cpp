@@ -126,7 +126,7 @@ void Editor::renderMainSelector(Window &gWindow, Input &input, SDL_Event &e)
     }
 }
 
-void Editor::saveTiles( )
+void Editor::saveTiles()
 {
 
     //Open the map
@@ -148,7 +148,6 @@ void Editor::saveTiles( )
             map << 0 << _currentMap->getTileSet()[ t ]->getType() << ":" << _currentMap->getTileSet()[ t ]->hasCollision() << " ";
         }
         else map << _currentMap->getTileSet()[ t ]->getType() << ":" << _currentMap->getTileSet()[ t ]->hasCollision() << " ";
-
     }
 
     //Close the file
@@ -370,12 +369,14 @@ void Editor::init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event
         else if (!input._mouseClick)
             _changeCollision = false;
 
-        SDL_PollEvent(&e);
-        input.checkControls(&e);
-
-        for( int i = 0; i < Screen::totalScreens; ++i )
+        while (SDL_PollEvent(&e) != 0)
         {
-            gWindows[ i ].handleEvent(e);
+            input.checkControls(&e);
+
+            for( int i = 0; i < Screen::totalScreens; ++i )
+            {
+                gWindows[ i ].handleEvent(e);
+            }
         }
 
         setCamera(input);
