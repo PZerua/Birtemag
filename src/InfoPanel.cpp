@@ -20,7 +20,6 @@ void InfoPanel::loadTexture(Window &gWindow, string path)
     mBox.x = 0;
     mBox.y = SCREEN_HEIGHT - mBox.h;
 }
-
 void InfoPanel::setText(Window &gWindow, string text)
 {
     SDL_Color textColor;

@@ -1,12 +1,11 @@
 #ifndef EDITOR_H
 #define EDITOR_H
-#include "../include/Common_libs.hxx"
-#include "../include/Map.h"
-#include "../include/Input.hxx"
-#include "../include/window.h"
-#include "../include/LTexture.h"
-#include "../include/Button.h"
-#include "../include/InfoPanel.h"
+#include "Common_libs.hxx"
+#include "Map.h"
+#include "Input.hxx"
+#include "window.h"
+#include "LTexture.h"
+#include "Button.h"
 
 
 class Button;
@@ -14,24 +13,24 @@ class Button;
 class Editor
 {
     public:
-        Editor( SDL_Rect &camera , Window gWindow[Screen::totalScreens]);
+        Editor(SDL_Rect &camera);
         virtual ~Editor();
 
-        void putTile(Window &gWindow, Input &input, SDL_Event &e);
+        void putTile(Input &input, SDL_Event &e);
         void saveTiles();
         void setMap(vector<Map *> &worldMaps, Map *gameMap);
-        void init(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
+        void init( Window &gWindow, Input &input, SDL_Event &e);
         void setCamera(Input &input);
-        void addTilemap(Window gWindows[Screen::totalScreens], string tilePath);
-        void handleTilemap(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
-        void handleButtons(Window gWindows[Screen::totalScreens], Input &input, SDL_Event &e);
-        void addButton(Window &gWindow, string name, int behaviour);
-        void showCollision(Window &gWindow);
+        void addTilemap( string tilePath);
+        void handleTilemap(Input &input, SDL_Event &e);
+        void handleButtons(Input &input, SDL_Event &e);
+        void addButton(string name, int behaviour);
+        void showCollision();
         void changeCollision();
-        void putCollision(Window &gWindow);
+        void putCollision();
         void setButtonPos();
-        void newMap(Window &gWindow);
-        void renderMainSelector(Window &gWindow, Input &input, SDL_Event &e);
+        void newMap();
+        void renderMainSelector(Input &input, SDL_Event &e);
 
     protected:
     private:
@@ -40,13 +39,16 @@ class Editor
         SDL_Rect _camera;
         int _camVel;
         int _tileType;
+        int _cameraOffset;
+        int _buttonsOffset;
         vector<Tilemap *> _tilemapsE;
         vector<Button *> _buttons;
         vector<Map *> _worldMaps;
         LTexture _collision;
         LTexture _selector;
         LTexture _mainSelector;
-        InfoPanel _infoPanel;
+        LTexture _tilemapBackground;
+        LTexture _editorBackground;
         bool _showCollision;
         bool _changing;
         bool _changeCollision;

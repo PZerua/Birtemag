@@ -40,11 +40,11 @@ class Window
 		bool isShown();
 		bool isClosed();
 		SDL_Renderer *getRender();
+		static SDL_Renderer* mRenderer;
 
 	private:
 		//Window data
 		SDL_Window* mWindow;
-		SDL_Renderer* mRenderer;
 		int mWindowID;
 
 		//Window dimensions

@@ -13,13 +13,13 @@ class Editor;
 class Button
 {
     public:
-        Button(Window &gWindow, int behaviour, string name);
+        Button(int behaviour, string name);
         virtual ~Button();
 
-        void render(Window &gWindow);
+        void render();
         void setState(int state);
         SDL_Rect getBox();
-        void activate(Editor &editor, Window gWindows[Screen::totalScreens]);
+        void activate(Editor &editor);
         void free();
         void setPos(int x, int y);
 

@@ -57,7 +57,6 @@
 		<Unit filename="include/Common_functions.hxx" />
 		<Unit filename="include/Common_libs.hxx" />
 		<Unit filename="include/Editor.hxx" />
-		<Unit filename="include/InfoPanel.h" />
 		<Unit filename="include/Input.hxx" />
 		<Unit filename="include/LTexture.h" />
 		<Unit filename="include/Map.h" />
@@ -70,7 +69,6 @@
 		<Unit filename="src/Button.cpp" />
 		<Unit filename="src/Common_functions.cxx" />
 		<Unit filename="src/Editor.cpp" />
-		<Unit filename="src/InfoPanel.cpp" />
 		<Unit filename="src/Input.cpp" />
 		<Unit filename="src/LTexture.cpp" />
 		<Unit filename="src/Map.cpp" />

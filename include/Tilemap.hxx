@@ -14,11 +14,11 @@ class Tilemap
 
         ~Tilemap();
 
-        bool loadTexture(Window &gWindow, string imagPath);
+        bool loadTexture(string imagPath);
 
         void setClips();
 
-        void initTilemap(Window &gWindow, string imagPath);
+        void initTilemap(string imagPath);
 
         LTexture *getTexture();
 

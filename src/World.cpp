@@ -1,6 +1,6 @@
 #include "World.h"
 
-World::World(Window &gWindow)
+World::World()
 {
 
     camera.x = 0;
@@ -9,8 +9,8 @@ World::World(Window &gWindow)
     camera.h = SCREEN_HEIGHT;
 
     _player = new Player();
-    addMap("bitmaps/prueba.map");
-    _worldMaps[0]->addTilemap(gWindow, "tilesets/tile1.png");
+    addMap("bitmaps/test.map");
+    _worldMaps[0]->addTilemap("tilesets/tile1.png");
 
     if( !_worldMaps[0]->setTiles() )
 	{
@@ -18,7 +18,7 @@ World::World(Window &gWindow)
 	}
 	_currentMap = _worldMaps[0];
 
-	if ( !_player->gPlayerTexture.loadFromFile(gWindow, "sprites/player.png"))
+	if ( !_player->gPlayerTexture.loadFromFile("sprites/player.png"))
     {
         cout<<"Failed to load sprite texture!\n"<<endl;
     }
@@ -63,15 +63,15 @@ void World::handlePlayer()
     _player->handleEvent();
 
     //LOGIC
-    _player->move(_currentMap->getTileSet(), _currentMap);
+    _player->move(_currentMap->getTiles(), _currentMap);
     _player->setCamera(camera, _currentMap);
 }
 
-void World::render(Window &gWindow)
+void World::render()
 {
-    _currentMap->renderMap(gWindow, camera);
+    _currentMap->renderMap(camera);
 
-    _player->render(gWindow, camera);
+    _player->render(camera);
 }
 
 SDL_Rect &World::getCamera()

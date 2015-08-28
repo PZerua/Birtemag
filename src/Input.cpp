@@ -1,4 +1,4 @@
-#include "../include/Input.hxx"
+#include "Input.hxx"
 
 Input::Input()
 {
@@ -21,6 +21,8 @@ void Input::checkControls(SDL_Event *event)
 {
     switch (event->type)
     {
+	case SDL_QUIT:
+		_quit = true;
     case SDL_KEYDOWN:
 
         switch (event->key.keysym.sym)

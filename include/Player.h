@@ -1,11 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "../include/Common_libs.hxx"
-#include "../include/Tile.h"
-#include "../include/Map.h"
-#include "../include/LTexture.h"
-#include "../include/Common_functions.hxx"
-#include "../include/window.h"
+
+#include "Common_libs.hxx"
+#include "Tile.h"
+#include "Map.h"
+#include "LTexture.h"
+#include "Common_functions.hxx"
+#include "window.h"
 
 class Player
 {
@@ -26,7 +27,7 @@ class Player
         void setCamera( SDL_Rect& camera, Map *gameMap);
 
         //Shows the player on the screen
-        void render( Window &gWindow, SDL_Rect& camera );
+        void render(SDL_Rect& camera );
 
         LTexture gPlayerTexture;
 
@@ -46,10 +47,10 @@ class Player
         int _moved;
         int _lastClip;
 
-        bool _UP;
-        bool _DOWN;
-        bool _LEFT;
-        bool _RIGHT;
+		bool _mUP;
+        bool _mDOWN;
+        bool _mLEFT;
+        bool _mRIGHT;
 
         const Uint8* keystate;
 

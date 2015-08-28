@@ -1,4 +1,4 @@
-#include "../include/Map.h"
+#include "Map.h"
 
 Map::Map(string path)
 {
@@ -55,7 +55,7 @@ Tilemap *Map::getTilemap()
     return _tilemaps[0];
 }
 
-Tile **Map::getTileSet()
+Tile **Map::getTiles()
 {
     return _tileSet;
 }
@@ -74,7 +74,7 @@ bool Map::setTiles()
     ifstream map( _mapPath );
 
     //If the map couldn't be loaded
-    if( map == NULL )
+    if( map.fail() )
     {
         printf( "Unable to load map file!\n" );
         tilesLoaded = false;
@@ -177,19 +177,19 @@ bool Map::touchesWall( SDL_Rect box )
     return false;
 }
 
-void Map::renderMap(Window &gWindow, SDL_Rect &camera)
+void Map::renderMap(SDL_Rect &camera)
 {
     for( int i = 0; i < TOTAL_TILES; ++i )
     {
-        _tileSet[ i ]->render( gWindow, camera, _tilemaps[0]->getClips() );
+        _tileSet[ i ]->render(camera, _tilemaps[0]->getClips() );
     }
 }
 
-void Map::addTilemap(Window &gWindow, string tilePath)
+void Map::addTilemap(string tilePath)
 {
     Tilemap *tile;
     tile = new Tilemap();
-    tile->initTilemap(gWindow, tilePath);
+    tile->initTilemap(tilePath);
 
     _tilemaps.push_back(tile);
 }

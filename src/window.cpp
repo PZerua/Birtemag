@@ -1,14 +1,13 @@
-#include <stdexcept>
-#include <memory>
-#include "../include/Common_libs.hxx"
+#include "Common_libs.hxx"
 
-#include "../include/window.h"
+#include "window.h"
+
+SDL_Renderer *Window::mRenderer = NULL;
 
 Window::Window()
 {
 	//Initialize non-existant window
 	mWindow = NULL;
-	mRenderer = NULL;
 
 	mMouseFocus = false;
 	mKeyboardFocus = false;
@@ -24,7 +23,7 @@ Window::Window()
 bool Window::init(string screenTitle, int xPos, int yPos)
 {
 	//Create window
-	mWindow = SDL_CreateWindow( screenTitle.c_str(), xPos, yPos, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+	mWindow = SDL_CreateWindow( screenTitle.c_str(), xPos, yPos, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 	if( mWindow != NULL )
 	{
 		mMouseFocus = true;
@@ -43,7 +42,7 @@ bool Window::init(string screenTitle, int xPos, int yPos)
 		else
 		{
 			//Initialize renderer color
-			SDL_SetRenderDrawColor( mRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+			SDL_SetRenderDrawColor( mRenderer, 0, 0, 0, 255 );
 
 			//Grab window identifier
 			mWindowID = SDL_GetWindowID( mWindow );
@@ -159,7 +158,6 @@ void Window::Clear()
     if ( !mMinimized )
     {
         //Clear screen
-        SDL_SetRenderDrawColor( mRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
         SDL_RenderClear( mRenderer );
     }
 }

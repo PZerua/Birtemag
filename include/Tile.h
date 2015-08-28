@@ -14,7 +14,7 @@ class Tile
         ~Tile();
 
         //Shows the tile
-        void render( Window &gWindow, SDL_Rect& camera , SDL_Rect *gTileClips);
+        void render(SDL_Rect& camera , SDL_Rect *gTileClips);
 
         void setTexture(LTexture *gTexture);
 

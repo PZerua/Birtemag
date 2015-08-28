@@ -26,13 +26,13 @@ class Map
 
         bool setTiles();
 
-        Tile **getTileSet();
+        Tile **getTiles();
 
         bool touchesWall( SDL_Rect box);
 
-        void renderMap(Window &gWindow, SDL_Rect &camera);
+        void renderMap(SDL_Rect &camera);
 
-        void addTilemap(Window &gWindow, string tilePath);
+        void addTilemap(string tilePath);
 
         string getPath();
 

@@ -1,6 +1,6 @@
-#include "..\include\Player.h"
-#include "..\include\Common_libs.hxx"
-#include "..\include\Input.hxx"
+#include "Player.h"
+#include "Common_libs.hxx"
+#include "Input.hxx"
 
 Player::Player()
 {
@@ -9,14 +9,14 @@ Player::Player()
 	mBox.w = TILE_SIZE;
 	mBox.h = TILE_SIZE;
 
-	_UP = false;
-	_DOWN = false;
-	_RIGHT = false;
-	_LEFT = false;
+	_mUP = false;
+	_mDOWN = false;
+	_mRIGHT = false;
+	_mLEFT = false;
 
 	_target = TARGET::IDLE;
 	_nextTarget = TARGET::IDLE;
-	_moved = 0.0;
+	_moved = 0;
 	_lastClip = 0;
 
     keystate = SDL_GetKeyboardState(NULL);
@@ -37,40 +37,40 @@ void Player::handleEvent()
     //If a key was pressed+-
 	if(keystate[SDL_SCANCODE_UP])
     {
-        _UP = true;
-        _RIGHT = false;
-        _LEFT = false;
-        _DOWN = false;
+        _mUP = true;
+        _mRIGHT = false;
+        _mLEFT = false;
+        _mDOWN = false;
     }
     else if (!keystate[SDL_SCANCODE_UP])
-        _UP = false;
+        _mUP = false;
     if(keystate[SDL_SCANCODE_DOWN])
     {
-        _DOWN = true;
-        _UP = false;
-        _LEFT = false;
-        _RIGHT = false;
+        _mDOWN = true;
+        _mUP = false;
+        _mLEFT = false;
+        _mRIGHT = false;
     }
     else if (!keystate[SDL_SCANCODE_DOWN])
-        _DOWN = false;
+        _mDOWN = false;
     if(keystate[SDL_SCANCODE_LEFT])
     {
-        _LEFT = true;
-        _RIGHT = false;
-        _UP = false;
-        _DOWN = false;
+        _mLEFT = true;
+        _mRIGHT = false;
+        _mUP = false;
+        _mDOWN = false;
     }
     else if (!keystate[SDL_SCANCODE_LEFT])
-        _LEFT = false;
+        _mLEFT = false;
     if(keystate[SDL_SCANCODE_RIGHT])
     {
-        _RIGHT = true;
-        _LEFT = false;
-        _UP = false;
-        _DOWN = false;
+        _mRIGHT = true;
+        _mLEFT = false;
+        _mUP = false;
+        _mDOWN = false;
     }
     else if (!keystate[SDL_SCANCODE_RIGHT])
-        _RIGHT = false;
+        _mRIGHT = false;
 
 }
 
@@ -86,10 +86,10 @@ void Player::move( Tile *tiles[], Map *gameMap)
         }
         else
         {
-            if (_UP) _target = TARGET::UP;
-            else if (_DOWN) _target = TARGET::DOWN;
-            else if (_RIGHT) _target = TARGET::RIGHT;
-            else if (_LEFT) _target = TARGET::LEFT;
+            if (_mUP) _target = TARGET::UP;
+            else if (_mDOWN) _target = TARGET::DOWN;
+            else if (_mRIGHT) _target = TARGET::RIGHT;
+            else if (_mLEFT) _target = TARGET::LEFT;
         }
     }
 
@@ -112,10 +112,10 @@ void Player::move( Tile *tiles[], Map *gameMap)
         if (_moved > TILE_SIZE/2)
         {
             // TODO: Fix movement (when pressing two keys at once)
-            if (_UP) _nextTarget = TARGET::UP;
-            else if (_DOWN) _nextTarget = TARGET::DOWN;
-            else if (_RIGHT) _nextTarget = TARGET::RIGHT;
-            else if (_LEFT) _nextTarget = TARGET::LEFT;
+            if (_mUP) _nextTarget = TARGET::UP;
+            else if (_mDOWN) _nextTarget = TARGET::DOWN;
+            else if (_mRIGHT) _nextTarget = TARGET::RIGHT;
+            else if (_mLEFT) _nextTarget = TARGET::LEFT;
         }
 
         //Move the dot left or right
@@ -128,7 +128,9 @@ void Player::move( Tile *tiles[], Map *gameMap)
             if( ( mBox.x < 0 ) || ( mBox.x + TILE_SIZE > gameMap->LEVEL_WIDTH ) || gameMap->touchesWall( mBox) )
             {
                 //move back
-                if(_target == TARGET::RIGHT) mBox.x -= PLAYER_VEL;
+				if (_target == TARGET::RIGHT) {
+					mBox.x -= PLAYER_VEL;
+				}
                 else if(_target == TARGET::LEFT) mBox.x += PLAYER_VEL;
             }
 
@@ -184,10 +186,10 @@ void Player::setCamera( SDL_Rect& camera, Map *gameMap)
     }
 }
 
-void Player::render( Window &gWindow, SDL_Rect& camera )
+void Player::render(SDL_Rect& camera )
 {
     //Show the dot
-    gPlayerTexture.render( gWindow, mBox.x - camera.x, mBox.y - camera.y, &_clip );
+    gPlayerTexture.render(mBox.x - camera.x, mBox.y - camera.y, &_clip );
 }
 
 void Player::nextXClip()

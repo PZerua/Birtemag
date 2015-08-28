@@ -1,7 +1,7 @@
 #include "SDL.h"
 #include <string>
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 #include <stdexcept>
 #include <sstream>
 #include <fstream>
@@ -10,7 +10,7 @@
 #include "SDL_ttf.h"
 
 #define TILE_SIZE 64
-#define SCREEN_WIDTH 768
-#define SCREEN_HEIGHT 608
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
 
 using namespace std;

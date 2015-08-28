@@ -1,5 +1,5 @@
-#include "../include/LTexture.h"
-#include "../include/window.h"
+#include "LTexture.h"
+#include "window.h"
 LTexture::LTexture()
 {
 	//Initialize
@@ -14,7 +14,7 @@ LTexture::~LTexture()
 	free();
 }
 
-bool LTexture::loadFromFile( Window &gWindow, string path )
+bool LTexture::loadFromFile(string path )
 {
 	//Get rid of preexisting texture
 	free();
@@ -34,7 +34,7 @@ bool LTexture::loadFromFile( Window &gWindow, string path )
 		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
 		//Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( gWindow.getRender(), loadedSurface );
+        newTexture = SDL_CreateTextureFromSurface( Window::mRenderer, loadedSurface );
 		if( newTexture == NULL )
 		{
 			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
@@ -55,7 +55,7 @@ bool LTexture::loadFromFile( Window &gWindow, string path )
 	return mTexture != NULL;
 }
 
-bool LTexture::loadFromRenderedText( Window &gWindow, std::string textureText, SDL_Color textColor, int fontSize )
+bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor, int fontSize )
 {
 	//Get rid of preexisting texture
 	free();
@@ -67,7 +67,7 @@ bool LTexture::loadFromRenderedText( Window &gWindow, std::string textureText, S
 	if( textSurface != NULL )
 	{
 		//Create texture from surface pixels
-        mTexture = SDL_CreateTextureFromSurface( gWindow.getRender(), textSurface );
+        mTexture = SDL_CreateTextureFromSurface( Window::mRenderer, textSurface );
 		if( mTexture == NULL )
 		{
 			printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
@@ -122,7 +122,7 @@ void LTexture::setAlpha( Uint8 alpha )
 	SDL_SetTextureAlphaMod( mTexture, alpha );
 }
 
-void LTexture::render(Window &gWindow, int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
+void LTexture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
 	//Set rendering space and render to screen
 	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
@@ -135,7 +135,7 @@ void LTexture::render(Window &gWindow, int x, int y, SDL_Rect* clip, double angl
 	}
 
 	//Render to screen
-	SDL_RenderCopyEx(gWindow.getRender(), mTexture, clip, &renderQuad, angle, center, flip );
+	SDL_RenderCopyEx(Window::mRenderer, mTexture, clip, &renderQuad, angle, center, flip );
 }
 
 int LTexture::getWidth()

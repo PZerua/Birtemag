@@ -9,7 +9,7 @@
 class World
 {
     public:
-        World(Window &gWindow);
+        World();
         virtual ~World();
 
         void addMap(string mapPath);
@@ -17,7 +17,7 @@ class World
         vector <Map *> &getMaps();
         Player *getPlayer();
         void handlePlayer();
-        void render(Window &gWindow);
+        void render();
         SDL_Rect &getCamera();
 
     protected:
