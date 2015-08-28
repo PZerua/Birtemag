@@ -8,15 +8,17 @@ Editor::Editor(SDL_Rect &camera)
     _tileType = 0;
     _cameraOffset = 300;
     _buttonsOffset = 10;
-    _selector.loadFromFile("utils/Selector.png");
-    _mainSelector.loadFromFile("utils/Selector.png");
+	_actualX = 20;
+	_actualY = 128;
+
+	_actualTile.loadFromFile("utils/Selector.png");
+    _selector.loadFromFile("utils/whiteSelector.png");
     _tilemapBackground.loadFromFile("utils/Tilemap_background.png");
     _editorBackground.loadFromFile("utils/Editor_background.png");
 
     addButton("Colisión", Behaviour::collision);
     addButton("Nuevo Mapa", Behaviour::newMap);
-    _collision.loadFromFile("utils/Collision.png");
-    _collision.setAlpha(150);
+	_selector.setAlpha(100);
     _changing = false;
     _changeCollision = false;
     _showCollision = false;
@@ -43,8 +45,8 @@ Editor::~Editor()
 
 void Editor::setButtonPos()
 {
-    int xMult = 20;
-    int yMult = 548;
+    int xMult = 40;
+    int yMult = 568;
 
     for (unsigned int i = 0; i < _buttons.size(); i++)
     {
@@ -83,7 +85,6 @@ void Editor::putTile(Input &input, SDL_Event &e)
                 //If the mouse is inside the tile
                 if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ) )
                 {
-                    _mainSelector.render(box.x, box.y);
                     //Replace it with new one
                     if (input._mouseClick)
                         if (e.button.button == SDL_BUTTON_LEFT)
@@ -210,6 +211,7 @@ void Editor::handleTilemap(Input &input, SDL_Event &e)
     int posY = 128;
 
     _tilemapsE[0]->getTexture()->render(posX, posY);
+	_actualTile.render(_actualX, _actualY);
 
     for(int i = 0; i < _tilemapsE[0]->getTotalTiles(); i++)
     {
@@ -224,6 +226,10 @@ void Editor::handleTilemap(Input &input, SDL_Event &e)
             if (input._mouseClick)
                 if (e.button.button == SDL_BUTTON_LEFT)
                 {
+					_actualX = temp.x;
+					_actualY = temp.y;
+					_mainSelector.setTile(*_tilemapsE[0]->getTexture());
+					_mainSelector.setClip(_tilemapsE[0]->getClips()[i]);
                     _tileType = i;
                 }
         }
@@ -267,8 +273,8 @@ void Editor::showCollision()
         {
             if(_currentMap->getTiles()[i]->hasCollision())
             {
-                _collision.render(_currentMap->getTiles()[i]->getBox().x - _camera.x , _currentMap->getTiles()[i]->getBox().y - _camera.y);
-            }
+				_collision.render(_currentMap->getTiles()[i]->getBox().x - _camera.x, _currentMap->getTiles()[i]->getBox().y - _camera.y);
+			}
         }
     }
 }
@@ -289,33 +295,37 @@ void Editor::putCollision()
     //Get mouse offsets
     SDL_GetMouseState( &x, &y );
 
-    //Adjust to _camera
-    x += _camera.x;
-    y += _camera.y;
+	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 108) || (y > 108 + _tilemapBackground.getHeight()))) && (y < 528))
+	{
 
-    //Go through tiles
-    for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
-    {
-        //Get tile's collision box
-        SDL_Rect box = _currentMap->getTiles()[ t ]->getBox();
+		//Adjust to _camera
+		x += _camera.x;
+		y += _camera.y;
 
-        //If the mouse is inside the tile
-        if( ( x > box.x ) && ( x < box.x + box.w ) && ( y > box.y ) && ( y < box.y + box.h ))
-        {
-            if (!_changeCollision)
-            {
-                if (_currentMap->getTiles()[ t ]->hasCollision())
-                    _collisionState = false;
-                else _collisionState = true;
+		//Go through tiles
+		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
+		{
+			//Get tile's collision box
+			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
-                _changeCollision = true;
-            }
-            if (_collisionState)
-                _currentMap->getTiles()[ t ]->setCollision(true);
-            else
-                _currentMap->getTiles()[ t ]->setCollision(false);
-        }
-    }
+			//If the mouse is inside the tile
+			if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+			{
+				if (!_changeCollision)
+				{
+					if (_currentMap->getTiles()[t]->hasCollision())
+						_collisionState = false;
+					else _collisionState = true;
+
+					_changeCollision = true;
+				}
+				if (_collisionState)
+					_currentMap->getTiles()[t]->setCollision(true);
+				else
+					_currentMap->getTiles()[t]->setCollision(false);
+			}
+		}
+	}
 }
 
 void Editor::newMap()
@@ -338,6 +348,8 @@ void Editor::newMap()
 
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 {
+	_mainSelector.setTile(*_tilemapsE[0]->getTexture());
+
     while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
     {
         if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT)

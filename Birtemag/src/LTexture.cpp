@@ -60,10 +60,10 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	//Get rid of preexisting texture
 	free();
 
-    TTF_Font *gFont = TTF_OpenFont("fonts/MOZART_0.ttf", fontSize);
-    //TTF_SetFontStyle(gFont, TTF_STYLE_BOLD);
+    TTF_Font *gFont = TTF_OpenFont("fonts/cour.ttf", fontSize);
+    TTF_SetFontStyle(gFont, TTF_STYLE_BOLD);
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid( gFont, textureText.c_str(), textColor);
+	SDL_Surface* textSurface = TTF_RenderText_Blended( gFont, textureText.c_str(), textColor);
 	if( textSurface != NULL )
 	{
 		//Create texture from surface pixels

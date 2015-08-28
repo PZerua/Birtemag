@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\Collision_tile.cpp" />
     <ClCompile Include="src\Common_functions.cxx" />
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\Input.cpp" />
@@ -143,6 +144,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Selector.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Tilemap.cpp" />
     <ClCompile Include="src\timer.cpp" />
@@ -151,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Button.h" />
+    <ClInclude Include="include\Collision_tile.h" />
     <ClInclude Include="include\Common_functions.hxx" />
     <ClInclude Include="include\Common_libs.hxx" />
     <ClInclude Include="include\Editor.hxx" />
@@ -158,6 +161,7 @@
     <ClInclude Include="include\LTexture.h" />
     <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Selector.h" />
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\Tilemap.hxx" />
     <ClInclude Include="include\timer.h" />

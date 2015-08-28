@@ -6,7 +6,8 @@
 #include "window.h"
 #include "LTexture.h"
 #include "Button.h"
-
+#include "Collision_tile.h"
+#include "Selector.h"
 
 class Button;
 
@@ -35,6 +36,7 @@ class Editor
     protected:
     private:
 
+		Selector _mainSelector;
         Map *_currentMap;
         SDL_Rect _camera;
         int _camVel;
@@ -44,15 +46,17 @@ class Editor
         vector<Tilemap *> _tilemapsE;
         vector<Button *> _buttons;
         vector<Map *> _worldMaps;
-        LTexture _collision;
         LTexture _selector;
-        LTexture _mainSelector;
+		LTexture _actualTile;
+		int _actualX;
+		int _actualY;
         LTexture _tilemapBackground;
         LTexture _editorBackground;
         bool _showCollision;
         bool _changing;
         bool _changeCollision;
         bool _collisionState;
+		Collision_tile _collision;
 
 
 };

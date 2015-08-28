@@ -11,7 +11,7 @@ Button::Button(int behaviour, string name)
     _actualState = 0;
     _behaviour = behaviour;
 
-    _text.loadFromRenderedText(name, color, 25);
+    _text.loadFromRenderedText(name, color, 16);
     _hoverState.loadFromFile("utils/hoverButton.png");
     _normalState.loadFromFile("utils/normalButton.png");
 

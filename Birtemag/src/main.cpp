@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     Window gWindow;
 
     //Start our window
-    gWindow.init("Birtemag", 300, 300);
+    gWindow.init("Birtemag", 300, 250);
 
 
     //Init font library
