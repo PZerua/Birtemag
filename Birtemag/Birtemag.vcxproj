@@ -77,8 +77,8 @@
     <LibraryPath>C:\Users\pachu\Desktop\Birtemag\libs\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>C:\Users\pachu\Desktop\Birtemag\libs\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\pachu\Desktop\Birtemag\libs\include\SDL2;C:\Users\pachu\Desktop\Birtemag\Birtemag\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\libs\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\libs\include\SDL2;..\Birtemag\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
