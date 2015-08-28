@@ -29,12 +29,11 @@ Player::Player()
 
 Player::~Player()
 {
-    //dtor
+
 }
 
 void Player::handleEvent()
 {
-    //If a key was pressed+-
 	if(keystate[SDL_SCANCODE_UP])
     {
         _mUP = true;
@@ -124,7 +123,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
             if(_target == TARGET::RIGHT) mBox.x += PLAYER_VEL;
             else if(_target == TARGET::LEFT) mBox.x -= PLAYER_VEL;
 
-            //If the dot went too far to the left or right or touched a wall
+            //If the player went too far to the left or right or touched a wall
             if( ( mBox.x < 0 ) || ( mBox.x + TILE_SIZE > gameMap->LEVEL_WIDTH ) || gameMap->touchesWall( mBox) )
             {
                 //move back
@@ -134,7 +133,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
                 else if(_target == TARGET::LEFT) mBox.x += PLAYER_VEL;
             }
 
-            //Move the dot up or down
+            //Move the player up or down
             if(_target == TARGET::DOWN)
             {
                 mBox.y += PLAYER_VEL;
@@ -143,7 +142,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
             }
             else if(_target == TARGET::UP) mBox.y -= PLAYER_VEL;
 
-            //If the dot went too far up or down or touched a wall
+            //If the player went too far up or down or touched a wall
             if( ( mBox.y < 0 ) || ( mBox.y + TILE_SIZE > gameMap->LEVEL_HEIGHT ) || gameMap->touchesWall( mBox) )
             {
                 //move back
@@ -163,7 +162,7 @@ void Player::move( Tile *tiles[], Map *gameMap)
 
 void Player::setCamera( SDL_Rect& camera, Map *gameMap)
 {
-    //Center the camera over the dot
+    //Center the camera over the player
     camera.x = ( mBox.x + TILE_SIZE / 2 ) - SCREEN_WIDTH / 2;
     camera.y = ( mBox.y + TILE_SIZE / 2 ) - SCREEN_HEIGHT / 2;
 
@@ -188,7 +187,7 @@ void Player::setCamera( SDL_Rect& camera, Map *gameMap)
 
 void Player::render(SDL_Rect& camera )
 {
-    //Show the dot
+    //Show the player
     gPlayerTexture.render(mBox.x - camera.x, mBox.y - camera.y, &_clip );
 }
 

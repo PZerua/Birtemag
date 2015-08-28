@@ -13,7 +13,6 @@ Button::Button(int behaviour, string name)
 
     _text.loadFromRenderedText(name, color, 25);
     _hoverState.loadFromFile("utils/hoverButton.png");
-    _clickState.loadFromFile("utils/clickButton.png");
     _normalState.loadFromFile("utils/normalButton.png");
 
     SDL_QueryTexture(_normalState.getTexture(), NULL, NULL, &mBox.w, &mBox.h);
@@ -31,8 +30,6 @@ void Button::render()
         _normalState.render(mBox.x , mBox.y);
     else if (_actualState == ButtonState::hover)
         _hoverState.render(mBox.x, mBox.y);
-    else if (_actualState == ButtonState::click)
-        _clickState.render(mBox.x, mBox.y);
     _text.render(mBox.x + mBox.w / 2 - mTextBox.w / 2, mBox.y + mBox.h / 2 - mTextBox.h / 2);
 }
 

@@ -10,7 +10,8 @@ Tilemap::Tilemap()
 
 Tilemap::~Tilemap()
 {
-
+    delete[] _tileClips;
+    delete(_tileTexture);
 }
 
 bool Tilemap::loadTexture(string imagPath)

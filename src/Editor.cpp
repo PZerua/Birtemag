@@ -40,9 +40,6 @@ Editor::~Editor()
         delete(*it);
         it = _tilemapsE.erase(it);
     }
-
-    _collision.free();
-    _selector.free();
 }
 
 void Editor::setButtonPos()
@@ -107,16 +104,19 @@ void Editor::renderMainSelector(Input &input, SDL_Event &e)
     //Get mouse offsets
     SDL_GetMouseState( &x, &y );
 
-    //Go through tiles
-    for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
+    if (((( x < 0 ) || ( x > _tilemapBackground.getWidth() ) || ( y < 108 ) || ( y > 108 + _tilemapBackground.getHeight()))) && (y < 528))
     {
-        //Get tile's collision box
-        SDL_Rect box = _currentMap->getTiles()[ t ]->getBox();
-
-        //If the mouse is inside the tile
-        if( ( x > box.x - _camera.x ) && ( x < box.x + box.w - _camera.x ) && ( y > box.y - _camera.y) && ( y < box.y + box.h - _camera.y) )
+        //Go through tiles
+        for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
         {
-            _mainSelector.render(box.x - _camera.x, box.y - _camera.y);
+            //Get tile's collision box
+            SDL_Rect box = _currentMap->getTiles()[ t ]->getBox();
+
+            //If the mouse is inside the tile
+            if( ( x > box.x - _camera.x ) && ( x < box.x + box.w - _camera.x ) && ( y > box.y - _camera.y) && ( y < box.y + box.h - _camera.y) )
+            {
+                _mainSelector.render(box.x - _camera.x, box.y - _camera.y);
+            }
         }
     }
 }
@@ -249,7 +249,7 @@ void Editor::handleButtons(Input &input, SDL_Event &e)
             if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT && !_changing)
             {
                 _changing = true;
-                (*it)->setState(ButtonState::click);
+                (*it)->setState(ButtonState::normal);
                 (*it)->activate(*this);
             }
             else (*it)->setState(ButtonState::hover);
