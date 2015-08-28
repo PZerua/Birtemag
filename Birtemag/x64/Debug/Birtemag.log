@@ -1,0 +1,38 @@
+﻿Build started 22/08/2015 17:17:54.
+     1>Project "C:\Users\pachu\Desktop\Birtemag\Birtemag\Birtemag.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\x86_amd64\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc140.pdb" /Gd /TP /errorReport:prompt src\Button.cpp src\Common_functions.cxx src\Editor.cpp src\InfoPanel.cpp src\Input.cpp src\LTexture.cpp src\main.cpp src\Map.cpp src\Player.cpp src\Tile.cpp src\Tilemap.cpp src\timer.cpp src\window.cpp src\World.cpp
+         World.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\src\world.cpp(1): fatal error C1083: Cannot open include file: 'World.h': No such file or directory
+         window.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         timer.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\src\timer.cpp(3): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Tilemap.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Tile.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Player.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Map.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         main.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         LTexture.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Input.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         InfoPanel.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\src\infopanel.cpp(1): fatal error C1083: Cannot open include file: 'InfoPanel.h': No such file or directory
+         Editor.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\src\editor.cpp(1): fatal error C1083: Cannot open include file: 'Editor.hxx': No such file or directory
+         Common_functions.cxx
+     1>c:\users\pachu\desktop\birtemag\birtemag\include\common_libs.hxx(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+         Button.cpp
+     1>c:\users\pachu\desktop\birtemag\birtemag\src\button.cpp(1): fatal error C1083: Cannot open include file: 'Button.h': No such file or directory
+         Generating Code...
+     1>Done Building Project "C:\Users\pachu\Desktop\Birtemag\Birtemag\Birtemag.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:01.70
