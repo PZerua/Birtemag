@@ -6,6 +6,7 @@ Editor::Editor(SDL_Rect &camera)
 	loadTilemaps();
 	_tilemapIndex = 1;
 	_previousIndex = _tilemapIndex;
+	_wasSelected = false;
 	_camera = camera;
 	_camVel = 8;
 	_tileType = 0;
@@ -277,6 +278,7 @@ void Editor::handleTilemap(Input &input, SDL_Event &e)
 				{
 					_previousIndex = _tilemapIndex;
 					_tileSelected = true;
+					_wasSelected = true;
 					_editMap = true;
 					_actualX = temp.x;
 					_actualY = temp.y;
@@ -412,7 +414,7 @@ void Editor::nextTilemap()
 	if (_tilemapIndex + 1 < _tilemaps.size())
 	{
 		_tilemapIndex++;
-		if (_tilemapIndex == _previousIndex)
+		if (_tilemapIndex == _previousIndex && _wasSelected == true)
 			_tileSelected = true;
 		else _tileSelected = false;
 	}
@@ -423,7 +425,7 @@ void Editor::previousTilemap()
 	if (_tilemapIndex > 0)
 	{
 		_tilemapIndex--;
-		if (_tilemapIndex == _previousIndex)
+		if (_tilemapIndex == _previousIndex && _wasSelected == true)
 			_tileSelected = true;
 		else _tileSelected = false;
 	}

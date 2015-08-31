@@ -64,6 +64,7 @@ private:
 	bool _collisionState;
 	bool _tileSelected;
 	bool _editMap;
+	bool _wasSelected;
 	Collision_tile _collision;
 
 
