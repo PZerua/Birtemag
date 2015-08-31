@@ -8,25 +8,25 @@
 
 class World
 {
-    public:
-        World();
-        virtual ~World();
+	public:
+		World();
+		virtual ~World();
 
-        void addMap(string mapPath);
-        Map *getCurrentMap();
-        vector <Map *> &getMaps();
-        Player *getPlayer();
-        void handlePlayer();
-        void render();
-        SDL_Rect &getCamera();
+		void addMap(string mapPath);
+		Map *getCurrentMap();
+		vector <Map *> &getMaps();
+		Player *getPlayer();
+		void handlePlayer();
+		void render();
+		SDL_Rect &getCamera();
 		void loadMaps();
 
-    protected:
-    private:
-        vector <Map *> _worldMaps;
-        Map *_currentMap;
-        Player *_player;
-        SDL_Rect camera;
+	protected:
+	private:
+		vector <Map *> _worldMaps;
+		Map *_currentMap;
+		Player *_player;
+		SDL_Rect camera;
 
 };
 

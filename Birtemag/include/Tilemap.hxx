@@ -8,36 +8,36 @@
 
 class Tilemap
 {
-    public:
+	public:
 
-        Tilemap();
+		Tilemap();
 
-        ~Tilemap();
+		~Tilemap();
 
-        bool loadTexture(string imagPath);
+		bool loadTexture(string imagPath);
 
-        void setClips();
+		void setClips();
 
-        void initTilemap(string imagPath, int id);
+		void initTilemap(string imagPath, int id);
 
-        LTexture *getTexture();
+		LTexture *getTexture();
 
-        SDL_Rect *getClips();
+		SDL_Rect *getClips();
 
-        int getTotalTiles();
+		int getTotalTiles();
 		
 		string getName();
 
 		int getID();
 
-    private:
+	private:
 
-        LTexture *_tileTexture;
+		LTexture *_tileTexture;
 
-        int _totalTiles;
+		int _totalTiles;
 		int _ID;
 
-        SDL_Rect *_tileClips;
+		SDL_Rect *_tileClips;
 
 		string _name;
 

@@ -2,20 +2,20 @@
 
 Tile::Tile( int x, int y, int tileType, bool collision, int id )
 {
-    //Get the offsets
-    mBox.x = x;
-    mBox.y = y;
+	//Get the offsets
+	mBox.x = x;
+	mBox.y = y;
 
-    //Set the collision box
-    mBox.w = TILE_SIZE;
-    mBox.h = TILE_SIZE;
+	//Set the collision box
+	mBox.w = TILE_SIZE;
+	mBox.h = TILE_SIZE;
 
-    //Get the tile type
-    _mType = tileType;
+	//Get the tile type
+	_mType = tileType;
 
 	_tilemapID = id;
 
-    _hasCollision = collision;
+	_hasCollision = collision;
 
 }
 
@@ -26,48 +26,48 @@ Tile::~Tile()
 
 void Tile::render(SDL_Rect& camera , SDL_Rect *gTileClips)
 {
-    //If the tile is on screen
-    if( checkCollision( camera, mBox ) )
-    {
-        //Show the tile
-        gTileTexture->render(mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ _mType ] );
-    }
+	//If the tile is on screen
+	if( checkCollision( camera, mBox ) )
+	{
+		//Show the tile
+		gTileTexture->render(mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ _mType ] );
+	}
 }
 
 void Tile::free()
 {
-    gTileTexture->free();
+	gTileTexture->free();
 }
 
 void Tile::setType(int type, int id)
 {
-    _mType = type;
+	_mType = type;
 	_tilemapID = id;
 }
 
 int Tile::getType()
 {
-    return _mType;
+	return _mType;
 }
 
 SDL_Rect Tile::getBox()
 {
-    return mBox;
+	return mBox;
 }
 
 void Tile::setTexture(LTexture *gTexture)
 {
-    gTileTexture = gTexture;
+	gTileTexture = gTexture;
 }
 
 bool Tile::hasCollision()
 {
-    return _hasCollision;
+	return _hasCollision;
 }
 
 void Tile::setCollision(bool coliss)
 {
-    _hasCollision = coliss;
+	_hasCollision = coliss;
 }
 
 int Tile::getTileMapID()

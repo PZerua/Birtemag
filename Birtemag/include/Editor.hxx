@@ -13,55 +13,55 @@ class Button;
 
 class Editor
 {
-    public:
-        Editor(SDL_Rect &camera);
-        virtual ~Editor();
+public:
+	Editor(SDL_Rect &camera);
+	virtual ~Editor();
 
-        void putTile(Input &input, SDL_Event &e);
-        void saveTiles();
-        void setMap(vector<Map *> &worldMaps, Map *gameMap);
-        void init( Window &gWindow, Input &input, SDL_Event &e);
-        void setCamera(Input &input);
-        void addTilemap( string tilePath, int id);
-        void handleTilemap(Input &input, SDL_Event &e);
-        void handleButtons(Input &input, SDL_Event &e);
-        void addButton(string name, int behaviour);
-        void showCollision();
-        void changeCollision();
-        void putCollision();
-        void setButtonPos();
-        void newMap();
-        void renderMainSelector(Input &input, SDL_Event &e);
-		void nextTilemap();
-		void previousTilemap();
-		void loadTilemaps();
+	void putTile(Input &input, SDL_Event &e);
+	void saveTiles();
+	void setMap(vector<Map *> &worldMaps, Map *gameMap);
+	void init( Window &gWindow, Input &input, SDL_Event &e);
+	void setCamera(Input &input);
+	void addTilemap( string tilePath, int id);
+	void handleTilemap(Input &input, SDL_Event &e);
+	void handleButtons(Input &input, SDL_Event &e);
+	void addButton(string name, int behaviour);
+	void showCollision();
+	void changeCollision();
+	void putCollision();
+	void setButtonPos();
+	void newMap();
+	void renderMainSelector(Input &input, SDL_Event &e);
+	void nextTilemap();
+	void previousTilemap();
+	void loadTilemaps();
 
-    protected:
-    private:
+protected:
+private:
 
-		Selector _mainSelector;
-        Map *_currentMap;
-        SDL_Rect _camera;
-        int _camVel;
-        int _tileType;
-		int _actualID;
-        int _cameraOffset;
-        int _buttonsOffset;
-        vector<Tilemap *> _tilemaps;
-        vector<Button *> _buttons;
-        vector<Map *> _worldMaps;
-        LTexture _selector;
-		LTexture _actualTile;
-		int _actualX;
-		int _actualY;
-		unsigned _tilemapIndex;
-        LTexture _tilemapBackground;
-        LTexture _editorBackground;
-        bool _showCollision;
-        bool _changing;
-        bool _changeCollision;
-        bool _collisionState;
-		Collision_tile _collision;
+	Selector _mainSelector;
+	Map *_currentMap;
+	SDL_Rect _camera;
+	int _camVel;
+	int _tileType;
+	int _actualID;
+	int _cameraOffset;
+	int _buttonsOffset;
+	vector<Tilemap *> _tilemaps;
+	vector<Button *> _buttons;
+	vector<Map *> _worldMaps;
+	LTexture _selector;
+	LTexture _actualTile;
+	int _actualX;
+	int _actualY;
+	unsigned _tilemapIndex;
+	LTexture _tilemapBackground;
+	LTexture _editorBackground;
+	bool _showCollision;
+	bool _changing;
+	bool _changeCollision;
+	bool _collisionState;
+	Collision_tile _collision;
 
 
 };

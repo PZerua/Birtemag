@@ -9,45 +9,45 @@ class Tile;
 
 class Map
 {
-    public:
+public:
 
-        Map(string path);
-        Map(int width, int height, string name);
+	Map(string path);
+	Map(int width, int height, string name);
 
-        virtual ~Map();
+	virtual ~Map();
 
-        int LEVEL_WIDTH;
+	int LEVEL_WIDTH;
 
-        int LEVEL_HEIGHT;
+	int LEVEL_HEIGHT;
 
-        int TOTAL_TILES;
+	int TOTAL_TILES;
 
-        bool loadMap();
+	bool loadMap();
 
-        Tile **getTiles();
+	Tile **getTiles();
 
-        bool touchesWall( SDL_Rect box);
+	bool touchesWall( SDL_Rect box);
 
-        void renderMap(SDL_Rect &camera);
+	void renderMap(SDL_Rect &camera);
 
-        void addTilemap(int tilemapID);
+	void addTilemap(int tilemapID);
 
-        string getPath();
+	string getPath();
 
-        void createMap();
+	void createMap();
 
-		vector<Tilemap *> getTilemaps();
+	vector<Tilemap *> getTilemaps();
 
-    protected:
+protected:
 
-    private:
-        string _name;
+private:
+	string _name;
 
-        string _mapPath;
+	string _mapPath;
 
-        vector<Tilemap *> _tilemaps;
+	vector<Tilemap *> _tilemaps;
 
-        Tile** _tileSet;
+	Tile** _tileSet;
 
 };
 #endif // MAP_H
