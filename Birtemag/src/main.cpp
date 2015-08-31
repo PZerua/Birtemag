@@ -32,6 +32,9 @@ int main(int argc, char** argv)
 	SDL_Event e;
 	//Our input instance
 	Input input;
+
+	cout << "[INFO] Press f2 to open editor, f3 to close" << endl;
+
 	//For tracking if we want to quit
 	while (!input._quit)
 	{

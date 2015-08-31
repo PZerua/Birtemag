@@ -24,6 +24,8 @@ bool Window::init(string screenTitle, int xPos, int yPos)
 {
 	//Create window
 	mWindow = SDL_CreateWindow( screenTitle.c_str(), xPos, yPos, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+
+	cout << "[GAME] Window created" << endl;
 	if( mWindow != NULL )
 	{
 		mMouseFocus = true;
@@ -33,6 +35,7 @@ bool Window::init(string screenTitle, int xPos, int yPos)
 
 		//Create renderer for window
 		mRenderer = SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+		cout << "[GAME] Renderer created: Accelerated, VSYNC" << endl;
 		if( mRenderer == NULL )
 		{
 			printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );

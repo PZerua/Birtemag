@@ -156,6 +156,8 @@ bool Map::loadMap()
 
 	}
 
+	cout << "[MAP] Map loaded" << endl;
+
 	//Close the file
 	map.close();
 

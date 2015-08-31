@@ -9,6 +9,8 @@ World::World()
 	camera.h = SCREEN_HEIGHT;
 
 	_player = new Player();
+	cout << "[WORLD] Player created" << endl;
+
 	loadMaps();
 
 	if( !_worldMaps[0]->loadMap() )
@@ -88,5 +90,5 @@ void World::loadMaps()
 	{
 		addMap("bitmaps/" + name);
 	}
-
+	cout << "[WORLD] Maps loaded" << endl;
 }

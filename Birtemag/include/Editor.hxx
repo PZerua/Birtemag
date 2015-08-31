@@ -54,6 +54,7 @@ private:
 	LTexture _actualTile;
 	int _actualX;
 	int _actualY;
+	int _previousIndex;
 	unsigned _tilemapIndex;
 	LTexture _tilemapBackground;
 	LTexture _editorBackground;
@@ -61,6 +62,8 @@ private:
 	bool _changing;
 	bool _changeCollision;
 	bool _collisionState;
+	bool _tileSelected;
+	bool _editMap;
 	Collision_tile _collision;
 
 
