@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile( int x, int y, int tileType, bool collision )
+Tile::Tile( int x, int y, int tileType, bool collision, int id )
 {
     //Get the offsets
     mBox.x = x;
@@ -11,7 +11,9 @@ Tile::Tile( int x, int y, int tileType, bool collision )
     mBox.h = TILE_SIZE;
 
     //Get the tile type
-    mType = tileType;
+    _mType = tileType;
+
+	_tilemapID = id;
 
     _hasCollision = collision;
 
@@ -28,7 +30,7 @@ void Tile::render(SDL_Rect& camera , SDL_Rect *gTileClips)
     if( checkCollision( camera, mBox ) )
     {
         //Show the tile
-        gTileTexture->render(mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ mType ] );
+        gTileTexture->render(mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ _mType ] );
     }
 }
 
@@ -37,14 +39,15 @@ void Tile::free()
     gTileTexture->free();
 }
 
-void Tile::setType(int type)
+void Tile::setType(int type, int id)
 {
-    mType = type;
+    _mType = type;
+	_tilemapID = id;
 }
 
 int Tile::getType()
 {
-    return mType;
+    return _mType;
 }
 
 SDL_Rect Tile::getBox()
@@ -65,4 +68,9 @@ bool Tile::hasCollision()
 void Tile::setCollision(bool coliss)
 {
     _hasCollision = coliss;
+}
+
+int Tile::getTileMapID()
+{
+	return _tilemapID;
 }

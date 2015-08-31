@@ -3,13 +3,16 @@
 Editor::Editor(SDL_Rect &camera)
 {
 
+	loadTilemaps();
+	_tilemapIndex = 1;
     _camera = camera;
     _camVel = 8;
     _tileType = 0;
+	_actualID = _tilemapIndex;
     _cameraOffset = 300;
     _buttonsOffset = 10;
 	_actualX = 20;
-	_actualY = 128;
+	_actualY = 56;
 
 	_actualTile.loadFromFile("utils/Selector.png");
     _selector.loadFromFile("utils/whiteSelector.png");
@@ -18,12 +21,17 @@ Editor::Editor(SDL_Rect &camera)
 
     addButton("Colisión", Behaviour::collision);
     addButton("Nuevo Mapa", Behaviour::newMap);
+	addButton(">", Behaviour::nextTilemap);
+	addButton("<", Behaviour::previousTilemap);
 	_selector.setAlpha(100);
     _changing = false;
     _changeCollision = false;
     _showCollision = false;
 
     setButtonPos();
+
+	_buttons[2]->setPos(153, 460);
+	_buttons[3]->setPos(15, 460);
 
     // TODO: Read all tile paths from file or something
 
@@ -36,10 +44,10 @@ Editor::~Editor()
         delete(*it);
         it = _buttons.erase(it);
     }
-    for(vector<Tilemap *>::iterator it = _tilemapsE.begin(); it < _tilemapsE.end(); ++it)
+    for(vector<Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
     {
         delete(*it);
-        it = _tilemapsE.erase(it);
+        it = _tilemaps.erase(it);
     }
 }
 
@@ -75,6 +83,7 @@ void Editor::putTile(Input &input, SDL_Event &e)
             //Adjust to _camera
             x += _camera.x;
             y += _camera.y;
+			bool exist = false;
 
             //Go through tiles
             for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
@@ -89,7 +98,26 @@ void Editor::putTile(Input &input, SDL_Event &e)
                     if (input._mouseClick)
                         if (e.button.button == SDL_BUTTON_LEFT)
                         {
-                            _currentMap->getTiles()[ t ]->setType(_tileType);
+							if (_currentMap->getTiles()[t]->getTileMapID() != _actualID)
+							{
+								for (int i = 0; i < _currentMap->getTilemaps().size(); i++)
+								{
+									if (_currentMap->getTilemaps()[i]->getID() == _actualID)
+									{
+										exist = true;
+									}
+								}
+								if (exist)
+								{
+									_currentMap->getTiles()[t]->setTexture(_currentMap->getTilemaps()[_actualID]->getTexture());
+								}
+								else
+								{
+									_currentMap->addTilemap(_actualID);
+									_currentMap->getTiles()[t]->setTexture(_currentMap->getTilemaps()[_actualID]->getTexture());
+								}
+							}
+                            _currentMap->getTiles()[ t ]->setType(_tileType, _actualID);
                         }
                 }
             }
@@ -126,6 +154,13 @@ void Editor::saveTiles()
     //Open the map
     std::ofstream map( _currentMap->getPath() );
 
+	map << _currentMap->getTilemaps().size() << "\n";
+
+	for (unsigned i = 0; i < _currentMap->getTilemaps().size(); i++)
+	{
+		map << _currentMap->getTilemaps()[i]->getID() << "\n";
+	}
+
     map << _currentMap->LEVEL_WIDTH / TILE_SIZE << " " << _currentMap->LEVEL_HEIGHT / TILE_SIZE << "\n";
 
     //Go through the tiles
@@ -135,6 +170,9 @@ void Editor::saveTiles()
         {
             map << "\n";
         }
+
+		map << _currentMap->getTiles()[t]->getTileMapID();
+		map << ":";
 
         if (_currentMap->getTiles()[ t ]->getType() < 10)
         {
@@ -180,12 +218,12 @@ void Editor::setCamera(Input &input)
     }
 }
 
-void Editor::addTilemap(string tilePath)
+void Editor::addTilemap(string tilePath, int id)
 {
     Tilemap *tileE;
     tileE = new Tilemap();
-    tileE->initTilemap(tilePath);
-    _tilemapsE.push_back(tileE);
+    tileE->initTilemap(tilePath, id);
+    _tilemaps.push_back(tileE);
 }
 
 void Editor::addButton(string name, int behaviour)
@@ -208,15 +246,15 @@ void Editor::handleTilemap(Input &input, SDL_Event &e)
     SDL_GetMouseState( &x, &y );
 
     int posX = 20;
-    int posY = 128;
-
-    _tilemapsE[0]->getTexture()->render(posX, posY);
+    int posY = 56;
+	
+    _tilemaps[_tilemapIndex]->getTexture()->render(posX, posY);
 	_actualTile.render(_actualX, _actualY);
 
-    for(int i = 0; i < _tilemapsE[0]->getTotalTiles(); i++)
+    for(int i = 0; i < _tilemaps[_tilemapIndex]->getTotalTiles(); i++)
     {
-        temp.x = _tilemapsE[0]->getClips()[i].x + posX;
-        temp.y = _tilemapsE[0]->getClips()[i].y + posY;
+        temp.x = _tilemaps[_tilemapIndex]->getClips()[i].x + posX;
+        temp.y = _tilemaps[_tilemapIndex]->getClips()[i].y + posY;
         temp.w = TILE_SIZE;
         temp.h = TILE_SIZE;
 
@@ -228,9 +266,10 @@ void Editor::handleTilemap(Input &input, SDL_Event &e)
                 {
 					_actualX = temp.x;
 					_actualY = temp.y;
-					_mainSelector.setTile(*_tilemapsE[0]->getTexture());
-					_mainSelector.setClip(_tilemapsE[0]->getClips()[i]);
+					_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
+					_mainSelector.setClip(_tilemaps[_tilemapIndex]->getClips()[i]);
                     _tileType = i;
+					_actualID = _tilemapIndex;
                 }
         }
     }
@@ -281,9 +320,16 @@ void Editor::showCollision()
 
 void Editor::changeCollision()
 {
-    if (_showCollision == true)
-        _showCollision = false;
-    else _showCollision = true;
+	if (_showCollision == true)
+	{
+		_showCollision = false;
+		_mainSelector.showTile();
+	}
+	else
+	{
+		_showCollision = true;
+		_mainSelector.showTile(false);
+	}
 }
 
 void Editor::putCollision()
@@ -335,27 +381,64 @@ void Editor::newMap()
     cin >> width;
     cout << endl << "Set height: ";
     cin >> height;
-    cout << endl;*/
+    cout << endl;
 
     Map *newMap;
     newMap = new Map(20, 20, "test");
     newMap->addTilemap("tilesets/empty.png");
-    newMap->setTiles();
+    newMap->loadMap();
     _worldMaps.push_back(newMap);
-    _currentMap = newMap;
+    _currentMap = newMap;*/
+}
+
+void Editor::nextTilemap()
+{
+	if (_tilemapIndex + 1 < _tilemaps.size())
+	{
+		_tilemapIndex++;
+		_actualX = 20;
+		_actualY = 56;
+	}
+}
+
+void Editor::previousTilemap()
+{
+	if (_tilemapIndex > 0)
+	{
+		_tilemapIndex--;
+		_actualX = 20;
+		_actualY = 56;
+	}
+}
+
+void Editor::loadTilemaps()
+{
+	ifstream tilemaps("tilesets/tilesets.txt");
+
+	string name;
+
+	int id = 0;
+
+	while (tilemaps >> name)
+	{
+		addTilemap("tilesets/" + name, id);
+		id++;
+	}
 
 }
 
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 {
-	_mainSelector.setTile(*_tilemapsE[0]->getTexture());
+	_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
 
     while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
     {
         if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT)
         {
-            if (_showCollision)
-                putCollision();
+			if (_showCollision)
+			{
+				putCollision();
+			}
             else
             {
                 putTile(input, e);
@@ -379,7 +462,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
         _currentMap->renderMap(_camera);
         showCollision();
         renderMainSelector(input, e);
-        _tilemapBackground.render(0, 108);
+        _tilemapBackground.render(0, 36);
         _editorBackground.render(0, 528);
         handleTilemap(input, e);
         handleButtons(input, e);

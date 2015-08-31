@@ -25,7 +25,9 @@ enum ButtonState
 enum Behaviour
 {
     collision,
-    newMap
+    newMap,
+	nextTilemap,
+	previousTilemap
 };
 
 #endif // COMMON_FUNC

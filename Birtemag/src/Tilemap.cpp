@@ -16,7 +16,10 @@ Tilemap::~Tilemap()
 
 bool Tilemap::loadTexture(string imagPath)
 {
-    _tileTexture->loadFromFile(imagPath );
+
+	_name = imagPath;
+
+    _tileTexture->loadFromFile(imagPath);
 
     if( _tileTexture->getWidth() % TILE_SIZE != 0 || _tileTexture->getHeight() % TILE_SIZE != 0)
     {
@@ -56,10 +59,11 @@ void Tilemap::setClips()
     else cout<<"Error cliping, there is no texture loaded"<<endl;
 }
 
-void Tilemap::initTilemap(string imagPath)
+void Tilemap::initTilemap(string imagPath, int id)
 {
     if(loadTexture(imagPath))
     {
+		_ID = id;
         _tileClips = new SDL_Rect[_totalTiles];
         setClips();
     }
@@ -79,4 +83,14 @@ SDL_Rect *Tilemap::getClips()
 int Tilemap::getTotalTiles()
 {
     return _totalTiles;
+}
+
+string Tilemap::getName()
+{
+	return _name;
+}
+
+int Tilemap::getID()
+{
+	return _ID;
 }

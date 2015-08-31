@@ -7,6 +7,7 @@ Selector::Selector()
 	_clip.y = 0;
 	_clip.w = TILE_SIZE;
 	_clip.h = TILE_SIZE;
+	_showTile = true;
 }
 
 Selector::~Selector()
@@ -16,7 +17,8 @@ Selector::~Selector()
 
 void Selector::render(int x, int y)
 {
-	_tile.render(x, y, &_clip);
+	if(_showTile)
+		_tile.render(x, y, &_clip);
 	_selector.render(x, y);
 
 }
@@ -29,4 +31,9 @@ void Selector::setTile(LTexture &texture)
 void Selector::setClip(SDL_Rect &clip)
 {
 	_clip = clip;
+}
+
+void Selector::showTile(bool state)
+{
+	_showTile = state;
 }

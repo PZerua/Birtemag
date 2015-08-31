@@ -49,6 +49,14 @@ void Button::activate(Editor &editor)
     {
         editor.newMap();
     }
+	else if (_behaviour == Behaviour::nextTilemap)
+	{
+		editor.nextTilemap();
+	}
+	else if (_behaviour == Behaviour::previousTilemap)
+	{
+		editor.previousTilemap();
+	}
 }
 
 void Button::setState(int state)

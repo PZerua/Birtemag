@@ -19,6 +19,7 @@ class World
         void handlePlayer();
         void render();
         SDL_Rect &getCamera();
+		void loadMaps();
 
     protected:
     private:

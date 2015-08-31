@@ -22,7 +22,7 @@ class Editor
         void setMap(vector<Map *> &worldMaps, Map *gameMap);
         void init( Window &gWindow, Input &input, SDL_Event &e);
         void setCamera(Input &input);
-        void addTilemap( string tilePath);
+        void addTilemap( string tilePath, int id);
         void handleTilemap(Input &input, SDL_Event &e);
         void handleButtons(Input &input, SDL_Event &e);
         void addButton(string name, int behaviour);
@@ -32,6 +32,9 @@ class Editor
         void setButtonPos();
         void newMap();
         void renderMainSelector(Input &input, SDL_Event &e);
+		void nextTilemap();
+		void previousTilemap();
+		void loadTilemaps();
 
     protected:
     private:
@@ -41,15 +44,17 @@ class Editor
         SDL_Rect _camera;
         int _camVel;
         int _tileType;
+		int _actualID;
         int _cameraOffset;
         int _buttonsOffset;
-        vector<Tilemap *> _tilemapsE;
+        vector<Tilemap *> _tilemaps;
         vector<Button *> _buttons;
         vector<Map *> _worldMaps;
         LTexture _selector;
 		LTexture _actualTile;
 		int _actualX;
 		int _actualY;
+		unsigned _tilemapIndex;
         LTexture _tilemapBackground;
         LTexture _editorBackground;
         bool _showCollision;

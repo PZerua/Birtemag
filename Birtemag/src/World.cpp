@@ -9,10 +9,9 @@ World::World()
     camera.h = SCREEN_HEIGHT;
 
     _player = new Player();
-    addMap("bitmaps/test.map");
-    _worldMaps[0]->addTilemap("tilesets/tile1.png");
+	loadMaps();
 
-    if( !_worldMaps[0]->setTiles() )
+    if( !_worldMaps[0]->loadMap() )
 	{
 		cout<<"Failed to load tile set!\n"<<endl;
 	}
@@ -77,4 +76,17 @@ void World::render()
 SDL_Rect &World::getCamera()
 {
     return camera;
+}
+
+void World::loadMaps()
+{
+	ifstream maps("bitmaps/maps.txt");
+	
+	string name;
+
+	while (maps >> name)
+	{
+		addMap("bitmaps/" + name);
+	}
+
 }

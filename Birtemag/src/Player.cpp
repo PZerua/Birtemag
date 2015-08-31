@@ -4,8 +4,8 @@
 
 Player::Player()
 {
-    mBox.x = 0;
-    mBox.y = 0;
+    mBox.x = 640;
+    mBox.y = 384;
 	mBox.w = TILE_SIZE;
 	mBox.h = TILE_SIZE;
 

@@ -45,7 +45,6 @@ int main(int argc, char** argv)
             //Goes into Editor
             input._f2 = false;
             Editor *gameEditor = new Editor(world.getCamera());
-            gameEditor->addTilemap("tilesets/tile1.png");
             gameEditor->setMap(world.getMaps(), world.getCurrentMap());
             gameEditor->init(gWindow, input, e);
             delete(gameEditor);

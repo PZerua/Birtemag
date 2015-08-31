@@ -1,9 +1,9 @@
 #ifndef MAP_H
 #define MAP_H
-#include "../include/Common_libs.hxx"
-#include "../include/Tilemap.hxx"
-#include "../include/Tile.h"
-#include "../include/window.h"
+#include "Common_libs.hxx"
+#include "Tilemap.hxx"
+#include "Tile.h"
+#include "window.h"
 
 class Tile;
 
@@ -22,9 +22,7 @@ class Map
 
         int TOTAL_TILES;
 
-        Tilemap *getTilemap();
-
-        bool setTiles();
+        bool loadMap();
 
         Tile **getTiles();
 
@@ -32,11 +30,13 @@ class Map
 
         void renderMap(SDL_Rect &camera);
 
-        void addTilemap(string tilePath);
+        void addTilemap(int tilemapID);
 
         string getPath();
 
         void createMap();
+
+		vector<Tilemap *> getTilemaps();
 
     protected:
 

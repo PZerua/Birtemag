@@ -18,7 +18,7 @@ Map::Map(int width, int height, string name)
     LEVEL_HEIGHT = height * TILE_SIZE;
     TOTAL_TILES = width * height;
     _name = name;
-    _mapPath = "bitmaps\\" + name + ".map";
+    _mapPath = "bitmaps/" + name + ".map";
     createMap();
 }
 
@@ -50,17 +50,13 @@ void Map::createMap()
     }
 }
 
-Tilemap *Map::getTilemap()
-{
-    return _tilemaps[0];
-}
 
 Tile **Map::getTiles()
 {
     return _tileSet;
 }
 
-bool Map::setTiles()
+bool Map::loadMap()
 {
     //Success flag
     bool tilesLoaded = true;
@@ -84,6 +80,20 @@ bool Map::setTiles()
         int width = -1;
         int height = -1;
 
+		int numberTilemaps = -1;
+		int tilemapID;
+
+		map >> numberTilemaps;
+
+		if (numberTilemaps != -1 && numberTilemaps != 0)
+		{
+			for (int i = 0; i < numberTilemaps; i++)
+			{
+				map >> tilemapID;
+				addTilemap(tilemapID);
+			}
+		}
+
         map >> width;
         map >> height;
 
@@ -104,8 +114,9 @@ bool Map::setTiles()
         {
             //Determines what kind of tile will be made
             int tileType = -1;
+			int tilemap = -1;
             //Read tile from map file
-            map >> tileType >> temp >> collision;
+            map >> tilemap >> temp >> tileType >> temp >> collision;
             //If the was a problem in reading the map
             if( map.fail() )
             {
@@ -116,9 +127,10 @@ bool Map::setTiles()
             }
 
             //If the number is a valid tile number
-            if( ( tileType >= 0 ) && ( tileType < getTilemap()[0].getTotalTiles() ) )
+            if( ( tileType >= 0 ) && ( tileType < _tilemaps[tilemap]->getTotalTiles() ) )
             {
-                _tileSet[ i ] = new Tile( x, y, tileType, collision );
+                _tileSet[i] = new Tile( x, y, tileType, collision, tilemap );
+				_tileSet[i]->setTexture(_tilemaps[tilemap]->getTexture());
             }
             //If we don't recognize the tile type
             else
@@ -141,13 +153,7 @@ bool Map::setTiles()
                 y += TILE_SIZE;
             }
         }
-    }
 
-    // TODO: Add multiple tilemap support
-
-    for(int i = 0; i < TOTAL_TILES; ++i)
-    {
-        _tileSet[ i ]->setTexture(_tilemaps[0]->getTexture());
     }
 
     //Close the file
@@ -181,20 +187,39 @@ void Map::renderMap(SDL_Rect &camera)
 {
     for( int i = 0; i < TOTAL_TILES; ++i )
     {
-        _tileSet[ i ]->render(camera, _tilemaps[0]->getClips() );
+        _tileSet[ i ]->render(camera, _tilemaps[_tileSet[i]->getTileMapID()]->getClips() );
     }
 }
 
-void Map::addTilemap(string tilePath)
+void Map::addTilemap(int tilemapID)
 {
-    Tilemap *tile;
-    tile = new Tilemap();
-    tile->initTilemap(tilePath);
+    Tilemap *tilemap;
+    tilemap = new Tilemap();
 
-    _tilemaps.push_back(tile);
+	ifstream tilemaps("tilesets/tilesets.txt");
+
+	int id = 0;
+	string temp;
+
+	while (tilemaps >> temp)
+	{
+		if (id == tilemapID)
+		{
+			tilemap->initTilemap("tilesets/" + temp, tilemapID);
+			_tilemaps.push_back(tilemap);
+			break;
+		}
+		id++;
+	}
+    
 }
 
 string Map::getPath()
 {
     return _mapPath;
+}
+
+vector<Tilemap *> Map::getTilemaps()
+{
+	return _tilemaps;
 }

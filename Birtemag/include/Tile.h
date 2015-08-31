@@ -10,7 +10,7 @@ class Tile
 {
     public:
         //Initializes position and type
-        Tile( int x, int y, int tileType, bool collision );
+        Tile( int x, int y, int tileType, bool collision, int id );
         ~Tile();
 
         //Shows the tile
@@ -30,15 +30,22 @@ class Tile
 
         void free();
 
-        void setType(int type);
+        void setType(int type, int id);
+
+		int getTileMapID();
+
+
 
     private:
         //The attributes of the tile
         SDL_Rect mBox;
 
         LTexture *gTileTexture;
+
         //The tile type
-        int mType;
+        int _mType;
+
+		int _tilemapID;
 
         bool _hasCollision;
 
