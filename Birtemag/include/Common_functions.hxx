@@ -8,13 +8,6 @@ class Tile;
 
 bool checkCollision( SDL_Rect a, SDL_Rect b );
 
-enum Screen
-{
-    mainScreen,
-    editScreen,
-    totalScreens
-};
-
 enum ButtonState
 {
     normal,
@@ -24,10 +17,24 @@ enum ButtonState
 
 enum Behaviour
 {
+	tile,
     collision,
+	attribute,
     newMap,
 	nextTilemap,
-	previousTilemap
+	previousTilemap,
+	nextLayer,
+	previousLayer
+};
+
+enum Layer
+{
+	ground,
+	mask,
+	cover,
+	fringe,
+	roof,
+	size
 };
 
 #endif // COMMON_FUNC

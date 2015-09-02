@@ -1,0 +1,6 @@
+Button Tile | 481 643 0
+Button Collision | 614 643 1
+Button Attribute | 747 643 2
+Button New Map | 900 643 3
+Button > | 153 460 4
+Button < | 15 460 5

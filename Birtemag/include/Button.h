@@ -13,7 +13,7 @@ class Editor;
 class Button
 {
     public:
-        Button(int behaviour, string name);
+        Button(int behaviour, string name, int x, int y);
         virtual ~Button();
 
         void render();

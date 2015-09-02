@@ -1,6 +1,7 @@
 #ifndef MAP_H
 #define MAP_H
 #include "Common_libs.hxx"
+#include "Common_functions.hxx"
 #include "Tilemap.hxx"
 #include "Tile.h"
 #include "window.h"
@@ -36,7 +37,7 @@ public:
 
 	void createMap();
 
-	vector<Tilemap *> getTilemaps();
+	map<int, Tilemap *> &getMap();
 
 protected:
 
@@ -45,7 +46,7 @@ private:
 
 	string _mapPath;
 
-	vector<Tilemap *> _tilemaps;
+	map<int, Tilemap *> _tmaps;
 
 	Tile** _tileSet;
 

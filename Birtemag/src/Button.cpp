@@ -1,8 +1,10 @@
 #include "Button.h"
 
-Button::Button(int behaviour, string name)
+Button::Button(int behaviour, string name, int x, int y)
 {
 
+	mBox.x = x;
+	mBox.y = y;
     SDL_Color color;
     color.a = 0;
     color.r = 0;

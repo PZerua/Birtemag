@@ -1,6 +1,7 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 #include "Common_libs.hxx"
+#include "Common_functions.hxx"
 #include "Map.h"
 #include "Input.hxx"
 #include "window.h"
@@ -25,16 +26,16 @@ public:
 	void addTilemap( string tilePath, int id);
 	void handleTilemap(Input &input, SDL_Event &e);
 	void handleButtons(Input &input, SDL_Event &e);
-	void addButton(string name, int behaviour);
+	void addButton(string name, int behaviour, int x, int y);
 	void showCollision();
 	void changeCollision();
 	void putCollision();
-	void setButtonPos();
 	void newMap();
 	void renderMainSelector(Input &input, SDL_Event &e);
 	void nextTilemap();
 	void previousTilemap();
 	void loadTilemaps();
+	void loadUtils();
 
 protected:
 private:
@@ -47,6 +48,7 @@ private:
 	int _actualID;
 	int _cameraOffset;
 	int _buttonsOffset;
+	int _currentLayer;
 	vector<Tilemap *> _tilemaps;
 	vector<Button *> _buttons;
 	vector<Map *> _worldMaps;

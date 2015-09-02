@@ -24,11 +24,7 @@ Map::Map(int width, int height, string name)
 
 Map::~Map()
 {
-	for(vector<Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
-	{
-		delete(*it);
-		it = _tilemaps.erase(it);
-	}
+
 }
 
 void Map::createMap()
@@ -127,19 +123,23 @@ bool Map::loadMap()
 			}
 
 			//If the number is a valid tile number
-			if( ( tileType >= 0 ) && ( tileType < _tilemaps[tilemap]->getTotalTiles() ) )
+			if ((tileType >= 0) && (tileType < _tmaps[tilemap]->getTotalTiles()))
 			{
-				_tileSet[i] = new Tile( x, y, tileType, collision, tilemap );
-				_tileSet[i]->setTexture(_tilemaps[tilemap]->getTexture());
+				_tileSet[i] = new Tile(x, y, tileType, collision, tilemap);
+				_tileSet[i]->setTexture(_tmaps[tilemap]->getTexture(), Layer::ground);
 			}
 			//If we don't recognize the tile type
 			else
 			{
 				//Stop loading map
-				printf( "Error loading map: Invalid tile type at %d!\n", i );
+				printf("Error loading map: Invalid tile type at %d!\n", i);
 				tilesLoaded = false;
 				break;
 			}
+
+			if (!tilesLoaded)
+				break;
+
 			//Move to next tile spot
 			x += TILE_SIZE;
 
@@ -189,7 +189,7 @@ void Map::renderMap(SDL_Rect &camera)
 {
 	for( int i = 0; i < TOTAL_TILES; ++i )
 	{
-		_tileSet[ i ]->render(camera, _tilemaps[_tileSet[i]->getTileMapID()]->getClips() );
+		_tileSet[ i ]->render(camera, _tmaps[_tileSet[i]->getTileMapID()]->getClips() );
 	}
 }
 
@@ -208,7 +208,7 @@ void Map::addTilemap(int tilemapID)
 		if (id == tilemapID)
 		{
 			tilemap->initTilemap("tilesets/" + temp, tilemapID);
-			_tilemaps.push_back(tilemap);
+			_tmaps[tilemapID] = tilemap;
 			break;
 		}
 		id++;
@@ -221,7 +221,7 @@ string Map::getPath()
 	return _mapPath;
 }
 
-vector<Tilemap *> Map::getTilemaps()
+map<int, Tilemap *> &Map::getMap()
 {
-	return _tilemaps;
+	return _tmaps;
 }

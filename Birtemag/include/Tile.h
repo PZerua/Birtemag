@@ -16,7 +16,7 @@ class Tile
 		//Shows the tile
 		void render(SDL_Rect& camera , SDL_Rect *gTileClips);
 
-		void setTexture(LTexture *gTexture);
+		void setTexture(LTexture *gTexture, int layer);
 
 		//Get the tile type
 		int getType();
@@ -41,6 +41,8 @@ class Tile
 		SDL_Rect mBox;
 
 		LTexture *gTileTexture;
+
+		map<int, LTexture *> _layers;
 
 		//The tile type
 		int _mType;

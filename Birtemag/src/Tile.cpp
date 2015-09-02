@@ -29,14 +29,20 @@ void Tile::render(SDL_Rect& camera , SDL_Rect *gTileClips)
 	//If the tile is on screen
 	if( checkCollision( camera, mBox ) )
 	{
-		//Show the tile
-		gTileTexture->render(mBox.x - camera.x, mBox.y - camera.y, &gTileClips[ _mType ] );
+		for (map<int, LTexture *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
+		{
+			//Show the tile
+			it->second->render(mBox.x - camera.x, mBox.y - camera.y, &gTileClips[_mType]);
+		}
 	}
 }
 
 void Tile::free()
 {
-	gTileTexture->free();
+	for (map<int, LTexture *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
+	{
+		it->second->free();
+	}
 }
 
 void Tile::setType(int type, int id)
@@ -55,9 +61,11 @@ SDL_Rect Tile::getBox()
 	return mBox;
 }
 
-void Tile::setTexture(LTexture *gTexture)
+void Tile::setTexture(LTexture *gTexture, int layer)
 {
-	gTileTexture = gTexture;
+	if (!_layers.count(layer))
+		_layers[layer] = new LTexture;
+	_layers[layer] = gTexture;
 }
 
 bool Tile::hasCollision()

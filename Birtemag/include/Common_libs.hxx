@@ -1,5 +1,6 @@
 #include "SDL.h"
 #include <string>
+#include <map>
 #include <iostream>
 #include <cstdio>
 #include <stdexcept>

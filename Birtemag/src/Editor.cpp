@@ -4,6 +4,8 @@ Editor::Editor(SDL_Rect &camera)
 {
 
 	loadTilemaps();
+	loadUtils();
+
 	_tilemapIndex = 1;
 	_previousIndex = _tilemapIndex;
 	_wasSelected = false;
@@ -15,29 +17,19 @@ Editor::Editor(SDL_Rect &camera)
 	_buttonsOffset = 10;
 	_actualX = 20;
 	_actualY = 56;
+	_currentLayer = Layer::ground;
 
 	_actualTile.loadFromFile("utils/Selector.png");
 	_selector.loadFromFile("utils/whiteSelector.png");
 	_tilemapBackground.loadFromFile("utils/Tilemap_background.png");
 	_editorBackground.loadFromFile("utils/Editor_background.png");
 
-	addButton("Colisión", Behaviour::collision);
-	addButton("Nuevo Mapa", Behaviour::newMap);
-	addButton(">", Behaviour::nextTilemap);
-	addButton("<", Behaviour::previousTilemap);
 	_selector.setAlpha(100);
 	_changing = false;
 	_changeCollision = false;
 	_showCollision = false;
 	_tileSelected = false;
 	_editMap = false;
-
-	setButtonPos();
-
-	_buttons[2]->setPos(153, 460);
-	_buttons[3]->setPos(15, 460);
-
-	// TODO: Read all tile paths from file or something
 
 }
 
@@ -52,25 +44,6 @@ Editor::~Editor()
 	{
 		delete(*it);
 		it = _tilemaps.erase(it);
-	}
-}
-
-void Editor::setButtonPos()
-{
-	int xMult = 40;
-	int yMult = 568;
-
-	for (unsigned int i = 0; i < _buttons.size(); i++)
-	{
-		if (xMult == SCREEN_WIDTH)
-		{
-			xMult = 0;
-			yMult += TILE_SIZE * 2;
-		}
-
-		_buttons[i]->setPos(xMult, yMult);
-
-		xMult += TILE_SIZE * 2 + _buttonsOffset;
 	}
 }
 
@@ -102,29 +75,25 @@ void Editor::putTile(Input &input, SDL_Event &e)
 				{
 					//Replace it with new one
 					if (input._mouseClick)
+					{
 						if (e.button.button == SDL_BUTTON_LEFT)
 						{
 							if (_currentMap->getTiles()[t]->getTileMapID() != _actualID)
 							{
-								for (unsigned i = 0; i < _currentMap->getTilemaps().size(); i++)
+								if (_currentMap->getMap().count(_actualID))
 								{
-									if (_currentMap->getTilemaps()[i]->getID() == _actualID)
-									{
-										exist = true;
-									}
-								}
-								if (exist)
-								{
-									_currentMap->getTiles()[t]->setTexture(_currentMap->getTilemaps()[_actualID]->getTexture());
+									_currentMap->getTiles()[t]->setTexture(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer);
 								}
 								else
 								{
 									_currentMap->addTilemap(_actualID);
-									_currentMap->getTiles()[t]->setTexture(_currentMap->getTilemaps()[_actualID]->getTexture());
+									_currentMap->getTiles()[t]->setTexture(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer);
 								}
 							}
 							_currentMap->getTiles()[t]->setType(_tileType, _actualID);
+							saveTiles();
 						}
+					}
 				}
 			}
 		}
@@ -161,39 +130,42 @@ void Editor::renderMainSelector(Input &input, SDL_Event &e)
 
 void Editor::saveTiles()
 {
+
+	//TODO: Save map after click
+
 	//Open the map
-	std::ofstream map( _currentMap->getPath() );
+	std::ofstream Map( _currentMap->getPath() );
 
-	map << _currentMap->getTilemaps().size() << "\n";
+	Map << _currentMap->getMap().size() << "\n";
 
-	for (unsigned i = 0; i < _currentMap->getTilemaps().size(); i++)
+	for (map<int, Tilemap *>::iterator it = _currentMap->getMap().begin(); it != _currentMap->getMap().end(); ++it)
 	{
-		map << _currentMap->getTilemaps()[i]->getID() << "\n";
+		Map << it->first << "\n";
 	}
 
-	map << _currentMap->LEVEL_WIDTH / TILE_SIZE << " " << _currentMap->LEVEL_HEIGHT / TILE_SIZE << "\n";
+	Map << _currentMap->LEVEL_WIDTH / TILE_SIZE << " " << _currentMap->LEVEL_HEIGHT / TILE_SIZE << "\n";
 
 	//Go through the tiles
 	for( int t = 0; t < _currentMap->TOTAL_TILES; t++ )
 	{
 		if ( (t % (_currentMap->LEVEL_WIDTH / TILE_SIZE)) == 0 && t != 0)
 		{
-			map << "\n";
+			Map << "\n";
 		}
 
-		map << _currentMap->getTiles()[t]->getTileMapID();
-		map << ":";
+		Map << _currentMap->getTiles()[t]->getTileMapID();
+		Map << ":";
 
 		if (_currentMap->getTiles()[ t ]->getType() < 10)
 		{
 			//Write tile type to file
-			map << 0 << _currentMap->getTiles()[ t ]->getType() << ":" << _currentMap->getTiles()[ t ]->hasCollision() << " ";
+			Map << 0 << _currentMap->getTiles()[ t ]->getType() << ":" << _currentMap->getTiles()[ t ]->hasCollision() << " ";
 		}
-		else map << _currentMap->getTiles()[ t ]->getType() << ":" << _currentMap->getTiles()[ t ]->hasCollision() << " ";
+		else Map << _currentMap->getTiles()[ t ]->getType() << ":" << _currentMap->getTiles()[ t ]->hasCollision() << " ";
 	}
 
 	//Close the file
-	map.close();
+	Map.close();
 }
 
 void Editor::setMap(vector <Map *> &worldMaps, Map *gameMap)
@@ -236,10 +208,10 @@ void Editor::addTilemap(string tilePath, int id)
 	_tilemaps.push_back(tileE);
 }
 
-void Editor::addButton(string name, int behaviour)
+void Editor::addButton(string name, int behaviour, int x, int y)
 {
 	Button *button;
-	button = new Button(behaviour, name);
+	button = new Button(behaviour, name, x, y);
 	_buttons.push_back(button);
 
 }
@@ -387,6 +359,7 @@ void Editor::putCollision()
 					_currentMap->getTiles()[t]->setCollision(true);
 				else
 					_currentMap->getTiles()[t]->setCollision(false);
+				saveTiles();
 			}
 		}
 	}
@@ -444,7 +417,36 @@ void Editor::loadTilemaps()
 		addTilemap("tilesets/" + name, id);
 		id++;
 	}
+}
 
+void Editor::loadUtils()
+{
+	ifstream utils("utils/utils.txt");
+
+	string type;
+	string temp;
+	string name;
+	int x = -1;
+	int y = -1;
+	int behaviour = -1;
+
+	while (utils >> type)
+	{
+		if (type == "Button")
+		{
+			utils >> name;
+			utils >> temp;
+
+			while (temp != "|")
+			{
+				name += " " + temp;
+				utils >> temp;
+			}
+
+			utils >> x >> y >> behaviour;
+			addButton(name, behaviour, x, y);
+		}
+	}
 }
 
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
@@ -463,7 +465,6 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 			{
 				putTile(input, e);
 			}
-			saveTiles();
 		}
 		else if (!input._mouseClick)
 			_changeCollision = false;
