@@ -1,8 +1,8 @@
 #ifndef COMMON_FUNC
 #define COMMON_FUNC
-#include "../include/Common_libs.hxx"
-#include "../include/Map.h"
-#include "../include/Tile.h"
+#include "Common_libs.hxx"
+#include "Map.h"
+#include "Tile.h"
 
 class Tile;
 
@@ -27,7 +27,7 @@ enum Behaviour
 	previousLayer
 };
 
-enum Layer
+enum Layers
 {
 	ground,
 	mask,

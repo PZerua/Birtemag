@@ -16,6 +16,7 @@ Button::Button(int behaviour, string name, int x, int y)
     _text.loadFromRenderedText(name, color, 16);
     _hoverState.loadFromFile("utils/hoverButton.png");
     _normalState.loadFromFile("utils/normalButton.png");
+	_clickState.loadFromFile("utils/clickButton.png");
 
     SDL_QueryTexture(_normalState.getTexture(), NULL, NULL, &mBox.w, &mBox.h);
     SDL_QueryTexture(_text.getTexture(), NULL, NULL, &mTextBox.w, &mTextBox.h);
@@ -30,8 +31,10 @@ void Button::render()
 {
     if (_actualState == ButtonState::normal)
         _normalState.render(mBox.x , mBox.y);
-    else if (_actualState == ButtonState::hover)
-        _hoverState.render(mBox.x, mBox.y);
+	else if (_actualState == ButtonState::hover)
+		_hoverState.render(mBox.x, mBox.y);
+	else if (_actualState == ButtonState::click)
+		_clickState.render(mBox.x, mBox.y);
     _text.render(mBox.x + mBox.w / 2 - mTextBox.w / 2, mBox.y + mBox.h / 2 - mTextBox.h / 2);
 }
 
@@ -43,10 +46,18 @@ void Button::setPos(int x, int y)
 
 void Button::activate(Editor &editor)
 {
-    if (_behaviour == Behaviour::collision)
+	if (_behaviour == Behaviour::tile)
+	{
+		editor.tileMode();
+	}
+    else if (_behaviour == Behaviour::collision)
     {
-        editor.changeCollision();
+        editor.collisionMode();
     }
+	else if (_behaviour == Behaviour::attribute)
+	{
+		editor.attributeMode();
+	}
     else if (_behaviour == Behaviour::newMap)
     {
         editor.newMap();
@@ -59,14 +70,35 @@ void Button::activate(Editor &editor)
 	{
 		editor.previousTilemap();
 	}
+	else if (_behaviour == Behaviour::nextLayer)
+	{
+		editor.nextLayer();
+	}
+	else if (_behaviour == Behaviour::previousLayer)
+	{
+		editor.previousLayer();
+	}
 }
 
 void Button::setState(int state)
 {
-    _actualState = state;
+	if(!_hasFixedState)
+		_actualState = state;
 }
 
 SDL_Rect Button::getBox()
 {
     return mBox;
 }
+
+void Button::setFixedState(int state)
+{
+	_actualState = state;
+	_hasFixedState = true;
+}
+
+void Button::removeFixedState()
+{
+	_hasFixedState = false;
+}
+

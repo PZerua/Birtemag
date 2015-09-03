@@ -1,3 +1,6 @@
+#ifndef COMMON_LIBS_H
+#define COMMON_LIBS_H
+
 #include "SDL.h"
 #include <string>
 #include <map>
@@ -15,3 +18,5 @@
 #define SCREEN_HEIGHT 720
 
 using namespace std;
+
+#endif

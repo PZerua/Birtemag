@@ -1,25 +1,25 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "../include/Common_functions.hxx"
-#include "../include/Common_libs.hxx"
-#include "../include/LTexture.h"
-#include "../include/window.h"
+#include "Common_libs.hxx"
+#include "LTexture.h"
+#include "window.h"
+#include "Layer.h"
+#include "Tilemap.hxx"
 
 class Tile
 {
 	public:
 		//Initializes position and type
-		Tile( int x, int y, int tileType, bool collision, int id );
+		Tile( int x, int y, bool collision);
 		~Tile();
 
 		//Shows the tile
 		void render(SDL_Rect& camera , SDL_Rect *gTileClips);
 
-		void setTexture(LTexture *gTexture, int layer);
-
+		void setLayer(LTexture *gTexture, int layer, int type, int id);
 		//Get the tile type
-		int getType();
+		int getType(int layer);
 
 		//Get the collision box
 		SDL_Rect getBox();
@@ -30,24 +30,16 @@ class Tile
 
 		void free();
 
-		void setType(int type, int id);
-
-		int getTileMapID();
-
-
+		int getTileMapID(int layer);
 
 	private:
 		//The attributes of the tile
 		SDL_Rect mBox;
 
-		LTexture *gTileTexture;
-
-		map<int, LTexture *> _layers;
+		map<int, Layer *> _layers;
+		map<int, Tilemap *> _tmaps;
 
 		//The tile type
-		int _mType;
-
-		int _tilemapID;
 
 		bool _hasCollision;
 

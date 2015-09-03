@@ -140,6 +140,7 @@
     <ClCompile Include="src\Common_functions.cxx" />
     <ClCompile Include="src\Editor.cpp" />
     <ClCompile Include="src\Input.cpp" />
+    <ClCompile Include="src\Layer.cpp" />
     <ClCompile Include="src\LTexture.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Map.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="include\Common_libs.hxx" />
     <ClInclude Include="include\Editor.hxx" />
     <ClInclude Include="include\Input.hxx" />
+    <ClInclude Include="include\Layer.h" />
     <ClInclude Include="include\LTexture.h" />
     <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\Player.h" />

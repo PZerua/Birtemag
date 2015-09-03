@@ -17,7 +17,6 @@ int main(int argc, char** argv)
 	//Start our window
 	gWindow.init("Birtemag", 300, 250);
 
-
 	//Init font library
 	if (TTF_Init() != 0)
 	{

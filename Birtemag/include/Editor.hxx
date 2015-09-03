@@ -28,7 +28,9 @@ public:
 	void handleButtons(Input &input, SDL_Event &e);
 	void addButton(string name, int behaviour, int x, int y);
 	void showCollision();
-	void changeCollision();
+	void collisionMode();
+	void tileMode();
+	void attributeMode();
 	void putCollision();
 	void newMap();
 	void renderMainSelector(Input &input, SDL_Event &e);
@@ -36,8 +38,9 @@ public:
 	void previousTilemap();
 	void loadTilemaps();
 	void loadUtils();
+	void nextLayer();
+	void previousLayer();
 
-protected:
 private:
 
 	Selector _mainSelector;
@@ -54,13 +57,13 @@ private:
 	vector<Map *> _worldMaps;
 	LTexture _selector;
 	LTexture _actualTile;
+	LTexture _tileOptions;
 	int _actualX;
 	int _actualY;
 	int _previousIndex;
 	unsigned _tilemapIndex;
 	LTexture _tilemapBackground;
 	LTexture _editorBackground;
-	bool _showCollision;
 	bool _changing;
 	bool _changeCollision;
 	bool _collisionState;
@@ -68,6 +71,14 @@ private:
 	bool _editMap;
 	bool _wasSelected;
 	Collision_tile _collision;
+	int _selectedMode;
+	int _previousMode;
+
+	enum Mode{
+		tile,
+		collision,
+		attribute
+	};
 
 
 };

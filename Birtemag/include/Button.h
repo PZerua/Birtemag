@@ -21,6 +21,8 @@ class Button
         SDL_Rect getBox();
         void activate(Editor &editor);
         void setPos(int x, int y);
+		void setFixedState(int state);
+		void removeFixedState();
 
     protected:
     private:
@@ -30,6 +32,8 @@ class Button
         LTexture _hoverState;
         LTexture _clickState;
         int _actualState;
+		int _fixedState;
+		bool _hasFixedState;
         SDL_Rect mBox;
         SDL_Rect mTextBox;
 

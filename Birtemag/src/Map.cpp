@@ -125,8 +125,8 @@ bool Map::loadMap()
 			//If the number is a valid tile number
 			if ((tileType >= 0) && (tileType < _tmaps[tilemap]->getTotalTiles()))
 			{
-				_tileSet[i] = new Tile(x, y, tileType, collision, tilemap);
-				_tileSet[i]->setTexture(_tmaps[tilemap]->getTexture(), Layer::ground);
+				_tileSet[i] = new Tile(x, y, collision);
+				_tileSet[i]->setLayer(_tmaps[tilemap]->getTexture(), Layers::ground, tileType, tilemap);
 			}
 			//If we don't recognize the tile type
 			else
@@ -189,7 +189,7 @@ void Map::renderMap(SDL_Rect &camera)
 {
 	for( int i = 0; i < TOTAL_TILES; ++i )
 	{
-		_tileSet[ i ]->render(camera, _tmaps[_tileSet[i]->getTileMapID()]->getClips() );
+		_tileSet[ i ]->render(camera, _tmaps[_tileSet[i]->getTileMapID(0)]->getClips() );
 	}
 }
 
