@@ -2,10 +2,9 @@
 #define TILE_H
 
 #include "Common_libs.hxx"
-#include "LTexture.h"
-#include "window.h"
 #include "Layer.h"
-#include "Tilemap.hxx"
+
+class Layer;
 
 class Tile
 {
@@ -32,12 +31,13 @@ class Tile
 
 		int getTileMapID(int layer);
 
+		void setLayerType(int layer, int type, int id);
+
 	private:
 		//The attributes of the tile
 		SDL_Rect mBox;
 
 		map<int, Layer *> _layers;
-		map<int, Tilemap *> _tmaps;
 
 		//The tile type
 

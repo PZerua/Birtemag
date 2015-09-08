@@ -20,6 +20,12 @@ int Layer::getType()
 	return _mType;
 }
 
+void Layer::setType(int type, int id)
+{
+	_mType = type;
+	_tilemapId = id;
+}
+
 void Layer::setTexture(LTexture *texture)
 {
 	_gTileTexture = texture;

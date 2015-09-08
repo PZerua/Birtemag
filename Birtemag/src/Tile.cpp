@@ -50,9 +50,13 @@ void Tile::setLayer(LTexture *gTexture, int layer, int type, int id)
 	if (!_layers.count(layer))
 	{
 		_layers[layer] = new Layer(id, type);
-		cout << "new layer " << layer << endl;
+		_layers[layer]->setTexture(gTexture);
 	}
-	_layers[layer]->setTexture(gTexture);
+	else
+	{
+		_layers[layer]->setTexture(gTexture);
+		_layers[layer]->setType(type, id);
+	}
 }
 
 bool Tile::hasCollision()
@@ -67,10 +71,20 @@ void Tile::setCollision(bool coliss)
 
 int Tile::getTileMapID(int layer)
 {
-	return _layers[layer]->getTilemapId();
+	if(_layers.count(layer))
+		return _layers[layer]->getTilemapId();
+	else return -1;
 }
 
 int Tile::getType(int layer)
 {
-	return _layers[layer]->getType();
+	if(_layers.count(layer))
+		return _layers[layer]->getType();
+	else return -1;
+}
+
+void Tile::setLayerType(int layer, int type, int id)
+{
+	if (_layers.count(layer))
+		_layers[layer]->setType(type, id);
 }

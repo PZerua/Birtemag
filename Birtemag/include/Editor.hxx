@@ -40,6 +40,8 @@ public:
 	void loadUtils();
 	void nextLayer();
 	void previousLayer();
+	void printLayer();
+	void changeLayerText();
 
 private:
 
@@ -58,6 +60,7 @@ private:
 	LTexture _selector;
 	LTexture _actualTile;
 	LTexture _tileOptions;
+	LTexture _layerText;
 	int _actualX;
 	int _actualY;
 	int _previousIndex;

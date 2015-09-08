@@ -15,6 +15,7 @@ public:
 	void setTexture(LTexture *texture);
 	void free();
 	void render(int x, int y, SDL_Rect *gTileClips);
+	void setType(int type, int id);
 
 private:
 	LTexture *_gTileTexture;

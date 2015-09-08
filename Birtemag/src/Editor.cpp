@@ -6,6 +6,11 @@ Editor::Editor(SDL_Rect &camera)
 	loadTilemaps();
 	loadUtils();
 
+	SDL_Color color;
+	color.r = 0;
+	color.g = 0;
+	color.b = 0;
+
 	_tilemapIndex = 1;
 	_previousIndex = _tilemapIndex;
 	_wasSelected = false;
@@ -19,6 +24,7 @@ Editor::Editor(SDL_Rect &camera)
 	_actualY = 56;
 	_currentLayer = Layers::ground;
 	_selectedMode = Mode::tile;
+	_layerText.loadFromRenderedText("Ground", color, 20);
 
 	_actualTile.loadFromFile("utils/Selector.png");
 	_selector.loadFromFile("utils/whiteSelector.png");
@@ -79,17 +85,21 @@ void Editor::putTile(Input &input, SDL_Event &e)
 					{
 						if (e.button.button == SDL_BUTTON_LEFT)
 						{
-							if (_currentMap->getTiles()[t]->getTileMapID(0) != _actualID)
+							if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == -1)
 							{
-								if (_currentMap->getMap().count(_actualID))
-								{
-									_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
-								}
-								else
+								if (!_currentMap->getMap().count(_actualID))
 								{
 									_currentMap->addTilemap(_actualID);
 									_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
 								}
+								else 
+								{
+									_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
+								}
+							}
+							else
+							{
+								_currentMap->getTiles()[t]->setLayerType(_currentLayer, _tileType, _actualID);
 							}
 							saveTiles();
 						}
@@ -464,6 +474,7 @@ void Editor::nextLayer()
 	if (_currentLayer + 1 < Layers::size)
 	{
 		_currentLayer++;
+		changeLayerText();
 	}
 }
 
@@ -472,6 +483,36 @@ void Editor::previousLayer()
 	if (_currentLayer > 0)
 	{
 		_currentLayer--;
+		changeLayerText();
+	}
+}
+
+void Editor::changeLayerText()
+{
+	SDL_Color color;
+	color.r = 0;
+	color.g = 0;
+	color.b = 0;
+
+	if (_currentLayer == Layers::ground)
+	{
+		_layerText.loadFromRenderedText("Ground", color, 20);
+	}
+	else if (_currentLayer == Layers::mask)
+	{
+		_layerText.loadFromRenderedText("Mask", color, 20);
+	}
+	else if (_currentLayer == Layers::cover)
+	{
+		_layerText.loadFromRenderedText("Cover", color, 20);
+	}
+	else if (_currentLayer == Layers::fringe)
+	{
+		_layerText.loadFromRenderedText("Fringe", color, 20);
+	}
+	else if (_currentLayer == Layers::roof)
+	{
+		_layerText.loadFromRenderedText("Roof", color, 20);
 	}
 }
 
@@ -520,6 +561,11 @@ void Editor::loadUtils()
 	}
 }
 
+void Editor::printLayer()
+{
+	_layerText.render(390, 580);
+}
+
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 {
 	_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
@@ -559,7 +605,9 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 		{
 			_tilemapBackground.render(0, 36);
 			_tileOptions.render(156, 560);
+			printLayer();
 		}
+
 		handleTilemap(input, e);
 		handleButtons(input, e);
 
