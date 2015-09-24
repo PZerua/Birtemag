@@ -23,6 +23,8 @@ class Button
         void setPos(int x, int y);
 		void setFixedState(int state);
 		void removeFixedState();
+		void enable();
+		void disable();
 
     protected:
     private:
@@ -34,6 +36,7 @@ class Button
         int _actualState;
 		int _fixedState;
 		bool _hasFixedState;
+		bool _isEnabled;
         SDL_Rect mBox;
         SDL_Rect mTextBox;
 

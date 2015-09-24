@@ -29,7 +29,7 @@ public:
 
 	bool touchesWall( SDL_Rect box);
 
-	void renderMap(SDL_Rect &camera);
+	void renderMap(SDL_Rect &camera, int currentLayer);
 
 	void addTilemap(int tilemapID);
 
@@ -45,6 +45,8 @@ private:
 	string _name;
 
 	string _mapPath;
+
+	LTexture _hideLayer;
 
 	map<int, Tilemap *> _tmaps;
 

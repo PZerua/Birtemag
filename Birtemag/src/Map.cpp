@@ -10,6 +10,9 @@ Map::Map(string path)
 
 	_mapPath = path;
 
+	_hideLayer.loadFromFile("utils/hideLayer.png");
+	_hideLayer.setAlpha(50);
+
 }
 
 Map::Map(int width, int height, string name)
@@ -111,40 +114,53 @@ bool Map::loadMap()
 			//Determines what kind of tile will be made
 			int tileType = -1;
 			int tilemap = -1;
-			//Read tile from map file
-			map >> tilemap >> temp >> tileType >> temp >> collision;
-			//If the was a problem in reading the map
-			if( map.fail() )
-			{
-				//Stop loading map
-				printf( "Error loading map: Unexpected end of file!\n" );
-				tilesLoaded = false;
-				break;
-			}
 
-			//If the number is a valid tile number
-			if ((tileType >= 0) && (tileType < _tmaps[tilemap]->getTotalTiles()))
+			for (int j = 0; j < Layers::size; j++)
 			{
-				_tileSet[i] = new Tile(x, y, collision);
-				_tileSet[i]->setLayer(_tmaps[tilemap]->getTexture(), Layers::ground, tileType, tilemap);
-			}
-			//If we don't recognize the tile type
-			else
-			{
-				//Stop loading map
-				printf("Error loading map: Invalid tile type at %d!\n", i);
-				tilesLoaded = false;
-				break;
-			}
+				//Read tile from map file
+				map >> tilemap >> temp >> tileType >> temp;
+				//If the was a problem in reading the map
+				if (map.fail())
+				{
+					//Stop loading map
+					printf("Error loading map: Unexpected end of file!\n");
+					tilesLoaded = false;
+					break;
+				}
 
-			if (!tilesLoaded)
-				break;
+				if (tilemap != 0)
+				{
+					//If the number is a valid tile number
+					if ((tileType >= 0) && (tileType < _tmaps[tilemap]->getTotalTiles()))
+					{
+						if (j == 0)
+							_tileSet[i] = new Tile(x, y, collision, &_hideLayer);
+						_tileSet[i]->setLayer(_tmaps[tilemap]->getTexture(), j, tileType, tilemap);
+					}
+					//If we don't recognize the tile type
+					else
+					{
+						//Stop loading map
+						printf("Error loading map: Invalid tile type at %d!\n", i);
+						tilesLoaded = false;
+						break;
+					}
+				}
+				else
+				{
+					if (j == 0)
+						_tileSet[i] = new Tile(x, y, collision, &_hideLayer);
+				}
+				
+				if (!tilesLoaded)
+					break;
+			}
 
 			//Move to next tile spot
 			x += TILE_SIZE;
 
 			//If we've gone too far
-			if( x >= LEVEL_WIDTH )
+			if (x >= LEVEL_WIDTH)
 			{
 				//Move back
 				x = 0;
@@ -152,6 +168,12 @@ bool Map::loadMap()
 				//Move to the next row
 				y += TILE_SIZE;
 			}
+
+			map >> collision;
+			_tileSet[i]->setCollision(collision);
+
+			if (!tilesLoaded)
+				break;
 		}
 
 	}
@@ -185,11 +207,13 @@ bool Map::touchesWall( SDL_Rect box )
 	return false;
 }
 
-void Map::renderMap(SDL_Rect &camera)
+void Map::renderMap(SDL_Rect &camera, int currentLayer)
 {
 	for( int i = 0; i < TOTAL_TILES; ++i )
 	{
-		_tileSet[ i ]->render(camera, _tmaps[_tileSet[i]->getTileMapID(0)]->getClips() );
+		for (int j = 0; j < Layers::size; j++)
+			if (_tileSet[i]->getTileMapID(j) != 0)
+				_tileSet[ i ]->render(camera, _tmaps, currentLayer);
 	}
 }
 
@@ -200,7 +224,7 @@ void Map::addTilemap(int tilemapID)
 
 	ifstream tilemaps("tilesets/tilesets.txt");
 
-	int id = 0;
+	int id = 1;
 	string temp;
 
 	while (tilemaps >> temp)

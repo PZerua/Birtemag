@@ -3,6 +3,7 @@
 
 #include "Common_libs.hxx"
 #include "Layer.h"
+#include "Tilemap.hxx"
 
 class Layer;
 
@@ -10,11 +11,11 @@ class Tile
 {
 	public:
 		//Initializes position and type
-		Tile( int x, int y, bool collision);
+		Tile( int x, int y, bool collision, LTexture *hideLayer);
 		~Tile();
 
 		//Shows the tile
-		void render(SDL_Rect& camera , SDL_Rect *gTileClips);
+		void render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int currentLayer);
 
 		void setLayer(LTexture *gTexture, int layer, int type, int id);
 		//Get the tile type
@@ -38,6 +39,8 @@ class Tile
 		SDL_Rect mBox;
 
 		map<int, Layer *> _layers;
+
+		LTexture *_hideLayer;
 
 		//The tile type
 

@@ -70,7 +70,7 @@ void World::handlePlayer()
 
 void World::render()
 {
-	_currentMap->renderMap(camera);
+	_currentMap->renderMap(camera, -1);
 
 	_player->render(camera);
 }

@@ -54,7 +54,7 @@ private:
 	int _cameraOffset;
 	int _buttonsOffset;
 	int _currentLayer;
-	vector<Tilemap *> _tilemaps;
+	map<int, Tilemap *> _tilemaps;
 	vector<Button *> _buttons;
 	vector<Map *> _worldMaps;
 	LTexture _selector;

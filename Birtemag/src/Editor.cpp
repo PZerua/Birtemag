@@ -11,7 +11,7 @@ Editor::Editor(SDL_Rect &camera)
 	color.g = 0;
 	color.b = 0;
 
-	_tilemapIndex = 1;
+	_tilemapIndex = 2;
 	_previousIndex = _tilemapIndex;
 	_wasSelected = false;
 	_camera = camera;
@@ -47,11 +47,11 @@ Editor::~Editor()
 		delete(*it);
 		it = _buttons.erase(it);
 	}
-	for(vector<Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
+	/*for(map<int, Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
 	{
 		delete(*it);
 		it = _tilemaps.erase(it);
-	}
+	}*/
 }
 
 void Editor::putTile(Input &input, SDL_Event &e)
@@ -85,7 +85,7 @@ void Editor::putTile(Input &input, SDL_Event &e)
 					{
 						if (e.button.button == SDL_BUTTON_LEFT)
 						{
-							if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == -1)
+							if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
 							{
 								if (!_currentMap->getMap().count(_actualID))
 								{
@@ -156,7 +156,7 @@ void Editor::renderMainSelector(Input &input, SDL_Event &e)
 void Editor::saveTiles()
 {
 
-	//TODO: Save map after click
+	//TODO: Save map after click button
 
 	//Open the map
 	std::ofstream Map( _currentMap->getPath() );
@@ -178,15 +178,19 @@ void Editor::saveTiles()
 			Map << "\n";
 		}
 
-		Map << _currentMap->getTiles()[t]->getTileMapID(0);
-		Map << ":";
-
-		if (_currentMap->getTiles()[ t ]->getType(0) < 10)
+		for (int i = 0; i < Layers::size; i++)
 		{
-			//Write tile type to file
-			Map << 0 << _currentMap->getTiles()[ t ]->getType(0) << ":" << _currentMap->getTiles()[ t ]->hasCollision() << " ";
+			Map << _currentMap->getTiles()[t]->getTileMapID(i);
+			Map << ":";
+
+			if (_currentMap->getTiles()[t]->getType(i) < 10)
+			{
+				//Write tile type to file
+				Map << 0 << _currentMap->getTiles()[t]->getType(i) << ":";
+			}
+			else Map << _currentMap->getTiles()[t]->getType(i) << ":";
 		}
-		else Map << _currentMap->getTiles()[ t ]->getType(0) << ":" << _currentMap->getTiles()[ t ]->hasCollision() << " ";
+		Map << _currentMap->getTiles()[t]->hasCollision() << " ";
 	}
 
 	//Close the file
@@ -227,10 +231,10 @@ void Editor::setCamera(Input &input)
 
 void Editor::addTilemap(string tilePath, int id)
 {
-	Tilemap *tileE;
-	tileE = new Tilemap();
-	tileE->initTilemap(tilePath, id);
-	_tilemaps.push_back(tileE);
+	Tilemap *tilemap;
+	tilemap = new Tilemap();
+	tilemap->initTilemap(tilePath, id);
+	_tilemaps[id] = tilemap;
 }
 
 void Editor::addButton(string name, int behaviour, int x, int y)
@@ -325,10 +329,12 @@ void Editor::handleButtons(Input &input, SDL_Event &e)
 
 		if (_selectedMode != Mode::tile)
 		{
-			if (i != Behaviour::nextTilemap && i != Behaviour::previousTilemap)
-				_buttons[i]->render();
+			if (i == Behaviour::nextTilemap || i == Behaviour::previousTilemap || i == Behaviour::nextLayer || i == Behaviour::previousLayer)
+				_buttons[i]->disable();
 		}
-		else _buttons[i]->render();
+		else _buttons[i]->enable();
+
+		_buttons[i]->render();
 
 		if( ( x > _buttons[i]->getBox().x ) && ( x < _buttons[i]->getBox().x + _buttons[i]->getBox().w ) && 
 			( y > _buttons[i]->getBox().y ) && ( y < _buttons[i]->getBox().y + _buttons[i]->getBox().h ) )
@@ -449,7 +455,7 @@ void Editor::newMap()
 
 void Editor::nextTilemap()
 {
-	if (_tilemapIndex + 1 < _tilemaps.size())
+	if (_tilemapIndex < _tilemaps.size())
 	{
 		_tilemapIndex++;
 		if (_tilemapIndex == _previousIndex && _wasSelected == true)
@@ -460,7 +466,7 @@ void Editor::nextTilemap()
 
 void Editor::previousTilemap()
 {
-	if (_tilemapIndex > 0)
+	if (_tilemapIndex > 1)
 	{
 		_tilemapIndex--;
 		if (_tilemapIndex == _previousIndex && _wasSelected == true)
@@ -522,7 +528,7 @@ void Editor::loadTilemaps()
 
 	string name;
 
-	int id = 0;
+	int id = 1;
 
 	while (tilemaps >> name)
 	{
@@ -597,7 +603,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		gWindow.Clear();
 
-		_currentMap->renderMap(_camera);
+		_currentMap->renderMap(_camera, _currentLayer);
 		showCollision();
 		renderMainSelector(input, e);
 		_editorBackground.render(0, 528);

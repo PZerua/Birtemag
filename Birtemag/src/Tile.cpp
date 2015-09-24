@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile( int x, int y, bool collision)
+Tile::Tile( int x, int y, bool collision, LTexture *hideLayer)
 {
 	//Get the offsets
 	mBox.x = x;
@@ -9,6 +9,8 @@ Tile::Tile( int x, int y, bool collision)
 	//Set the collision box
 	mBox.w = TILE_SIZE;
 	mBox.h = TILE_SIZE;
+	
+	_hideLayer = hideLayer;
 
 	_hasCollision = collision;
 
@@ -16,10 +18,10 @@ Tile::Tile( int x, int y, bool collision)
 
 Tile::~Tile()
 {
-
+	free();
 }
 
-void Tile::render(SDL_Rect& camera , SDL_Rect *gTileClips)
+void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int currentLayer)
 {
 	//If the tile is on screen
 	if( checkCollision( camera, mBox ) )
@@ -27,7 +29,13 @@ void Tile::render(SDL_Rect& camera , SDL_Rect *gTileClips)
 		for (map<int, Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
 		{
 			//Show the tile
-			it->second->render(mBox.x - camera.x, mBox.y - camera.y, gTileClips);
+			it->second->render(mBox.x - camera.x, mBox.y - camera.y, tmaps[it->second->getTilemapId()]->getClips());
+			if (it->first < currentLayer)
+			{
+				for (int i = it->first; i < currentLayer; i++)
+					_hideLayer->render(mBox.x - camera.x, mBox.y - camera.y);
+			}
+				
 		}
 	}
 }
@@ -73,14 +81,14 @@ int Tile::getTileMapID(int layer)
 {
 	if(_layers.count(layer))
 		return _layers[layer]->getTilemapId();
-	else return -1;
+	else return 0;
 }
 
 int Tile::getType(int layer)
 {
 	if(_layers.count(layer))
 		return _layers[layer]->getType();
-	else return -1;
+	else return 0;
 }
 
 void Tile::setLayerType(int layer, int type, int id)
