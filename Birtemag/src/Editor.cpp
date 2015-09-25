@@ -1,9 +1,9 @@
 #include "Editor.hxx"
 
-Editor::Editor(SDL_Rect &camera)
+Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 {
 
-	loadTilemaps();
+	_tilemaps = tmaps;
 	loadUtils();
 
 	SDL_Color color;
@@ -83,14 +83,14 @@ void Editor::putTile(Input &input)
 					//Replace it with new one
 					if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
 					{
-						if (!_currentMap->getMap().count(_actualID))
+						if (!_currentMap->getTilemaps().count(_actualID))
 						{
 							_currentMap->addTilemap(_actualID);
-							_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
+							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
 						}
 						else 
 						{
-							_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
+							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
 						}
 					}
 					else
@@ -106,33 +106,30 @@ void Editor::putTile(Input &input)
 
 void Editor::quitTile(Input &input)
 {
-	if (_editMap)
+	//Mouse offsets
+	int x = 0, y = 0;
+
+	//Get mouse offsets
+	SDL_GetMouseState(&x, &y);
+
+	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
 	{
-		//Mouse offsets
-		int x = 0, y = 0;
+		//Adjust to _camera
+		x += _camera.x;
+		y += _camera.y;
+		bool exist = false;
 
-		//Get mouse offsets
-		SDL_GetMouseState(&x, &y);
-
-		if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
+		//Go through tiles
+		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
 		{
-			//Adjust to _camera
-			x += _camera.x;
-			y += _camera.y;
-			bool exist = false;
+			//Get tile's collision box
+			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
-			//Go through tiles
-			for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
+			//If the mouse is inside the tile
+			if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
 			{
-				//Get tile's collision box
-				SDL_Rect box = _currentMap->getTiles()[t]->getBox();
-
-				//If the mouse is inside the tile
-				if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
-				{
-					_currentMap->getTiles()[t]->eraseLayer(_currentLayer);
-					saveTiles();
-				}
+				_currentMap->getTiles()[t]->eraseLayer(_currentLayer);
+				saveTiles();
 			}
 		}
 	}
@@ -140,42 +137,39 @@ void Editor::quitTile(Input &input)
 
 void Editor::renderMainSelector(Input &input)
 {
-	if(_editMap || _selectedMode == Mode::collision)
+	//Mouse offsets
+	int x = 0, y = 0;
+
+	//Get mouse offsets
+	SDL_GetMouseState(&x, &y);
+
+	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
 	{
-		//Mouse offsets
-		int x = 0, y = 0;
-
-		//Get mouse offsets
-		SDL_GetMouseState(&x, &y);
-
-		if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
+		//Go through tiles
+		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
 		{
-			//Go through tiles
-			for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
-			{
-				//Get tile's collision box
-				SDL_Rect box = _currentMap->getTiles()[t]->getBox();
+			//Get tile's collision box
+			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
-				//If the mouse is inside the tile
-				if ((x > box.x - _camera.x) && (x < box.x + box.w - _camera.x) && (y > box.y - _camera.y) && (y < box.y + box.h - _camera.y))
-				{
-					_mainSelector.render(box.x - _camera.x, box.y - _camera.y);
-				}
+			//If the mouse is inside the tile
+			if ((x > box.x - _camera.x) && (x < box.x + box.w - _camera.x) && (y > box.y - _camera.y) && (y < box.y + box.h - _camera.y))
+			{
+				_mainSelector.render(box.x - _camera.x, box.y - _camera.y);
 			}
 		}
-		else if (y < 528 && _selectedMode != Mode::tile)
+	}
+	else if (y < 528 && _selectedMode != Mode::tile)
+	{
+		//Go through tiles
+		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
 		{
-			//Go through tiles
-			for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
-			{
-				//Get tile's collision box
-				SDL_Rect box = _currentMap->getTiles()[t]->getBox();
+			//Get tile's collision box
+			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
-				//If the mouse is inside the tile
-				if ((x > box.x - _camera.x) && (x < box.x + box.w - _camera.x) && (y > box.y - _camera.y) && (y < box.y + box.h - _camera.y))
-				{
-					_mainSelector.render(box.x - _camera.x, box.y - _camera.y);
-				}
+			//If the mouse is inside the tile
+			if ((x > box.x - _camera.x) && (x < box.x + box.w - _camera.x) && (y > box.y - _camera.y) && (y < box.y + box.h - _camera.y))
+			{
+				_mainSelector.render(box.x - _camera.x, box.y - _camera.y);
 			}
 		}
 	}
@@ -189,9 +183,9 @@ void Editor::saveTiles()
 	//Open the map
 	std::ofstream Map( _currentMap->getPath() );
 
-	Map << _currentMap->getMap().size() << "\n";
+	Map << _currentMap->getTilemaps().size() << "\n";
 
-	for (map<int, Tilemap *>::iterator it = _currentMap->getMap().begin(); it != _currentMap->getMap().end(); ++it)
+	for (map<int, Tilemap *>::iterator it = _currentMap->getTilemaps().begin(); it != _currentMap->getTilemaps().end(); ++it)
 	{
 		Map << it->first << "\n";
 	}
@@ -225,7 +219,7 @@ void Editor::saveTiles()
 	Map.close();
 }
 
-void Editor::setMap(vector <Map *> &worldMaps, Map *gameMap)
+void Editor::setMaps(vector <Map *> &worldMaps, Map *gameMap)
 {
 	_worldMaps = worldMaps;
 	_currentMap = gameMap;
@@ -257,20 +251,11 @@ void Editor::setCamera(Input &input)
 	}
 }
 
-void Editor::addTilemap(string tilePath, int id)
-{
-	Tilemap *tilemap;
-	tilemap = new Tilemap();
-	tilemap->initTilemap(tilePath, id);
-	_tilemaps[id] = tilemap;
-}
-
 void Editor::addButton(string name, int behaviour, int x, int y)
 {
 	Button *button;
 	button = new Button(behaviour, name, x, y);
 	_buttons.push_back(button);
-
 }
 
 void Editor::handleTilemap(Input &input)
@@ -410,7 +395,6 @@ void Editor::collisionMode()
 
 void Editor::tileMode()
 {
-
 	_mainSelector.showTile();
 }
 
@@ -547,21 +531,6 @@ void Editor::changeLayerText()
 	}
 }
 
-void Editor::loadTilemaps()
-{
-	ifstream tilemaps("tilesets/tilesets.txt");
-
-	string name;
-
-	int id = 1;
-
-	while (tilemaps >> name)
-	{
-		addTilemap("tilesets/" + name, id);
-		id++;
-	}
-}
-
 void Editor::loadUtils()
 {
 	ifstream utils("utils/utils.txt");
@@ -599,8 +568,6 @@ void Editor::printLayer()
 
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 {
-	_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
-
 	while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
 	{
 		if (input._mouseLClick)

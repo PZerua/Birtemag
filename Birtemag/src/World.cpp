@@ -3,6 +3,8 @@
 World::World()
 {
 
+
+	loadTilemaps();
 	camera.x = 0;
 	camera.y = 0;
 	camera.w = SCREEN_WIDTH;
@@ -39,8 +41,8 @@ World::~World()
 void World::addMap(string mapPath)
 {
 	Map *newMap = new Map(mapPath);
+	newMap->setTilemaps(getTilemaps());
 	_worldMaps.push_back(newMap);
-
 }
 
 Map *World::getCurrentMap()
@@ -92,4 +94,28 @@ void World::loadMaps()
 		addMap("bitmaps/" + name);
 	}
 	cout << "[WORLD] Maps loaded" << endl;
+}
+
+void World::loadTilemaps()
+{
+	Tilemap *tilemap;
+	tilemap = new Tilemap();
+
+	ifstream tilemaps("tilesets/tilesets.txt");
+
+	string name;
+
+	int id = 1;
+
+	while (tilemaps >> name)
+	{
+		tilemap->setData("tilesets/" + name, id);
+		_tmaps[id] = tilemap;
+		id++;
+	}
+}
+
+map<int, Tilemap *> &World::getTilemaps()
+{
+	return _tmaps;
 }

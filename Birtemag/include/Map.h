@@ -37,7 +37,9 @@ public:
 
 	void createMap();
 
-	map<int, Tilemap *> &getMap();
+	map<int, Tilemap *> &getTilemaps();
+
+	void setTilemaps(map<int, Tilemap *> tmaps);
 
 protected:
 

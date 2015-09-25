@@ -46,8 +46,8 @@ int main(int argc, char** argv)
 		{
 			//Goes into Editor
 			input._f2 = false;
-			Editor *gameEditor = new Editor(world.getCamera());
-			gameEditor->setMap(world.getMaps(), world.getCurrentMap());
+			Editor *gameEditor = new Editor(world.getCamera(), world.getTilemaps());
+			gameEditor->setMaps(world.getMaps(), world.getCurrentMap());
 			gameEditor->init(gWindow, input, e);
 			delete(gameEditor);
 			//If the window has been closed exits the loop

@@ -59,15 +59,21 @@ void Tilemap::setClips()
 	else cout<<"Error cliping, there is no texture loaded"<<endl;
 }
 
-void Tilemap::initTilemap(string imagPath, int id)
+void Tilemap::initTilemap()
 {
-	if(loadTexture(imagPath))
+	cout << _imgPath << endl;
+	if(loadTexture(_imgPath))
 	{
-		_ID = id;
 		_tileClips = new SDL_Rect[_totalTiles];
 		setClips();
 	}
-	else cout<<"Cannot init tilemap: "<<imagPath<<endl;
+	else cout<<"Cannot init tilemap: "<<_imgPath<<endl;
+}
+
+void Tilemap::setData(string imgPath, int id)
+{
+	_imgPath = imgPath;
+	_ID = id;
 }
 
 LTexture *Tilemap::getTexture()

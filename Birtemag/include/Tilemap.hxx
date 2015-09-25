@@ -18,7 +18,9 @@ class Tilemap
 
 		void setClips();
 
-		void initTilemap(string imagPath, int id);
+		void initTilemap();
+
+		void setData(string imgPath, int id);
 
 		LTexture *getTexture();
 
@@ -35,11 +37,14 @@ class Tilemap
 		LTexture *_tileTexture;
 
 		int _totalTiles;
+
 		int _ID;
 
 		SDL_Rect *_tileClips;
 
 		string _name;
+
+		string _imgPath;
 
 
 };

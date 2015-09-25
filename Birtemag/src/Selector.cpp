@@ -7,7 +7,7 @@ Selector::Selector()
 	_clip.y = 0;
 	_clip.w = TILE_SIZE;
 	_clip.h = TILE_SIZE;
-	_showTile = true;
+	_showTile = false;
 }
 
 Selector::~Selector()
@@ -25,6 +25,8 @@ void Selector::render(int x, int y)
 
 void Selector::setTile(LTexture &texture)
 {
+	if (!_showTile)
+		_showTile = true;
 	_tile = texture;
 }
 

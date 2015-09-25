@@ -219,25 +219,7 @@ void Map::renderMap(SDL_Rect &camera, int currentLayer)
 
 void Map::addTilemap(int tilemapID)
 {
-	Tilemap *tilemap;
-	tilemap = new Tilemap();
-
-	ifstream tilemaps("tilesets/tilesets.txt");
-
-	int id = 1;
-	string temp;
-
-	while (tilemaps >> temp)
-	{
-		if (id == tilemapID)
-		{
-			tilemap->initTilemap("tilesets/" + temp, tilemapID);
-			_tmaps[tilemapID] = tilemap;
-			break;
-		}
-		id++;
-	}
-    
+	_tmaps[tilemapID]->initTilemap();
 }
 
 string Map::getPath()
@@ -245,7 +227,12 @@ string Map::getPath()
 	return _mapPath;
 }
 
-map<int, Tilemap *> &Map::getMap()
+map<int, Tilemap *> &Map::getTilemaps()
 {
 	return _tmaps;
+}
+
+void Map::setTilemaps(map<int, Tilemap *> tmaps)
+{
+	_tmaps = tmaps;
 }

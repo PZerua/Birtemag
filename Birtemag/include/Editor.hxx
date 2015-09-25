@@ -15,16 +15,15 @@ class Button;
 class Editor
 {
 public:
-	Editor(SDL_Rect &camera);
+	Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps);
 	virtual ~Editor();
 
 	void putTile(Input &input);
 	void quitTile(Input &input);
 	void saveTiles();
-	void setMap(vector<Map *> &worldMaps, Map *gameMap);
+	void setMaps(vector<Map *> &worldMaps, Map *gameMap);
 	void init( Window &gWindow, Input &input, SDL_Event &e);
 	void setCamera(Input &input);
-	void addTilemap( string tilePath, int id);
 	void handleTilemap(Input &input);
 	void handleButtons(Input &input);
 	void addButton(string name, int behaviour, int x, int y);
@@ -37,7 +36,6 @@ public:
 	void renderMainSelector(Input &input);
 	void nextTilemap();
 	void previousTilemap();
-	void loadTilemaps();
 	void loadUtils();
 	void nextLayer();
 	void previousLayer();
