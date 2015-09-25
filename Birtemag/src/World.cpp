@@ -70,6 +70,7 @@ void World::handlePlayer()
 
 void World::render()
 {
+	// Second parameter is used in Editor to hide layers
 	_currentMap->renderMap(camera, -1);
 
 	_player->render(camera);

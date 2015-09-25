@@ -3,7 +3,8 @@
 Input::Input()
 {
     _quit = false;
-    _mouseClick = false;
+    _mouseLClick = false;
+	_mouseRClick = false;
     _f2 = false;
     _f3 = false;
     _right = false;
@@ -51,10 +52,17 @@ void Input::checkControls(SDL_Event *event)
         }
         break;
     case SDL_MOUSEBUTTONDOWN:
-        _mouseClick = true;
+		if (event->button.button == SDL_BUTTON_LEFT)
+			_mouseLClick = true;
+		else if (event->button.button == SDL_BUTTON_RIGHT)
+			_mouseRClick = true;
         break;
     case SDL_MOUSEBUTTONUP:
-        _mouseClick = false;
+		if (event->button.button == SDL_BUTTON_LEFT)
+			_mouseLClick = false;
+		else if (event->button.button == SDL_BUTTON_RIGHT)
+			_mouseRClick = false;
+		break;
         break;
     case SDL_KEYUP:
         switch (event->key.keysym.sym)

@@ -11,7 +11,8 @@ class Input
         void checkControls(SDL_Event *events);
 
         bool _quit;
-        bool _mouseClick;
+        bool _mouseLClick;
+		bool _mouseRClick;
         bool _f2;
         bool _f3;
         bool _right;

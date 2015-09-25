@@ -18,14 +18,15 @@ public:
 	Editor(SDL_Rect &camera);
 	virtual ~Editor();
 
-	void putTile(Input &input, SDL_Event &e);
+	void putTile(Input &input);
+	void quitTile(Input &input);
 	void saveTiles();
 	void setMap(vector<Map *> &worldMaps, Map *gameMap);
 	void init( Window &gWindow, Input &input, SDL_Event &e);
 	void setCamera(Input &input);
 	void addTilemap( string tilePath, int id);
-	void handleTilemap(Input &input, SDL_Event &e);
-	void handleButtons(Input &input, SDL_Event &e);
+	void handleTilemap(Input &input);
+	void handleButtons(Input &input);
 	void addButton(string name, int behaviour, int x, int y);
 	void showCollision();
 	void collisionMode();
@@ -33,7 +34,7 @@ public:
 	void attributeMode();
 	void putCollision();
 	void newMap();
-	void renderMainSelector(Input &input, SDL_Event &e);
+	void renderMainSelector(Input &input);
 	void nextTilemap();
 	void previousTilemap();
 	void loadTilemaps();

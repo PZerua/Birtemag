@@ -54,7 +54,7 @@ Editor::~Editor()
 	}*/
 }
 
-void Editor::putTile(Input &input, SDL_Event &e)
+void Editor::putTile(Input &input)
 {
 	if (_editMap)
 	{
@@ -81,36 +81,64 @@ void Editor::putTile(Input &input, SDL_Event &e)
 				if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
 				{
 					//Replace it with new one
-					if (input._mouseClick)
+					if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
 					{
-						if (e.button.button == SDL_BUTTON_LEFT)
+						if (!_currentMap->getMap().count(_actualID))
 						{
-							if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
-							{
-								if (!_currentMap->getMap().count(_actualID))
-								{
-									_currentMap->addTilemap(_actualID);
-									_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
-								}
-								else 
-								{
-									_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
-								}
-							}
-							else
-							{
-								_currentMap->getTiles()[t]->setLayerType(_currentLayer, _tileType, _actualID);
-							}
-							saveTiles();
+							_currentMap->addTilemap(_actualID);
+							_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
+						}
+						else 
+						{
+							_currentMap->getTiles()[t]->setLayer(_currentMap->getMap()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
 						}
 					}
+					else
+					{
+						_currentMap->getTiles()[t]->setLayerType(_currentLayer, _tileType, _actualID);
+					}
+					saveTiles();
 				}
 			}
 		}
 	}
 }
 
-void Editor::renderMainSelector(Input &input, SDL_Event &e)
+void Editor::quitTile(Input &input)
+{
+	if (_editMap)
+	{
+		//Mouse offsets
+		int x = 0, y = 0;
+
+		//Get mouse offsets
+		SDL_GetMouseState(&x, &y);
+
+		if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
+		{
+			//Adjust to _camera
+			x += _camera.x;
+			y += _camera.y;
+			bool exist = false;
+
+			//Go through tiles
+			for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
+			{
+				//Get tile's collision box
+				SDL_Rect box = _currentMap->getTiles()[t]->getBox();
+
+				//If the mouse is inside the tile
+				if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+				{
+					_currentMap->getTiles()[t]->eraseLayer(_currentLayer);
+					saveTiles();
+				}
+			}
+		}
+	}
+}
+
+void Editor::renderMainSelector(Input &input)
 {
 	if(_editMap || _selectedMode == Mode::collision)
 	{
@@ -245,7 +273,7 @@ void Editor::addButton(string name, int behaviour, int x, int y)
 
 }
 
-void Editor::handleTilemap(Input &input, SDL_Event &e)
+void Editor::handleTilemap(Input &input)
 {
 	if (_selectedMode == Mode::tile)
 	{
@@ -275,28 +303,25 @@ void Editor::handleTilemap(Input &input, SDL_Event &e)
 			if ((x > temp.x) && (x < temp.x + temp.w) && (y > temp.y) && (y < temp.y + temp.h))
 			{
 				_selector.render(temp.x, temp.y);
-				if (input._mouseClick)
+				if (input._mouseLClick)
 				{
-					if (e.button.button == SDL_BUTTON_LEFT)
-					{
-						_previousIndex = _tilemapIndex;
-						_tileSelected = true;
-						_wasSelected = true;
-						_editMap = true;
-						_actualX = temp.x;
-						_actualY = temp.y;
-						_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
-						_mainSelector.setClip(_tilemaps[_tilemapIndex]->getClips()[i]);
-						_tileType = i;
-						_actualID = _tilemapIndex;
-					}
+					_previousIndex = _tilemapIndex;
+					_tileSelected = true;
+					_wasSelected = true;
+					_editMap = true;
+					_actualX = temp.x;
+					_actualY = temp.y;
+					_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
+					_mainSelector.setClip(_tilemaps[_tilemapIndex]->getClips()[i]);
+					_tileType = i;
+					_actualID = _tilemapIndex;
 				}
 			}
 		}
 	}
 }
 
-void Editor::handleButtons(Input &input, SDL_Event &e)
+void Editor::handleButtons(Input &input)
 {
 	//Mouse offsets
 	int x = 0, y = 0;
@@ -341,7 +366,7 @@ void Editor::handleButtons(Input &input, SDL_Event &e)
 		{
 			if(!_changing) 
 				_buttons[i]->setState(ButtonState::hover);
-			if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT && !_changing)
+			if (input._mouseLClick && !_changing)
 			{
 				if (i == Mode::tile)
 					_selectedMode = Mode::tile;
@@ -357,7 +382,7 @@ void Editor::handleButtons(Input &input, SDL_Event &e)
 		} 
 		else _buttons[i]->setState(ButtonState::normal);
 	}
-	if (!input._mouseClick && _changing)
+	if (!input._mouseLClick && _changing)
 	{
 		_changing = false;
 	}
@@ -578,7 +603,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 	while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
 	{
-		if (input._mouseClick && e.button.button == SDL_BUTTON_LEFT)
+		if (input._mouseLClick)
 		{
 			if (_selectedMode == Mode::collision)
 			{
@@ -586,11 +611,16 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 			}
 			else
 			{
-				putTile(input, e);
+				putTile(input);
 			}
 		}
-		else if (!input._mouseClick)
+		else if (!input._mouseLClick)
 			_changeCollision = false;
+
+		if (input._mouseRClick)
+		{
+			quitTile(input);
+		}
 
 		while (SDL_PollEvent(&e) != 0)
 		{
@@ -605,7 +635,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		_currentMap->renderMap(_camera, _currentLayer);
 		showCollision();
-		renderMainSelector(input, e);
+		renderMainSelector(input);
 		_editorBackground.render(0, 528);
 		if (_selectedMode == Mode::tile)
 		{
@@ -614,8 +644,8 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 			printLayer();
 		}
 
-		handleTilemap(input, e);
-		handleButtons(input, e);
+		handleTilemap(input);
+		handleButtons(input);
 
 		gWindow.Present();
 	}

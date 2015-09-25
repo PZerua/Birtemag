@@ -8,6 +8,7 @@ Layer::Layer(int id, int type)
 
 Layer::~Layer()
 {
+	free();
 }
 
 int Layer::getTilemapId()

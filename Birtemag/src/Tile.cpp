@@ -96,3 +96,8 @@ void Tile::setLayerType(int layer, int type, int id)
 	if (_layers.count(layer))
 		_layers[layer]->setType(type, id);
 }
+
+void Tile::eraseLayer(int layer)
+{
+	_layers.erase(layer);
+}

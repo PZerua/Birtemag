@@ -34,6 +34,8 @@ class Tile
 
 		void setLayerType(int layer, int type, int id);
 
+		void eraseLayer(int layer);
+
 	private:
 		//The attributes of the tile
 		SDL_Rect mBox;
