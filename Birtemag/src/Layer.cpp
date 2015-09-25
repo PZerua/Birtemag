@@ -8,7 +8,7 @@ Layer::Layer(int id, int type)
 
 Layer::~Layer()
 {
-	free();
+
 }
 
 int Layer::getTilemapId()
@@ -27,17 +27,13 @@ void Layer::setType(int type, int id)
 	_tilemapId = id;
 }
 
-void Layer::setTexture(LTexture *texture)
+void Layer::setTexture(LTexture &texture)
 {
 	_gTileTexture = texture;
 }
 
-void Layer::free()
-{
-	_gTileTexture->free();
-}
 
 void Layer::render(int x, int y, SDL_Rect *gTileClips)
 {
-	_gTileTexture->render(x, y, &gTileClips[_mType]);
+	_gTileTexture.render(x, y, &gTileClips[_mType]);
 }

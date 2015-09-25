@@ -15,7 +15,7 @@ public:
 
 private:
 	LTexture _selector;
-	LTexture _tile;
+	LTexture *_tile;
 	SDL_Rect _clip;
 	bool _showTile;
 };

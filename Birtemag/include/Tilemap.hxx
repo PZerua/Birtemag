@@ -22,7 +22,7 @@ class Tilemap
 
 		void setData(string imgPath, int id);
 
-		LTexture *getTexture();
+		LTexture &getTexture();
 
 		SDL_Rect *getClips();
 
@@ -34,7 +34,7 @@ class Tilemap
 
 	private:
 
-		LTexture *_tileTexture;
+		LTexture _tileTexture;
 
 		int _totalTiles;
 

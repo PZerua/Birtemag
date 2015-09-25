@@ -17,7 +17,7 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 	_camera = camera;
 	_camVel = 8;
 	_tileType = 0;
-	_actualID = _tilemapIndex;
+	_actualTmID = _tilemapIndex;
 	_cameraOffset = 300;
 	_buttonsOffset = 10;
 	_actualX = 20;
@@ -42,16 +42,10 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 
 Editor::~Editor()
 {
-	for(vector<Button *>::iterator it = _buttons.begin(); it < _buttons.end(); ++it)
+	for (int i = 0; i < _buttons.size(); i++)
 	{
-		delete(*it);
-		it = _buttons.erase(it);
+		delete _buttons[i];
 	}
-	/*for(map<int, Tilemap *>::iterator it = _tilemaps.begin(); it < _tilemaps.end(); ++it)
-	{
-		delete(*it);
-		it = _tilemaps.erase(it);
-	}*/
 }
 
 void Editor::putTile(Input &input)
@@ -81,21 +75,21 @@ void Editor::putTile(Input &input)
 				if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
 				{
 					//Replace it with new one
-					if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
+					if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualTmID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
 					{
-						if (!_currentMap->getTilemaps().count(_actualID))
+						if (!_currentMap->getTilemaps().count(_actualTmID))
 						{
-							_currentMap->addTilemap(_actualID);
-							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
+							_currentMap->addTilemap(_actualTmID);
+							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualTmID]->getTexture(), _currentLayer, _tileType, _actualTmID);
 						}
 						else 
 						{
-							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualID]->getTexture(), _currentLayer, _tileType, _actualID);
+							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualTmID]->getTexture(), _currentLayer, _tileType, _actualTmID);
 						}
 					}
 					else
 					{
-						_currentMap->getTiles()[t]->setLayerType(_currentLayer, _tileType, _actualID);
+						_currentMap->getTiles()[t]->setLayerType(_currentLayer, _tileType, _actualTmID);
 					}
 					saveTiles();
 				}
@@ -273,7 +267,7 @@ void Editor::handleTilemap(Input &input)
 		int posX = 20;
 		int posY = 56;
 
-		_tilemaps[_tilemapIndex]->getTexture()->render(posX, posY);
+		_tilemaps[_tilemapIndex]->getTexture().render(posX, posY);
 
 		if (_tileSelected)
 			_actualTile.render(_actualX, _actualY);
@@ -296,10 +290,10 @@ void Editor::handleTilemap(Input &input)
 					_editMap = true;
 					_actualX = temp.x;
 					_actualY = temp.y;
-					_mainSelector.setTile(*_tilemaps[_tilemapIndex]->getTexture());
+					_mainSelector.setTile(_tilemaps[_tilemapIndex]->getTexture());
 					_mainSelector.setClip(_tilemaps[_tilemapIndex]->getClips()[i]);
 					_tileType = i;
-					_actualID = _tilemapIndex;
+					_actualTmID = _tilemapIndex;
 				}
 			}
 		}

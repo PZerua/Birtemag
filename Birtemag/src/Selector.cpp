@@ -18,7 +18,7 @@ Selector::~Selector()
 void Selector::render(int x, int y)
 {
 	if(_showTile)
-		_tile.render(x, y, &_clip);
+		_tile->render(x, y, &_clip);
 	_selector.render(x, y);
 
 }
@@ -27,7 +27,7 @@ void Selector::setTile(LTexture &texture)
 {
 	if (!_showTile)
 		_showTile = true;
-	_tile = texture;
+	_tile = &texture;
 }
 
 void Selector::setClip(SDL_Rect &clip)

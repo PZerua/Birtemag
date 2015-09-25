@@ -42,10 +42,7 @@ void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int currentLaye
 
 void Tile::free()
 {
-	for (map<int, Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
-	{
-		it->second->free();
-	}
+
 }
 
 SDL_Rect Tile::getBox()
@@ -53,7 +50,7 @@ SDL_Rect Tile::getBox()
 	return mBox;
 }
 
-void Tile::setLayer(LTexture *gTexture, int layer, int type, int id)
+void Tile::setLayer(LTexture &gTexture, int layer, int type, int id)
 {
 	if (!_layers.count(layer))
 	{

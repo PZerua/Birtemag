@@ -96,7 +96,7 @@ void LTexture::free()
 {
 	//Free texture if it exists
 	if( mTexture != NULL )
-	{
+	{	
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
 		mWidth = 0;

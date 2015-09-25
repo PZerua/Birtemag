@@ -4,14 +4,12 @@
 Tilemap::Tilemap()
 {
 	_totalTiles = 0;
-	_tileTexture = new LTexture;
 	_tileClips = NULL;
 }
 
 Tilemap::~Tilemap()
 {
 	delete[] _tileClips;
-	delete(_tileTexture);
 }
 
 bool Tilemap::loadTexture(string imagPath)
@@ -19,15 +17,15 @@ bool Tilemap::loadTexture(string imagPath)
 
 	_name = imagPath;
 
-	_tileTexture->loadFromFile(imagPath);
+	_tileTexture.loadFromFile(imagPath);
 
-	if( _tileTexture->getWidth() % TILE_SIZE != 0 || _tileTexture->getHeight() % TILE_SIZE != 0)
+	if( _tileTexture.getWidth() % TILE_SIZE != 0 || _tileTexture.getHeight() % TILE_SIZE != 0)
 	{
 		cout<<"Wrong tile texture size"<<endl;
 		return false;
 	}
 
-	_totalTiles = (_tileTexture->getHeight() / TILE_SIZE ) * (_tileTexture->getWidth() / TILE_SIZE);
+	_totalTiles = (_tileTexture.getHeight() / TILE_SIZE ) * (_tileTexture.getWidth() / TILE_SIZE);
 
 	return true;
 
@@ -42,7 +40,7 @@ void Tilemap::setClips()
 	{
 		for(int i = 0; i < _totalTiles; i++)
 		{
-			if (xMult == _tileTexture->getWidth() / TILE_SIZE)
+			if (xMult == _tileTexture.getWidth() / TILE_SIZE)
 			{
 				yMult++;
 				xMult = 0;
@@ -61,7 +59,6 @@ void Tilemap::setClips()
 
 void Tilemap::initTilemap()
 {
-	cout << _imgPath << endl;
 	if(loadTexture(_imgPath))
 	{
 		_tileClips = new SDL_Rect[_totalTiles];
@@ -76,7 +73,7 @@ void Tilemap::setData(string imgPath, int id)
 	_ID = id;
 }
 
-LTexture *Tilemap::getTexture()
+LTexture &Tilemap::getTexture()
 {
 	return _tileTexture;
 }

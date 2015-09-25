@@ -49,7 +49,7 @@ private:
 	SDL_Rect _camera;
 	int _camVel;
 	int _tileType;
-	int _actualID;
+	int _actualTmID;
 	int _cameraOffset;
 	int _buttonsOffset;
 	int _currentLayer;

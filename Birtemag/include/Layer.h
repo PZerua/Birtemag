@@ -12,13 +12,12 @@ public:
 	~Layer();
 	int getTilemapId();
 	int getType();
-	void setTexture(LTexture *texture);
-	void free();
+	void setTexture(LTexture &texture);
 	void render(int x, int y, SDL_Rect *gTileClips);
 	void setType(int type, int id);
 
 private:
-	LTexture *_gTileTexture;
+	LTexture _gTileTexture;
 	int _tilemapId;
 	int _mType;
 };
