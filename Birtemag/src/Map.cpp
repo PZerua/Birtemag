@@ -141,7 +141,8 @@ bool Map::loadMap()
 					else
 					{
 						//Stop loading map
-						printf("Error loading map: Invalid tile type at %d!\n", i);
+						cout << "Error loading map: Invalid tile type at " << i << endl;
+						cout << "tilemap: " << tilemap << ", tileType: " << tileType << endl;
 						tilesLoaded = false;
 						break;
 					}
@@ -155,6 +156,9 @@ bool Map::loadMap()
 				if (!tilesLoaded)
 					break;
 			}
+
+			if (!tilesLoaded)
+				break;
 
 			//Move to next tile spot
 			x += TILE_SIZE;
@@ -172,8 +176,6 @@ bool Map::loadMap()
 			map >> collision;
 			_tileSet[i]->setCollision(collision);
 
-			if (!tilesLoaded)
-				break;
 		}
 
 	}
@@ -232,7 +234,7 @@ map<int, Tilemap *> &Map::getTilemaps()
 	return _tmaps;
 }
 
-void Map::setTilemaps(map<int, Tilemap *> tmaps)
+void Map::setTilemaps(map<int, Tilemap *> &tmaps)
 {
 	_tmaps = tmaps;
 }

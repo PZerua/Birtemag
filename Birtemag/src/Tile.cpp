@@ -42,7 +42,13 @@ void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int currentLaye
 
 void Tile::free()
 {
+	for (map<int, Layer *>::iterator it = _layers.begin(); it != _layers.end(); it++)
+	{
+		delete it->second;
+		it = _layers.erase(it);
+	}
 
+	delete _hideLayer;
 }
 
 SDL_Rect Tile::getBox()

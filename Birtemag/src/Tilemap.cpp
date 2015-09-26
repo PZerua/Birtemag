@@ -5,6 +5,7 @@ Tilemap::Tilemap()
 {
 	_totalTiles = 0;
 	_tileClips = NULL;
+	_isInit = false;
 }
 
 Tilemap::~Tilemap()
@@ -63,13 +64,15 @@ void Tilemap::initTilemap()
 	{
 		_tileClips = new SDL_Rect[_totalTiles];
 		setClips();
+		_isInit = true;
 	}
 	else cout<<"Cannot init tilemap: "<<_imgPath<<endl;
 }
 
-void Tilemap::setData(string imgPath, int id)
+void Tilemap::setData(string name, int id)
 {
-	_imgPath = imgPath;
+	_name = name;
+	_imgPath = "tilesets/" + name;
 	_ID = id;
 }
 
@@ -96,4 +99,9 @@ string Tilemap::getName()
 int Tilemap::getID()
 {
 	return _ID;
+}
+
+bool Tilemap::isInit()
+{
+	return _isInit;
 }

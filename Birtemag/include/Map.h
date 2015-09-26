@@ -39,7 +39,7 @@ public:
 
 	map<int, Tilemap *> &getTilemaps();
 
-	void setTilemaps(map<int, Tilemap *> tmaps);
+	void setTilemaps(map<int, Tilemap *> &tmaps);
 
 protected:
 

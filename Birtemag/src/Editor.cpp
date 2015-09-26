@@ -42,7 +42,7 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 
 Editor::~Editor()
 {
-	for (int i = 0; i < _buttons.size(); i++)
+	for (unsigned i = 0; i < _buttons.size(); i++)
 	{
 		delete _buttons[i];
 	}
@@ -394,7 +394,7 @@ void Editor::tileMode()
 
 void Editor::attributeMode()
 {
-	//_mainSelector.showTile();
+	_mainSelector.showTile(false);
 }
 
 void Editor::putCollision()
@@ -461,6 +461,10 @@ void Editor::nextTilemap()
 	if (_tilemapIndex < _tilemaps.size())
 	{
 		_tilemapIndex++;
+		if (!_tilemaps[_tilemapIndex]->isInit())
+		{
+			_tilemaps[_tilemapIndex]->initTilemap();
+		}
 		if (_tilemapIndex == _previousIndex && _wasSelected == true)
 			_tileSelected = true;
 		else _tileSelected = false;
@@ -472,6 +476,10 @@ void Editor::previousTilemap()
 	if (_tilemapIndex > 1)
 	{
 		_tilemapIndex--;
+		if (!_tilemaps[_tilemapIndex]->isInit())
+		{
+			_tilemaps[_tilemapIndex]->initTilemap();
+		}
 		if (_tilemapIndex == _previousIndex && _wasSelected == true)
 			_tileSelected = true;
 		else _tileSelected = false;

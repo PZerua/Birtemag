@@ -18,6 +18,7 @@ private:
 	LTexture *_tile;
 	SDL_Rect _clip;
 	bool _showTile;
+	bool _hasTile;
 };
 
 #endif

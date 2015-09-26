@@ -1,9 +1,9 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 
-#include "../include/Common_libs.hxx"
-#include "../include/LTexture.h"
-#include "../include/window.h"
+#include "Common_libs.hxx"
+#include "LTexture.h"
+#include "window.h"
 
 
 class Tilemap
@@ -20,7 +20,7 @@ class Tilemap
 
 		void initTilemap();
 
-		void setData(string imgPath, int id);
+		void setData(string name, int id);
 
 		LTexture &getTexture();
 
@@ -31,6 +31,8 @@ class Tilemap
 		string getName();
 
 		int getID();
+
+		bool isInit();
 
 	private:
 
@@ -45,6 +47,8 @@ class Tilemap
 		string _name;
 
 		string _imgPath;
+
+		bool _isInit;
 
 
 };

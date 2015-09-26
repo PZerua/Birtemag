@@ -35,6 +35,12 @@ World::~World()
 		it = _worldMaps.erase(it);
 	}
 
+	for (map<int, Tilemap *>::iterator it = _tmaps.begin(); it != _tmaps.end(); it++)
+	{
+		delete it->second;
+		it = _tmaps.erase(it);
+	}
+
 	delete _player;
 }
 
@@ -98,9 +104,6 @@ void World::loadMaps()
 
 void World::loadTilemaps()
 {
-	Tilemap *tilemap;
-	tilemap = new Tilemap();
-
 	ifstream tilemaps("tilesets/tilesets.txt");
 
 	string name;
@@ -109,7 +112,10 @@ void World::loadTilemaps()
 
 	while (tilemaps >> name)
 	{
-		tilemap->setData("tilesets/" + name, id);
+		Tilemap *tilemap;
+		tilemap = new Tilemap();
+
+		tilemap->setData(name, id);
 		_tmaps[id] = tilemap;
 		id++;
 	}
