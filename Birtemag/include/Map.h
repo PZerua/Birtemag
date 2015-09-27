@@ -29,7 +29,7 @@ public:
 
 	bool touchesWall( SDL_Rect box);
 
-	void renderMap(SDL_Rect &camera, int currentLayer);
+	void renderMap(SDL_Rect &camera, int currentLayer, bool showBorder = false);
 
 	void addTilemap(int tilemapID);
 

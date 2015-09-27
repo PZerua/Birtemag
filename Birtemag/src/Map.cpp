@@ -209,13 +209,22 @@ bool Map::touchesWall( SDL_Rect box )
 	return false;
 }
 
-void Map::renderMap(SDL_Rect &camera, int currentLayer)
+void Map::renderMap(SDL_Rect &camera, int currentLayer, bool showBorder)
 {
 	for( int i = 0; i < TOTAL_TILES; ++i )
 	{
 		for (int j = 0; j < Layers::size; j++)
 			if (_tileSet[i]->getTileMapID(j) != 0)
 				_tileSet[ i ]->render(camera, _tmaps, currentLayer);
+		if (showBorder)
+		{
+			SDL_Rect temp;
+			temp = _tileSet[i]->getBox();
+			if (temp.x == 0 && temp.y == 0)
+			{
+
+			}
+		}
 	}
 }
 

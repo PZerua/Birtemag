@@ -42,6 +42,7 @@ class Window
 		SDL_Renderer *getRender();
 		static SDL_Renderer* mRenderer;
 
+
 	private:
 		//Window data
 		SDL_Window* mWindow;
@@ -58,6 +59,7 @@ class Window
 		bool mMinimized;
 		bool mShown;
 		bool mClosed;
+		
 };
 
 #endif
