@@ -9,6 +9,8 @@ Window::Window()
 	//Initialize non-existant window
 	mWindow = NULL;
 
+	_pressing = false;
+	_isFullscreen = false;
 	mMouseFocus = false;
 	mKeyboardFocus = false;
 	mFullScreen = false;
@@ -135,11 +137,35 @@ void Window::handleEvent( SDL_Event& e )
 				break;
 		}
 	}
-	switch (e.key.keysym.sym)
+	switch (e.type)
 	{
-	case SDLK_F11:
-		SDL_SetWindowFullscreen(mWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
-		break;
+		case SDL_KEYDOWN:
+			switch (e.key.keysym.sym)
+			{
+				case SDLK_F11:
+					if (!_isFullscreen && !_pressing)
+					{
+						SDL_SetWindowFullscreen(mWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+						_isFullscreen = true;
+						_pressing = true;
+					}
+					else if (_isFullscreen && !_pressing)
+					{
+						SDL_SetWindowFullscreen(mWindow, 0);
+						_isFullscreen = false;
+						_pressing = true;
+					}
+					break;
+			}
+			break;
+		case SDL_KEYUP:
+			switch (e.key.keysym.sym)
+			{
+				case SDLK_F11:
+					_pressing = false;
+					break;
+			}
+			break;
 	}
 }
 

@@ -59,6 +59,8 @@ class Window
 		bool mMinimized;
 		bool mShown;
 		bool mClosed;
+		bool _isFullscreen;
+		bool _pressing;
 		
 };
 
