@@ -1,10 +1,10 @@
 #ifndef EDITOR_H
 #define EDITOR_H
-#include "Common_libs.hxx"
-#include "Common_functions.hxx"
+#include "Common_libs.h"
+#include "Common_functions.h"
 #include "Map.h"
-#include "Input.hxx"
-#include "window.h"
+#include "Input.h"
+#include "Window.h"
 #include "LTexture.h"
 #include "Button.h"
 #include "Collision_tile.h"
@@ -18,22 +18,22 @@ public:
 	Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps);
 	virtual ~Editor();
 
-	void putTile(Input &input);
-	void quitTile(Input &input);
+	void putTile(Input &input, Window &gWindow);
+	void quitTile(Input &input, Window &gWindow);
 	void saveTiles();
 	void setMaps(vector<Map *> &worldMaps, Map *gameMap);
 	void init( Window &gWindow, Input &input, SDL_Event &e);
 	void setCamera(Input &input);
-	void handleTilemap(Input &input);
-	void handleButtons(Input &input);
+	void handleTilemap(Input &input, Window &gWindow);
+	void handleButtons(Input &input, Window &gWindow);
 	void addButton(string name, int behaviour, int x, int y);
 	void showCollision();
 	void collisionMode();
 	void tileMode();
 	void attributeMode();
-	void putCollision();
+	void putCollision(Window &gWindow);
 	void newMap();
-	void renderMainSelector(Input &input);
+	void renderMainSelector(Input &input, Window &gWindow);
 	void nextTilemap();
 	void previousTilemap();
 	void loadUtils();

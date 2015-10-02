@@ -1,4 +1,4 @@
-#include "Input.hxx"
+#include "Input.h"
 
 Input::Input()
 {

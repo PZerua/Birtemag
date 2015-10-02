@@ -1,6 +1,6 @@
 #ifndef COMMON_FUNC
 #define COMMON_FUNC
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 #include "Map.h"
 #include "Tile.h"
 

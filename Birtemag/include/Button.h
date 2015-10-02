@@ -1,11 +1,11 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 #include "LTexture.h"
 #include "window.h"
-#include "Common_functions.hxx"
-#include "Editor.hxx"
+#include "Common_functions.h"
+#include "Editor.h"
 #include "window.h"
 
 class Editor;

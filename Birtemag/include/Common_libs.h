@@ -12,6 +12,7 @@
 #include <vector>
 #include "SDL_image.h"
 #include "SDL_ttf.h"
+#include "math.h"
 
 #define TILE_SIZE 64
 #define SCREEN_WIDTH 1280

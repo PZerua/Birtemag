@@ -1,6 +1,6 @@
 #ifndef SELECTOR_H
 #define SELECTOR_H
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 #include "LTexture.h"
 
 class Selector

@@ -1,7 +1,7 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 #include "Map.h"
 #include "window.h"
 #include "Player.h"

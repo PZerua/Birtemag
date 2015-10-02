@@ -1,6 +1,6 @@
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 
-#include "window.h"
+#include "Window.h"
 
 SDL_Renderer *Window::mRenderer = NULL;
 
@@ -255,4 +255,9 @@ SDL_Renderer *Window::getRender()
 void Window::setFocus(bool focus)
 {
     mMouseFocus = focus;
+}
+
+bool Window::isFullscreen()
+{
+	return _isFullscreen;
 }

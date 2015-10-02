@@ -1,8 +1,8 @@
 #ifndef MAP_H
 #define MAP_H
-#include "Common_libs.hxx"
-#include "Common_functions.hxx"
-#include "Tilemap.hxx"
+#include "Common_libs.h"
+#include "Common_functions.h"
+#include "Tilemap.h"
 #include "Tile.h"
 #include "window.h"
 

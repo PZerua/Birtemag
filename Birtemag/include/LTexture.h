@@ -1,7 +1,6 @@
 #ifndef LTEXTURE_H
 #define LTEXTURE_H
-#include "../include/Common_libs.hxx"
-#include "../include/window.h"
+#include "Common_libs.h"
 
 class LTexture
 {

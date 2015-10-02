@@ -1,4 +1,4 @@
-#include "Common_functions.hxx"
+#include "Common_functions.h"
 
 
 bool checkCollision( SDL_Rect a, SDL_Rect b )

@@ -1,12 +1,12 @@
-#include "window.h"
+#include "Window.h"
 #include "timer.h"
-#include "Input.hxx"
+#include "Input.h"
 #include "Tile.h"
-#include "Common_libs.hxx"
-#include "Common_functions.hxx"
+#include "Common_libs.h"
+#include "Common_functions.h"
 #include "Map.h"
 #include "Player.h"
-#include "Editor.hxx"
+#include "Editor.h"
 #include "World.h"
 
 int main(int argc, char** argv)

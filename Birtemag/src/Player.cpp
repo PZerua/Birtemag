@@ -1,6 +1,6 @@
 #include "Player.h"
-#include "Common_libs.hxx"
-#include "Input.hxx"
+#include "Common_libs.h"
+#include "Input.h"
 
 Player::Player()
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 #include "LTexture.h"
 
 class Collision_tile

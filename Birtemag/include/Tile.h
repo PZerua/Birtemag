@@ -1,9 +1,9 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 #include "Layer.h"
-#include "Tilemap.hxx"
+#include "Tilemap.h"
 
 class Layer;
 

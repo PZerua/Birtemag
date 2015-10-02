@@ -1,7 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "Common_libs.hxx"
+#include "Common_libs.h"
 
 class Window
 {
@@ -41,6 +41,7 @@ class Window
 		bool isClosed();
 		SDL_Renderer *getRender();
 		static SDL_Renderer* mRenderer;
+		bool isFullscreen();
 
 
 	private:

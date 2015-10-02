@@ -1,4 +1,4 @@
-#include "Editor.hxx"
+#include "Editor.h"
 
 Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 {
@@ -48,7 +48,7 @@ Editor::~Editor()
 	}
 }
 
-void Editor::putTile(Input &input)
+void Editor::putTile(Input &input, Window &gWindow)
 {
 	if (_editMap)
 	{
@@ -57,6 +57,15 @@ void Editor::putTile(Input &input)
 
 		//Get mouse offsets
 		SDL_GetMouseState(&x, &y);
+
+		if (gWindow.isFullscreen())
+		{
+			SDL_DisplayMode desktop;
+			SDL_GetDesktopDisplayMode(0, &desktop);
+
+			x = (int)round(x * SCREEN_WIDTH / desktop.w);
+			y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+		}
 
 		if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
 		{
@@ -98,13 +107,22 @@ void Editor::putTile(Input &input)
 	}
 }
 
-void Editor::quitTile(Input &input)
+void Editor::quitTile(Input &input, Window &gWindow)
 {
 	//Mouse offsets
 	int x = 0, y = 0;
 
 	//Get mouse offsets
 	SDL_GetMouseState(&x, &y);
+
+	if (gWindow.isFullscreen())
+	{
+		SDL_DisplayMode desktop;
+		SDL_GetDesktopDisplayMode(0, &desktop);
+
+		x = (int)round(x * SCREEN_WIDTH / desktop.w);
+		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+	}
 
 	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
 	{
@@ -129,13 +147,22 @@ void Editor::quitTile(Input &input)
 	}
 }
 
-void Editor::renderMainSelector(Input &input)
+void Editor::renderMainSelector(Input &input, Window &gWindow)
 {
 	//Mouse offsets
 	int x = 0, y = 0;
 
 	//Get mouse offsets
 	SDL_GetMouseState(&x, &y);
+
+	if (gWindow.isFullscreen())
+	{
+		SDL_DisplayMode desktop;
+		SDL_GetDesktopDisplayMode(0, &desktop);
+
+		x = (int)round(x * SCREEN_WIDTH / desktop.w);
+		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+	}
 
 	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
 	{
@@ -252,7 +279,7 @@ void Editor::addButton(string name, int behaviour, int x, int y)
 	_buttons.push_back(button);
 }
 
-void Editor::handleTilemap(Input &input)
+void Editor::handleTilemap(Input &input, Window &gWindow)
 {
 	if (_selectedMode == Mode::tile)
 	{
@@ -263,6 +290,15 @@ void Editor::handleTilemap(Input &input)
 
 		//Get mouse offsets
 		SDL_GetMouseState(&x, &y);
+
+		if (gWindow.isFullscreen())
+		{
+			SDL_DisplayMode desktop;
+			SDL_GetDesktopDisplayMode(0, &desktop);
+
+			x = (int)round(x * SCREEN_WIDTH / desktop.w);
+			y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+		}
 
 		int posX = 20;
 		int posY = 56;
@@ -300,13 +336,22 @@ void Editor::handleTilemap(Input &input)
 	}
 }
 
-void Editor::handleButtons(Input &input)
+void Editor::handleButtons(Input &input, Window &gWindow)
 {
 	//Mouse offsets
 	int x = 0, y = 0;
 
 	//Get mouse offsets
 	SDL_GetMouseState( &x, &y );
+
+	if (gWindow.isFullscreen())
+	{
+		SDL_DisplayMode desktop;
+		SDL_GetDesktopDisplayMode(0, &desktop);
+
+		x = (int)round(x * SCREEN_WIDTH / desktop.w);
+		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+	}
 
 	if (_selectedMode == Mode::tile)
 	{
@@ -327,7 +372,6 @@ void Editor::handleButtons(Input &input)
 		_buttons[Mode::attribute]->setFixedState(ButtonState::hover);
 	}
 		
-
 	for(unsigned i = 0; i < _buttons.size(); i++)
 	{
 
@@ -397,7 +441,7 @@ void Editor::attributeMode()
 	_mainSelector.showTile(false);
 }
 
-void Editor::putCollision()
+void Editor::putCollision(Window &gWindow)
 {
 
 	//Mouse offsets
@@ -405,6 +449,15 @@ void Editor::putCollision()
 
 	//Get mouse offsets
 	SDL_GetMouseState( &x, &y );
+
+	if (gWindow.isFullscreen())
+	{
+		SDL_DisplayMode desktop;
+		SDL_GetDesktopDisplayMode(0, &desktop);
+
+		x = (int)round(x * SCREEN_WIDTH / desktop.w);
+		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+	}
 
 	if (y < 528 && _selectedMode == Mode::collision)
 	{
@@ -572,15 +625,20 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 {
 	while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
 	{
+		//Mouse offsets
+		int x = 0, y = 0;
+
+		//Get mouse offsets
+		
 		if (input._mouseLClick)
 		{
 			if (_selectedMode == Mode::collision)
 			{
-				putCollision();
+				putCollision(gWindow);
 			}
 			else
 			{
-				putTile(input);
+				putTile(input, gWindow);
 			}
 		}
 		else if (!input._mouseLClick)
@@ -588,7 +646,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		if (input._mouseRClick)
 		{
-			quitTile(input);
+			quitTile(input, gWindow);
 		}
 
 		while (SDL_PollEvent(&e) != 0)
@@ -604,7 +662,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		_currentMap->renderMap(_camera, _currentLayer);
 		showCollision();
-		renderMainSelector(input);
+		renderMainSelector(input, gWindow);
 		_editorBackground.render(0, 528);
 		if (_selectedMode == Mode::tile)
 		{
@@ -613,10 +671,9 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 			printLayer();
 		}
 
-		handleTilemap(input);
-		handleButtons(input);
+		handleTilemap(input, gWindow);
+		handleButtons(input, gWindow);
 
 		gWindow.Present();
 	}
 }
-
