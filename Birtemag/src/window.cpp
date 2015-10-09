@@ -39,8 +39,7 @@ bool Window::init(string screenTitle, int xPos, int yPos)
 		mRenderer = SDL_CreateRenderer( mWindow, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 		cout << "[GAME] Renderer created: Accelerated, VSYNC" << endl;
 
-		if (SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0"))
-			cout << "Set Hint" << endl;
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
 		SDL_RenderSetLogicalSize(mRenderer, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 		if( mRenderer == NULL )

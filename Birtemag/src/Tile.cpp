@@ -21,21 +21,29 @@ Tile::~Tile()
 	free();
 }
 
-void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int currentLayer)
+void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &currentLayer)
 {
-	//If the tile is on screen
+	bool showHide = true;
+	// If the tile is on screen
 	if( checkCollision( camera, mBox ) )
 	{
 		for (map<int, Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
 		{
-			//Show the tile
+			// Show the tile
 			it->second->render(mBox.x - camera.x, mBox.y - camera.y, tmaps[it->second->getTilemapId()]->getClips());
+			// Hide lower layers when changing current layer (only in Editor mode)
+			// BLACK MAGIC!! wtf is going on here
 			if (it->first < currentLayer)
 			{
-				for (int i = it->first; i < currentLayer; i++)
+				for (int i = it->first + 1; i < currentLayer; i++)
+				{
+					if (_layers.count(i))
+						showHide = false;
+				}
+				if (showHide)
 					_hideLayer->render(mBox.x - camera.x, mBox.y - camera.y);
 			}
-				
+			showHide = true;
 		}
 	}
 }
