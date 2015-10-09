@@ -155,17 +155,18 @@
   <ItemGroup>
     <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Collision_tile.h" />
-    <ClInclude Include="include\Common_functions.hxx" />
-    <ClInclude Include="include\Common_libs.hxx" />
-    <ClInclude Include="include\Editor.hxx" />
-    <ClInclude Include="include\Input.hxx" />
+    <ClInclude Include="include\Common_functions.h" />
+    <ClInclude Include="include\Common_libs.h" />
+    <ClInclude Include="include\Editor.h" />
+    <ClInclude Include="include\InfoPanel.h" />
+    <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Layer.h" />
     <ClInclude Include="include\LTexture.h" />
     <ClInclude Include="include\Map.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Selector.h" />
     <ClInclude Include="include\Tile.h" />
-    <ClInclude Include="include\Tilemap.hxx" />
+    <ClInclude Include="include\Tilemap.h" />
     <ClInclude Include="include\timer.h" />
     <ClInclude Include="include\window.h" />
     <ClInclude Include="include\World.h" />

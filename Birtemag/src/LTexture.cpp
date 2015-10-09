@@ -152,3 +152,13 @@ SDL_Texture *LTexture::getTexture()
 {
     return mTexture;
 }
+
+void LTexture::setHeight(int height)
+{
+	mHeight = mHeight;
+}
+
+void LTexture::setWidth(int width)
+{
+	mWidth = mWidth;
+}

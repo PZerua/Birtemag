@@ -660,7 +660,7 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		gWindow.Clear();
 
-		_currentMap->renderMap(_camera, _currentLayer);
+		_currentMap->renderMap(_camera, _currentLayer, true);
 		showCollision();
 		renderMainSelector(input, gWindow);
 		_editorBackground.render(0, 528);

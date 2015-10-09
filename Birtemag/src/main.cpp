@@ -34,6 +34,8 @@ int main(int argc, char** argv)
 
 	cout << "[INFO] Press f2 to open editor, f3 to close" << endl;
 
+	SDL_ShowCursor(SDL_DISABLE);
+
 	//For tracking if we want to quit
 	while (!input._quit)
 	{
@@ -45,11 +47,13 @@ int main(int argc, char** argv)
 		if (input._f2)
 		{
 			//Goes into Editor
+			SDL_ShowCursor(SDL_ENABLE);
 			input._f2 = false;
 			Editor *gameEditor = new Editor(world.getCamera(), world.getTilemaps());
 			gameEditor->setMaps(world.getMaps(), world.getCurrentMap());
 			gameEditor->init(gWindow, input, e);
 			delete(gameEditor);
+			SDL_ShowCursor(SDL_DISABLE);
 			//If the window has been closed exits the loop
 			if (gWindow.isClosed())
 			{

@@ -50,6 +50,10 @@ private:
 
 	LTexture _hideLayer;
 
+	LTexture _border;
+
+	SDL_Point center;
+
 	map<int, Tilemap *> _tmaps;
 
 	Tile** _tileSet;

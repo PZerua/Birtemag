@@ -36,6 +36,9 @@ class LTexture
 		int getWidth();
 		int getHeight();
 
+		void setHeight(int height);
+		void setWidth(int width);
+
 		SDL_Texture *getTexture();
 
 	private:

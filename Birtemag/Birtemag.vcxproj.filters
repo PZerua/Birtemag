@@ -68,18 +68,6 @@
     <ClInclude Include="include\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Common_functions.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Common_libs.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Editor.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Input.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\LTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -90,9 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Tile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Tilemap.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\timer.h">
@@ -111,6 +96,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Layer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common_functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Common_libs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Editor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\InfoPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Tilemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

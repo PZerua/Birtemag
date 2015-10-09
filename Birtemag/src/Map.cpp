@@ -10,7 +10,11 @@ Map::Map(string path)
 
 	_mapPath = path;
 
+	center.x = 0;
+	center.y = 0;
+
 	_hideLayer.loadFromFile("utils/hideLayer.png");
+	_border.loadFromFile("utils/border.png");
 	_hideLayer.setAlpha(50);
 
 }
@@ -27,6 +31,30 @@ Map::Map(int width, int height, string name)
 
 Map::~Map()
 {
+
+}
+
+void Map::renderMap(SDL_Rect &camera, int currentLayer, bool showBorder)
+{
+	for (int i = 0; i < TOTAL_TILES; ++i)
+	{
+		for (int j = 0; j < Layers::size; j++)
+			if (_tileSet[i]->getTileMapID(j) != 0)
+				_tileSet[i]->render(camera, _tmaps, currentLayer);
+		if (showBorder)
+		{
+			if (i < LEVEL_WIDTH / 64)
+			{
+				_border.render(i * TILE_SIZE - camera.x, -2 - camera.y);
+				_border.render(i * TILE_SIZE - camera.x, LEVEL_HEIGHT - camera.y);
+			}
+			if (i < LEVEL_HEIGHT / 64)
+			{
+				_border.render(-1 - camera.x, i * TILE_SIZE - camera.y, NULL, 90, &center);
+				_border.render(LEVEL_WIDTH + 1 - camera.x, i * TILE_SIZE - camera.y, NULL, 90, &center);
+			}
+		}
+	}
 
 }
 
@@ -207,25 +235,6 @@ bool Map::touchesWall( SDL_Rect box )
 
 	//If no wall tiles were touched
 	return false;
-}
-
-void Map::renderMap(SDL_Rect &camera, int currentLayer, bool showBorder)
-{
-	for( int i = 0; i < TOTAL_TILES; ++i )
-	{
-		for (int j = 0; j < Layers::size; j++)
-			if (_tileSet[i]->getTileMapID(j) != 0)
-				_tileSet[ i ]->render(camera, _tmaps, currentLayer);
-		if (showBorder)
-		{
-			SDL_Rect temp;
-			temp = _tileSet[i]->getBox();
-			if (temp.x == 0 && temp.y == 0)
-			{
-
-			}
-		}
-	}
 }
 
 void Map::addTilemap(int tilemapID)
