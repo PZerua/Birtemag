@@ -149,7 +149,7 @@
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\Tilemap.cpp" />
     <ClCompile Include="src\timer.cpp" />
-    <ClCompile Include="src\window.cpp" />
+    <ClCompile Include="src\Window.cpp" />
     <ClCompile Include="src\World.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,7 +168,7 @@
     <ClInclude Include="include\Tile.h" />
     <ClInclude Include="include\Tilemap.h" />
     <ClInclude Include="include\timer.h" />
-    <ClInclude Include="include\window.h" />
+    <ClInclude Include="include\Window.h" />
     <ClInclude Include="include\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
