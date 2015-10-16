@@ -32,7 +32,7 @@ int main(int argc, char** argv)
 	//Our input instance
 	Input input;
 
-	cout << "[INFO] Press f2 to open editor, f3 to close" << endl;
+	cout << "[INFO] Press F2 to open editor and F3 to close it" << endl;
 
 	SDL_ShowCursor(SDL_DISABLE);
 

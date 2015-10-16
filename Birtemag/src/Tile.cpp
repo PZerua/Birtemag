@@ -23,7 +23,7 @@ Tile::~Tile()
 
 void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &currentLayer)
 {
-	bool showHide = true;
+	bool hide = true;
 	// If the tile is on screen
 	if( checkCollision( camera, mBox ) )
 	{
@@ -38,12 +38,12 @@ void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &curr
 				for (int i = it->first + 1; i < currentLayer; i++)
 				{
 					if (_layers.count(i))
-						showHide = false;
+						hide = false;
 				}
-				if (showHide)
+				if (hide)
 					_hideLayer->render(mBox.x - camera.x, mBox.y - camera.y);
 			}
-			showHide = true;
+			hide = true;
 		}
 	}
 }

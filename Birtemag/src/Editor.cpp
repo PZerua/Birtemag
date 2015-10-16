@@ -623,6 +623,10 @@ void Editor::printLayer()
 
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 {
+	cout << "[INFO] Use w, a, s ,d to move camera" << endl;
+	cout << "[INFO] Left click to select and put tiles/collisions" << endl;
+	cout << "[INFO] Right click to quit tiles in the actual layer" << endl;
+
 	while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
 	{
 		//Mouse offsets
