@@ -5,22 +5,22 @@ Button::Button(int behaviour, string name, int x, int y)
 
 	mBox.x = x;
 	mBox.y = y;
-    SDL_Color color;
-    color.a = 0;
-    color.r = 0;
-    color.g = 0;
-    color.b = 0;
-    _actualState = 0;
-    _behaviour = behaviour;
+	SDL_Color color;
+	color.a = 0;
+	color.r = 0;
+	color.g = 0;
+	color.b = 0;
+	_actualState = 0;
+	_behaviour = behaviour;
 	_isEnabled = true;
 
-    _text.loadFromRenderedText(name, color, 16);
-    _hoverState.loadFromFile("utils/hoverButton.png");
-    _normalState.loadFromFile("utils/normalButton.png");
+	_text.loadFromRenderedText(name, color, 16);
+	_hoverState.loadFromFile("utils/hoverButton.png");
+	_normalState.loadFromFile("utils/normalButton.png");
 	_clickState.loadFromFile("utils/clickButton.png");
 
-    SDL_QueryTexture(_normalState.getTexture(), NULL, NULL, &mBox.w, &mBox.h);
-    SDL_QueryTexture(_text.getTexture(), NULL, NULL, &mTextBox.w, &mTextBox.h);
+	SDL_QueryTexture(_normalState.getTexture(), NULL, NULL, &mBox.w, &mBox.h);
+	SDL_QueryTexture(_text.getTexture(), NULL, NULL, &mTextBox.w, &mTextBox.h);
 }
 
 Button::~Button()
@@ -44,8 +44,8 @@ void Button::render()
 
 void Button::setPos(int x, int y)
 {
-    mBox.x = x;
-    mBox.y = y;
+	mBox.x = x;
+	mBox.y = y;
 }
 
 void Button::activate(Editor &editor)
@@ -95,7 +95,7 @@ void Button::setState(int state)
 
 SDL_Rect Button::getBox()
 {
-    return mBox;
+	return mBox;
 }
 
 void Button::setFixedState(int state)

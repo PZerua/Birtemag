@@ -10,17 +10,17 @@ bool checkCollision( SDL_Rect a, SDL_Rect b );
 
 enum ButtonState
 {
-    normal,
-    hover,
-    click
+	normal,
+	hover,
+	click
 };
 
 enum Behaviour
 {
 	tile,
-    collision,
+	collision,
 	attribute,
-    newMap,
+	newMap,
 	nextTilemap,
 	previousTilemap,
 	nextLayer,

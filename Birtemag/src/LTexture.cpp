@@ -34,7 +34,7 @@ bool LTexture::loadFromFile(string path )
 		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
 		//Create texture from surface pixels
-        newTexture = SDL_CreateTextureFromSurface( Window::mRenderer, loadedSurface );
+	    newTexture = SDL_CreateTextureFromSurface( Window::mRenderer, loadedSurface );
 		if( newTexture == NULL )
 		{
 			printf( "Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
@@ -52,6 +52,7 @@ bool LTexture::loadFromFile(string path )
 
 	//Return success
 	mTexture = newTexture;
+
 	return mTexture != NULL;
 }
 
@@ -60,14 +61,14 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	//Get rid of preexisting texture
 	free();
 
-    TTF_Font *gFont = TTF_OpenFont("fonts/cour.ttf", fontSize);
-    TTF_SetFontStyle(gFont, TTF_STYLE_BOLD);
+	TTF_Font *gFont = TTF_OpenFont("fonts/cour.ttf", fontSize);
+	TTF_SetFontStyle(gFont, TTF_STYLE_BOLD);
 	//Render text surface
 	SDL_Surface* textSurface = TTF_RenderText_Blended( gFont, textureText.c_str(), textColor);
 	if( textSurface != NULL )
 	{
 		//Create texture from surface pixels
-        mTexture = SDL_CreateTextureFromSurface( Window::mRenderer, textSurface );
+	    mTexture = SDL_CreateTextureFromSurface( Window::mRenderer, textSurface );
 		if( mTexture == NULL )
 		{
 			printf( "Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError() );
@@ -150,7 +151,7 @@ int LTexture::getHeight()
 
 SDL_Texture *LTexture::getTexture()
 {
-    return mTexture;
+	return mTexture;
 }
 
 void LTexture::setHeight(int height)

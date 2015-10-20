@@ -21,7 +21,7 @@ class Window
 		//Print render
 		void Present();
 
-        //Clear screen
+	    //Clear screen
 		void Clear();
 
 		//Deallocates internals

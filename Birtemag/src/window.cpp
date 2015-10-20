@@ -192,11 +192,11 @@ void Window::Present()
 
 void Window::Clear()
 {
-    if ( !mMinimized )
-    {
-        //Clear screen
-        SDL_RenderClear( mRenderer );
-    }
+	if ( !mMinimized )
+	{
+	    //Clear screen
+	    SDL_RenderClear( mRenderer );
+	}
 }
 
 void Window::free()
@@ -249,12 +249,12 @@ bool Window::isClosed()
 
 SDL_Renderer *Window::getRender()
 {
-    return mRenderer;
+	return mRenderer;
 }
 
 void Window::setFocus(bool focus)
 {
-    mMouseFocus = focus;
+	mMouseFocus = focus;
 }
 
 bool Window::isFullscreen()
