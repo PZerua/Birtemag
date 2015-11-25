@@ -3,39 +3,75 @@
 Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 {
 
+	// The world's camera position
+	_camera = camera;
+	// The tilemaps loaded from game
 	_tilemaps = tmaps;
+	// Load button
 	loadUtils();
 
+	// Init layer info texture with desired color
 	SDL_Color color;
 	color.r = 0;
 	color.g = 0;
 	color.b = 0;
-
-	_tilemapIndex = 2;
-	_previousIndex = _tilemapIndex;
-	_wasSelected = false;
-	_camera = camera;
-	_camVel = 8;
-	_tileType = 0;
-	_actualTmID = _tilemapIndex;
-	_cameraOffset = 300;
-	_buttonsOffset = 10;
-	_actualX = 20;
-	_actualY = 56;
-	_currentLayer = Layers::ground;
-	_selectedMode = Mode::tile;
 	_layerText.loadFromRenderedText("Ground", color, 20);
 
+	// The default selected tilemap, it's used to show the tilemap texture in the editor
+	_tilemapIndex = 2;
+
+	// When you select a tile from a tilemap, this value changes to the index of this tile's tilemap
+	// This is used to show (or not) the selector in the tile you clicked on when you change to another tilemap
+	_previousIndex = _tilemapIndex;
+
+	// This is the tilemap ID from the tile currently selected (it's not necessarily the same as _tilemapIndex)
+	_actualTmID = _tilemapIndex;
+
+	// Used to track if a tile has been selected
+	_wasSelected = false;
+	
+	// The camera's velocity
+	_camVel = 8;
+	// The type of the new tile to be added
+	_tileType = 0;
+	
+	// How far the camera can go out of the map
+	_cameraOffset = 300;
+
+	// The distance between buttons
+	_buttonsOffset = 10;
+
+	// The position of the current tile selected
+	_actualX = 20;
+	_actualY = 56;
+	// The current layer selected, by default is Ground
+	_currentLayer = Layers::ground;
+	// The Mode selected in Editor, default is Tile
+	_selectedMode = Mode::tile;
+
+	// Load some utils
+	// TODO load this using file (as with buttons)
 	_actualTile.loadFromFile("utils/Selector.png");
 	_selector.loadFromFile("utils/whiteSelector.png");
 	_tilemapBackground.loadFromFile("utils/Tilemap_background.png");
 	_editorBackground.loadFromFile("utils/Editor_background.png");
 	_tileOptions.loadFromFile("utils/tileOptions.png");
 
+	// Where the world is shown in the editor
+	_worldRect.x = _tilemapBackground.getWidth();
+	_worldRect.y = 0;
+	_worldRect.w = SCREEN_WIDTH - _tilemapBackground.getWidth();
+	_worldRect.h = SCREEN_HEIGHT - _editorBackground.getHeight();
+
+	// The alpha from the selector used to select a tile in the tilemap
 	_selector.setAlpha(100);
+	// Variable used to track button state changes
 	_changing = false;
+	// Variable used to track collision state changes
 	_changeCollision = false;
+	// Variable used to display the current selected tile inside the selector
 	_tileSelected = false;
+	// You can only edit a map when a tile is selected
 	_editMap = false;
 
 }
@@ -53,25 +89,25 @@ void Editor::putTile(Input &input, Window &gWindow)
 	if (_editMap)
 	{
 		//Mouse offsets
-		int x = 0, y = 0;
+		SDL_Point point;
 
 		//Get mouse offsets
-		SDL_GetMouseState(&x, &y);
+		SDL_GetMouseState(&point.x, &point.y);
 
 		if (gWindow.isFullscreen())
 		{
 			SDL_DisplayMode desktop;
 			SDL_GetDesktopDisplayMode(0, &desktop);
 
-			x = (int)round(x * SCREEN_WIDTH / desktop.w);
-			y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+			point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
+			point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 		}
 
-		if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
+		if (isInside(point, _worldRect) && _selectedMode == Mode::tile)
 		{
 			//Adjust to _camera
-			x += _camera.x;
-			y += _camera.y;
+			point.x += _camera.x;
+			point.y += _camera.y;
 			bool exist = false;
 
 			//Go through tiles
@@ -81,7 +117,7 @@ void Editor::putTile(Input &input, Window &gWindow)
 				SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
 				//If the mouse is inside the tile
-				if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+				if (isInside(point, box))
 				{
 					//Replace it with new one
 					if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualTmID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
@@ -110,25 +146,25 @@ void Editor::putTile(Input &input, Window &gWindow)
 void Editor::quitTile(Input &input, Window &gWindow)
 {
 	//Mouse offsets
-	int x = 0, y = 0;
+	SDL_Point point;
 
 	//Get mouse offsets
-	SDL_GetMouseState(&x, &y);
+	SDL_GetMouseState(&point.x, &point.y);
 
 	if (gWindow.isFullscreen())
 	{
 		SDL_DisplayMode desktop;
 		SDL_GetDesktopDisplayMode(0, &desktop);
 
-		x = (int)round(x * SCREEN_WIDTH / desktop.w);
-		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+		point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
+		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
+	if (isInside(point, _worldRect) && _selectedMode == Mode::tile)
 	{
 		//Adjust to _camera
-		x += _camera.x;
-		y += _camera.y;
+		point.x += _camera.x;
+		point.y += _camera.y;
 		bool exist = false;
 
 		//Go through tiles
@@ -138,7 +174,7 @@ void Editor::quitTile(Input &input, Window &gWindow)
 			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
 			//If the mouse is inside the tile
-			if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+			if (isInside(point, box))
 			{
 				_currentMap->getTiles()[t]->eraseLayer(_currentLayer);
 				saveTiles();
@@ -150,47 +186,51 @@ void Editor::quitTile(Input &input, Window &gWindow)
 void Editor::renderMainSelector(Input &input, Window &gWindow)
 {
 	//Mouse offsets
-	int x = 0, y = 0;
+	SDL_Point point;
 
 	//Get mouse offsets
-	SDL_GetMouseState(&x, &y);
+	SDL_GetMouseState(&point.x, &point.y);
 
 	if (gWindow.isFullscreen())
 	{
 		SDL_DisplayMode desktop;
 		SDL_GetDesktopDisplayMode(0, &desktop);
 
-		x = (int)round(x * SCREEN_WIDTH / desktop.w);
-		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+		point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
+		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if ((((x < 0) || (x > _tilemapBackground.getWidth()) || (y < 36) || (y > 36 + _tilemapBackground.getHeight()))) && (y < 528) && _selectedMode == Mode::tile)
+	if (isInside(point, _worldRect) && _selectedMode == Mode::tile)
 	{
 		//Go through tiles
 		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
 		{
 			//Get tile's collision box
 			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
+			box.x = box.x - _camera.x;
+			box.y = box.y - _camera.y;
 
 			//If the mouse is inside the tile
-			if ((x > box.x - _camera.x) && (x < box.x + box.w - _camera.x) && (y > box.y - _camera.y) && (y < box.y + box.h - _camera.y))
+			if (isInside(point, box))
 			{
-				_mainSelector.render(box.x - _camera.x, box.y - _camera.y);
+				_mainSelector.render(box.x, box.y);
 			}
 		}
 	}
-	else if (y < 528 && _selectedMode != Mode::tile)
+	else if (point.y < _worldRect.h && _selectedMode != Mode::tile)
 	{
 		//Go through tiles
 		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
 		{
 			//Get tile's collision box
 			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
+			box.x = box.x - _camera.x;
+			box.y = box.y - _camera.y;
 
 			//If the mouse is inside the tile
-			if ((x > box.x - _camera.x) && (x < box.x + box.w - _camera.x) && (y > box.y - _camera.y) && (y < box.y + box.h - _camera.y))
+			if (isInside(point, box))
 			{
-				_mainSelector.render(box.x - _camera.x, box.y - _camera.y);
+				_mainSelector.render(box.x, box.y);
 			}
 		}
 	}
@@ -284,24 +324,23 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 	if (_selectedMode == Mode::tile)
 	{
 		//Mouse offsets
-		int x = 0, y = 0;
-
+		SDL_Point point;
 		SDL_Rect temp;
 
 		//Get mouse offsets
-		SDL_GetMouseState(&x, &y);
+		SDL_GetMouseState(&point.x, &point.y);
 
 		if (gWindow.isFullscreen())
 		{
 			SDL_DisplayMode desktop;
 			SDL_GetDesktopDisplayMode(0, &desktop);
 
-			x = (int)round(x * SCREEN_WIDTH / desktop.w);
-			y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+			point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
+			point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 		}
 
 		int posX = 20;
-		int posY = 56;
+		int posY = 20;
 
 		_tilemaps[_tilemapIndex]->getTexture().render(posX, posY);
 
@@ -315,7 +354,7 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 			temp.w = TILE_SIZE;
 			temp.h = TILE_SIZE;
 
-			if ((x > temp.x) && (x < temp.x + temp.w) && (y > temp.y) && (y < temp.y + temp.h))
+			if (isInside(point, temp))
 			{
 				_selector.render(temp.x, temp.y);
 				if (input._mouseLClick)
@@ -339,18 +378,18 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 void Editor::handleButtons(Input &input, Window &gWindow)
 {
 	//Mouse offsets
-	int x = 0, y = 0;
+	SDL_Point point;
 
 	//Get mouse offsets
-	SDL_GetMouseState( &x, &y );
+	SDL_GetMouseState( &point.x, &point.y );
 
 	if (gWindow.isFullscreen())
 	{
 		SDL_DisplayMode desktop;
 		SDL_GetDesktopDisplayMode(0, &desktop);
 
-		x = (int)round(x * SCREEN_WIDTH / desktop.w);
-		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+		point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
+		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
 	if (_selectedMode == Mode::tile)
@@ -384,8 +423,7 @@ void Editor::handleButtons(Input &input, Window &gWindow)
 
 		_buttons[i]->render();
 
-		if( ( x > _buttons[i]->getBox().x ) && ( x < _buttons[i]->getBox().x + _buttons[i]->getBox().w ) && 
-			( y > _buttons[i]->getBox().y ) && ( y < _buttons[i]->getBox().y + _buttons[i]->getBox().h ) )
+		if(isInside(point, _buttons[i]->getBox()))
 		{
 			if(!_changing) 
 				_buttons[i]->setState(ButtonState::hover);
@@ -445,25 +483,25 @@ void Editor::putCollision(Window &gWindow)
 {
 
 	//Mouse offsets
-	int x = 0, y = 0;
+	SDL_Point point;
 
 	//Get mouse offsets
-	SDL_GetMouseState( &x, &y );
+	SDL_GetMouseState( &point.x, &point.y );
 
 	if (gWindow.isFullscreen())
 	{
 		SDL_DisplayMode desktop;
 		SDL_GetDesktopDisplayMode(0, &desktop);
 
-		x = (int)round(x * SCREEN_WIDTH / desktop.w);
-		y = (int)round(y * SCREEN_HEIGHT / desktop.h);
+		point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
+		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if (y < 528 && _selectedMode == Mode::collision)
+	if (point.y < _worldRect.h && _selectedMode == Mode::collision)
 	{
 		//Adjust to _camera
-		x += _camera.x;
-		y += _camera.y;
+		point.x += _camera.x;
+		point.y += _camera.y;
 
 		//Go through tiles
 		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
@@ -472,7 +510,7 @@ void Editor::putCollision(Window &gWindow)
 			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
 			//If the mouse is inside the tile
-			if ((x > box.x) && (x < box.x + box.w) && (y > box.y) && (y < box.y + box.h))
+			if (isInside(point, box))
 			{
 				if (!_changeCollision)
 				{
@@ -664,13 +702,13 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		gWindow.Clear();
 
-		_currentMap->renderMap(_camera, _currentLayer, true);
+		_currentMap->renderMap(_camera, _currentLayer, LayerPos::All, true);
 		showCollision();
 		renderMainSelector(input, gWindow);
 		_editorBackground.render(0, 528);
 		if (_selectedMode == Mode::tile)
 		{
-			_tilemapBackground.render(0, 36);
+			_tilemapBackground.render(0, 0);
 			_tileOptions.render(156, 560);
 			printLayer();
 		}
@@ -680,4 +718,12 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		gWindow.Present();
 	}
+}
+
+bool Editor::isInside(const SDL_Point &point, const SDL_Rect &plane)
+{
+	if ((point.x > plane.x) && (point.x < plane.x + plane.w) &&
+		(point.y > plane.y) && (point.y < plane.y + plane.h))
+		return true;
+	else return false;
 }

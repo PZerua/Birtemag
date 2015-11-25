@@ -37,4 +37,11 @@ enum Layers
 	size
 };
 
+enum LayerPos
+{
+	Lower,
+	Upper,
+	All
+};
+
 #endif // COMMON_FUNC

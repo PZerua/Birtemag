@@ -19,8 +19,10 @@ Button::Button(int behaviour, string name, int x, int y)
 	_normalState.loadFromFile("utils/normalButton.png");
 	_clickState.loadFromFile("utils/clickButton.png");
 
-	SDL_QueryTexture(_normalState.getTexture(), NULL, NULL, &mBox.w, &mBox.h);
-	SDL_QueryTexture(_text.getTexture(), NULL, NULL, &mTextBox.w, &mTextBox.h);
+	mBox.w = _normalState.getWidth();
+	mBox.h = _normalState.getHeight();
+	mTextBox.w = _text.getWidth();
+	mTextBox.h = _text.getHeight();
 }
 
 Button::~Button()

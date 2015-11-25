@@ -2,8 +2,6 @@
 
 World::World()
 {
-
-
 	loadTilemaps();
 	camera.x = 0;
 	camera.y = 0;
@@ -79,9 +77,11 @@ void World::handlePlayer()
 void World::render()
 {
 	// Second parameter is used in Editor to hide layers
-	_currentMap->renderMap(camera, -1);
+	_currentMap->renderMap(camera, -1, LayerPos::Lower);
 
 	_player->render(camera);
+
+	_currentMap->renderMap(camera, -1, LayerPos::Upper);
 }
 
 SDL_Rect &World::getCamera()

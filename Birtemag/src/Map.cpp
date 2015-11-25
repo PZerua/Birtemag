@@ -34,13 +34,13 @@ Map::~Map()
 
 }
 
-void Map::renderMap(SDL_Rect &camera, int currentLayer, bool showBorder)
+void Map::renderMap(SDL_Rect &camera, int currentLayer, int layersToDraw, bool showBorder)
 {
+	
 	for (int i = 0; i < TOTAL_TILES; ++i)
 	{
-		for (int j = 0; j < Layers::size; j++)
-			if (_tileSet[i]->getTileMapID(j) != 0)
-				_tileSet[i]->render(camera, _tmaps, currentLayer);
+		_tileSet[i]->render(camera, _tmaps, layersToDraw, currentLayer);
+
 		if (showBorder)
 		{
 			if (i < LEVEL_WIDTH / 64)

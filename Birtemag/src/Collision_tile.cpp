@@ -8,20 +8,23 @@ Collision_tile::Collision_tile()
 	color.g = 0;
 	color.b = 0;
 	_collisionText.loadFromRenderedText("C", color, 26);
-	SDL_QueryTexture(_collisionText.getTexture(), NULL, NULL, &textBox.w, &textBox.h);
-	SDL_QueryTexture(_collision.getTexture(), NULL, NULL, &mBox.w, &mBox.h);
 	_collision.loadFromFile("utils/Collision.png");
 	_collision.setAlpha(150);
 
+	mBox.w = _collision.getWidth();
+	mBox.h = _collision.getHeight();
+	mTextBox.w = _collisionText.getWidth();
+	mTextBox.h = _collisionText.getHeight();
 }
 
 
 Collision_tile::~Collision_tile()
 {
+
 }
 
 void Collision_tile::render(int x, int y)
 {
 	_collision.render(x, y);
-	_collisionText.render(x + TILE_SIZE / 2 - textBox.w / 2 , y + TILE_SIZE/ 2 - textBox.h / 2);
+	_collisionText.render(x + TILE_SIZE / 2 - mTextBox.w / 2 , y + TILE_SIZE/ 2 - mTextBox.h / 2);
 }

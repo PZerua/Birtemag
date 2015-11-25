@@ -15,7 +15,7 @@ class Tile
 		~Tile();
 
 		//Shows the tile
-		void render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &currentLayer);
+		void render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int layersToDraw, const int &currentLayer);
 
 		void setLayer(LTexture &gTexture, int layer, int type, int id);
 		//Get the tile type

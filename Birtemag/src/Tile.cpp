@@ -21,27 +21,48 @@ Tile::~Tile()
 	free();
 }
 
-void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &currentLayer)
+void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int layersToDraw, const int &currentLayer)
 {
+	int begin, end;
 	bool hide = true;
+
+	if (layersToDraw == LayerPos::Lower)
+	{
+		begin = Layers::ground;
+		end = Layers::cover;
+	}
+	else if (layersToDraw == LayerPos::Upper)
+	{
+		begin = Layers::fringe;
+		end = Layers::roof;
+	}
+	else if (layersToDraw == LayerPos::All)
+	{
+		begin = Layers::ground;
+		end = Layers::roof;
+	}
+	
 	// If the tile is on screen
 	if( checkCollision( camera, mBox ) )
 	{
-		for (map<int, Layer *>::iterator it = _layers.begin(); it != _layers.end(); ++it)
+		for (int i = begin; i < end; i++)
 		{
-			// Show the tile
-			it->second->render(mBox.x - camera.x, mBox.y - camera.y, tmaps[it->second->getTilemapId()]->getClips());
-			// Hide lower layers when changing current layer (only in Editor mode)
-			// BLACK MAGIC!! wtf is going on here
-			if (it->first < currentLayer)
+			if (_layers.count(i))
 			{
-				for (int i = it->first + 1; i < currentLayer; i++)
+				// Show the tile
+				_layers[i]->render(mBox.x - camera.x, mBox.y - camera.y, tmaps[_layers[i]->getTilemapId()]->getClips());
+				// Hide lower layers when changing current layer (only in Editor mode)
+				// BLACK MAGIC!! wtf is going on here
+				if (i < currentLayer)
 				{
-					if (_layers.count(i))
-						hide = false;
+					for (int j = i + 1; j < currentLayer; j++)
+					{
+						if (_layers.count(j))
+							hide = false;
+					}
+					if (hide)
+						_hideLayer->render(mBox.x - camera.x, mBox.y - camera.y);
 				}
-				if (hide)
-					_hideLayer->render(mBox.x - camera.x, mBox.y - camera.y);
 			}
 			hide = true;
 		}

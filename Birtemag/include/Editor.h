@@ -41,18 +41,26 @@ public:
 	void previousLayer();
 	void printLayer();
 	void changeLayerText();
+	bool isInside(const SDL_Point &point, const SDL_Rect &plane);
 
 private:
 
 	Selector _mainSelector;
 	Map *_currentMap;
 	SDL_Rect _camera;
+	SDL_Rect _worldRect;
 	int _camVel;
 	int _tileType;
 	int _actualTmID;
 	int _cameraOffset;
 	int _buttonsOffset;
 	int _currentLayer;
+	int _actualX;
+	int _actualY;
+	int _previousIndex;
+	int _selectedMode;
+	int _previousMode;
+	unsigned _tilemapIndex;
 	map<int, Tilemap *> _tilemaps;
 	vector<Button *> _buttons;
 	vector<Map *> _worldMaps;
@@ -60,10 +68,6 @@ private:
 	LTexture _actualTile;
 	LTexture _tileOptions;
 	LTexture _layerText;
-	int _actualX;
-	int _actualY;
-	int _previousIndex;
-	unsigned _tilemapIndex;
 	LTexture _tilemapBackground;
 	LTexture _editorBackground;
 	bool _changing;
@@ -73,15 +77,12 @@ private:
 	bool _editMap;
 	bool _wasSelected;
 	Collision_tile _collision;
-	int _selectedMode;
-	int _previousMode;
 
 	enum Mode{
 		tile,
 		collision,
 		attribute
 	};
-
 
 };
 

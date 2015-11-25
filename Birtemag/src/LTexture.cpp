@@ -2,27 +2,29 @@
 #include "window.h"
 LTexture::LTexture()
 {
-	//Initialize
+	// Initialize
 	mTexture = NULL;
-	mWidth = 0;
-	mHeight = 0;
+	_textureRect.x = 0;
+	_textureRect.y = 0;
+	_textureRect.w = 0;
+	_textureRect.h = 0;
 }
 
 LTexture::~LTexture()
 {
-	//Deallocate
+	// Deallocate
 	free();
 }
 
 bool LTexture::loadFromFile(string path )
 {
-	//Get rid of preexisting texture
+	// Get rid of preexisting texture
 	free();
 
-	//The final texture
+	// The final texture
 	SDL_Texture* newTexture = NULL;
 
-	//Load image at specified path
+	// Load image at specified path
 	SDL_Surface* loadedSurface = IMG_Load( path.c_str() );
 	if( loadedSurface == NULL )
 	{
@@ -30,10 +32,10 @@ bool LTexture::loadFromFile(string path )
 	}
 	else
 	{
-		//Color key image
+		// Color key image
 		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
 
-		//Create texture from surface pixels
+		// Create texture from surface pixels
 	    newTexture = SDL_CreateTextureFromSurface( Window::mRenderer, loadedSurface );
 		if( newTexture == NULL )
 		{
@@ -41,16 +43,15 @@ bool LTexture::loadFromFile(string path )
 		}
 		else
 		{
-			//Get image dimensions
-			mWidth = loadedSurface->w;
-			mHeight = loadedSurface->h;
+			// Get image dimensions
+			SDL_QueryTexture(newTexture, NULL, NULL, &_textureRect.w, &_textureRect.h);
 		}
 
-		//Get rid of old loaded surface
+		// Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
 	}
 
-	//Return success
+	// Return success
 	mTexture = newTexture;
 
 	return mTexture != NULL;
@@ -58,16 +59,16 @@ bool LTexture::loadFromFile(string path )
 
 bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor, int fontSize )
 {
-	//Get rid of preexisting texture
+	// Get rid of preexisting texture
 	free();
 
 	TTF_Font *gFont = TTF_OpenFont("fonts/cour.ttf", fontSize);
 	TTF_SetFontStyle(gFont, TTF_STYLE_BOLD);
-	//Render text surface
+	// Render text surface
 	SDL_Surface* textSurface = TTF_RenderText_Blended( gFont, textureText.c_str(), textColor);
 	if( textSurface != NULL )
 	{
-		//Create texture from surface pixels
+		// Create texture from surface pixels
 	    mTexture = SDL_CreateTextureFromSurface( Window::mRenderer, textSurface );
 		if( mTexture == NULL )
 		{
@@ -75,12 +76,11 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 		}
 		else
 		{
-			//Get image dimensions
-			mWidth = textSurface->w;
-			mHeight = textSurface->h;
+			// Get image dimensions
+			SDL_QueryTexture(mTexture, NULL, NULL, &_textureRect.w, &_textureRect.h);
 		}
 
-		//Get rid of old surface
+		// Get rid of old surface
 		SDL_FreeSurface( textSurface );
 	}
 	else
@@ -89,77 +89,83 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	}
 
 
-	//Return success
+	// Return success
 	return mTexture != NULL;
 }
 
 void LTexture::free()
 {
-	//Free texture if it exists
+	// Free texture if it exists
 	if( mTexture != NULL )
 	{	
 		SDL_DestroyTexture( mTexture );
 		mTexture = NULL;
-		mWidth = 0;
-		mHeight = 0;
+		_textureRect.x = 0;
+		_textureRect.y = 0;
+		_textureRect.w = 0;
+		_textureRect.h = 0;
 	}
 }
 
 void LTexture::setColor( Uint8 red, Uint8 green, Uint8 blue )
 {
-	//Modulate texture rgb
+	// Modulate texture rgb
 	SDL_SetTextureColorMod( mTexture, red, green, blue );
 }
 
 void LTexture::setBlendMode( SDL_BlendMode blending )
 {
-	//Set blending function
+	// Set blending function
 	SDL_SetTextureBlendMode( mTexture, blending );
 }
 
 void LTexture::setAlpha( Uint8 alpha )
 {
-	//Modulate texture alpha
+	// Modulate texture alpha
 	SDL_SetTextureAlphaMod( mTexture, alpha );
 }
 
 void LTexture::render(int x, int y, SDL_Rect* clip, double angle, SDL_Point* center, SDL_RendererFlip flip )
 {
-	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+	// Set rect pos
+	_textureRect.x = x;
+	_textureRect.y = y;
 
-	//Set clip rendering dimensions
+	// Set rendering space and render to screen
+	SDL_Rect renderQuad = _textureRect;
+
+	// Set clip rendering dimensions
 	if( clip != NULL )
 	{
 		renderQuad.w = clip->w;
 		renderQuad.h = clip->h;
 	}
 
-	//Render to screen
+	// Render to screen
 	SDL_RenderCopyEx(Window::mRenderer, mTexture, clip, &renderQuad, angle, center, flip );
+}
+
+SDL_Rect LTexture::getRect()
+{
+	return _textureRect;
 }
 
 int LTexture::getWidth()
 {
-	return mWidth;
+	return _textureRect.w;
 }
 
 int LTexture::getHeight()
 {
-	return mHeight;
+	return _textureRect.h;
 }
 
-SDL_Texture *LTexture::getTexture()
+int LTexture::getX()
 {
-	return mTexture;
+	return _textureRect.x;
 }
 
-void LTexture::setHeight(int height)
+int LTexture::getY()
 {
-	mHeight = mHeight;
-}
-
-void LTexture::setWidth(int width)
-{
-	mWidth = mWidth;
+	return _textureRect.y;
 }

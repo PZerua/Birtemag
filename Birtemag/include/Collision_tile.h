@@ -12,7 +12,7 @@ private:
 	LTexture _collision;
 	LTexture _collisionText;
 	SDL_Rect mBox;
-	SDL_Rect textBox;
+	SDL_Rect mTextBox;
 	SDL_Color color;
 
 };

@@ -22,7 +22,7 @@ bool Tilemap::loadTexture(string imagPath)
 
 	if( _tileTexture.getWidth() % TILE_SIZE != 0 || _tileTexture.getHeight() % TILE_SIZE != 0)
 	{
-		cout<<"Wrong tile texture size"<<endl;
+		cout<<"Wrong tilemap texture size"<<endl;
 		return false;
 	}
 
