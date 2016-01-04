@@ -1,7 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
 #include "Common_libs.h"
-#include "Common_functions.h"
 #include "Tilemap.h"
 #include "Tile.h"
 #include "window.h"
@@ -40,6 +39,8 @@ public:
 	map<int, Tilemap *> &getTilemaps();
 
 	void setTilemaps(map<int, Tilemap *> &tmaps);
+
+	bool checkCollision(SDL_Rect a, SDL_Rect b);
 
 protected:
 

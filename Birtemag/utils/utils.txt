@@ -4,5 +4,10 @@ Button Attribute | 747 643 2
 Button New Map | 900 643 3
 Button > | 153 482 4
 Button < | 15 482 5
-Button > | 492 576 6
-Button < | 172 576 7
+Button > | 492 574 6
+Button < | 172 574 7
+Frame 0 0 0 296 529 0
+Frame 0 0 528 1280 192 -1
+Frame 1 20 548 1240 152 -1
+Frame 3 156 558 968 65 -1
+Frame 3 398 632 484 57 -1

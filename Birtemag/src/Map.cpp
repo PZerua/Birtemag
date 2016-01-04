@@ -27,6 +27,13 @@ Map::Map(int width, int height, string name)
 	_name = name;
 	_mapPath = "bitmaps/" + name + ".map";
 	createMap();
+
+	center.x = 0;
+	center.y = 0;
+
+	_hideLayer.loadFromFile("utils/hideLayer.png");
+	_border.loadFromFile("utils/border.png");
+	_hideLayer.setAlpha(50);
 }
 
 Map::~Map()
@@ -60,21 +67,58 @@ void Map::renderMap(SDL_Rect &camera, int currentLayer, int layersToDraw, bool s
 
 void Map::createMap()
 {
-	ofstream newMap(_mapPath);
 
-	int width, height;
+	_tileSet = new Tile*[TOTAL_TILES];
 
-	width = LEVEL_WIDTH / TILE_SIZE;
-	height = LEVEL_HEIGHT / TILE_SIZE;
+	std::ofstream Map(_mapPath);
 
-	newMap << width << " " << height << "\n";
+	Map << getTilemaps().size() << "\n";
 
-	for (int i = 0; i < TOTAL_TILES; i++)
+	for (map<int, Tilemap *>::iterator it = getTilemaps().begin(); it != getTilemaps().end(); ++it)
 	{
-		if ( (i % width) == 0 && i != 0)
-			newMap << "\n";
-		newMap << "00:0 ";
+		Map << it->first << "\n";
 	}
+
+	Map << LEVEL_WIDTH / TILE_SIZE << " " <<LEVEL_HEIGHT / TILE_SIZE << "\n";
+
+	int x = 0;
+	int y = 0;
+
+	//Go through the tiles
+	for (int t = 0; t < TOTAL_TILES; t++)
+	{
+		if (x == LEVEL_WIDTH)
+		{
+			x = 0;
+			y += 64;
+		}
+
+		_tileSet[t] = new Tile(x, y, 0, &_hideLayer);
+
+		if ((t % (LEVEL_WIDTH / TILE_SIZE)) == 0 && t != 0)
+		{
+			Map << "\n";
+		}
+
+		for (int i = 0; i < Layers::size; i++)
+		{
+			Map << _tileSet[t]->getTileMapID(i);
+			Map << ":";
+
+			if (_tileSet[t]->getType(i) < 10)
+			{
+				//Write tile type to file
+				Map << 0 << _tileSet[t]->getType(i) << ":";
+			}
+			else Map << _tileSet[t]->getType(i) << ":";
+		}
+		Map << _tileSet[t]->hasCollision() << " ";
+
+		x += 64;
+	}
+
+	//Close the file
+	Map.close();
 }
 
 
@@ -236,6 +280,52 @@ bool Map::touchesWall( SDL_Rect box )
 	//If no wall tiles were touched
 	return false;
 }
+
+bool Map::checkCollision(SDL_Rect a, SDL_Rect b)
+{
+	//The sides of the rectangles
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	//Calculate the sides of rect A
+	leftA = a.x;
+	rightA = a.x + a.w;
+	topA = a.y;
+	bottomA = a.y + a.h;
+
+	//Calculate the sides of rect B
+	leftB = b.x;
+	rightB = b.x + b.w;
+	topB = b.y;
+	bottomB = b.y + b.h;
+
+	//If any of the sides from A are outside of B
+	if (bottomA <= topB)
+	{
+		return false;
+	}
+
+	if (topA >= bottomB)
+	{
+		return false;
+	}
+
+	if (rightA <= leftB)
+	{
+		return false;
+	}
+
+	if (leftA >= rightB)
+	{
+		return false;
+	}
+
+	//If none of the sides from A are outside B
+	return true;
+}
+
 
 void Map::addTilemap(int tilemapID)
 {

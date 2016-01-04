@@ -3,7 +3,6 @@
 #include "Input.h"
 #include "Tile.h"
 #include "Common_libs.h"
-#include "Common_functions.h"
 #include "Map.h"
 #include "Player.h"
 #include "Editor.h"

@@ -2,7 +2,6 @@
 #define LAYER_H
 
 #include "Common_libs.h"
-#include "Common_functions.h"
 #include "LTexture.h"
 
 class Layer

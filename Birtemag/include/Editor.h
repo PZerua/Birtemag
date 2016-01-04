@@ -1,14 +1,12 @@
-#ifndef EDITOR_H
-#define EDITOR_H
+#pragma once
 #include "Common_libs.h"
-#include "Common_functions.h"
 #include "Map.h"
 #include "Input.h"
 #include "Window.h"
 #include "LTexture.h"
-#include "Button.h"
 #include "Collision_tile.h"
 #include "Selector.h"
+#include "GUI.h"
 
 class Button;
 
@@ -25,8 +23,6 @@ public:
 	void init( Window &gWindow, Input &input, SDL_Event &e);
 	void setCamera(Input &input);
 	void handleTilemap(Input &input, Window &gWindow);
-	void handleButtons(Input &input, Window &gWindow);
-	void addButton(string name, int behaviour, int x, int y);
 	void showCollision();
 	void collisionMode();
 	void tileMode();
@@ -39,9 +35,10 @@ public:
 	void loadUtils();
 	void nextLayer();
 	void previousLayer();
-	void printLayer();
+	void printText();
 	void changeLayerText();
 	bool isInside(const SDL_Point &point, const SDL_Rect &plane);
+	void manageStates(const int &behaviour);
 
 private:
 
@@ -60,16 +57,15 @@ private:
 	int _previousIndex;
 	int _selectedMode;
 	int _previousMode;
+	int _tilemapOffset;
 	unsigned _tilemapIndex;
 	map<int, Tilemap *> _tilemaps;
-	vector<Button *> _buttons;
 	vector<Map *> _worldMaps;
 	LTexture _selector;
 	LTexture _actualTile;
 	LTexture _tileOptions;
-	LTexture _layerText;
-	LTexture _tilemapBackground;
-	LTexture _editorBackground;
+	LTexture _layerText[2];
+	LTexture _mode;
 	bool _changing;
 	bool _changeCollision;
 	bool _collisionState;
@@ -77,13 +73,6 @@ private:
 	bool _editMap;
 	bool _wasSelected;
 	Collision_tile _collision;
-
-	enum Mode{
-		tile,
-		collision,
-		attribute
-	};
+	GUI _gui;
 
 };
-
-#endif // EDITOR_H

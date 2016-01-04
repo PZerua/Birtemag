@@ -36,6 +36,8 @@ class Tile
 
 		void eraseLayer(int layer);
 
+		bool checkCollision(SDL_Rect a, SDL_Rect b);
+
 	private:
 		//The attributes of the tile
 		SDL_Rect mBox;

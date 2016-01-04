@@ -137,8 +137,9 @@
   <ItemGroup>
     <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Collision_tile.cpp" />
-    <ClCompile Include="src\Common_functions.cxx" />
     <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\Frame.cpp" />
+    <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Layer.cpp" />
     <ClCompile Include="src\LTexture.cpp" />
@@ -155,9 +156,10 @@
   <ItemGroup>
     <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Collision_tile.h" />
-    <ClInclude Include="include\Common_functions.h" />
     <ClInclude Include="include\Common_libs.h" />
     <ClInclude Include="include\Editor.h" />
+    <ClInclude Include="include\Frame.h" />
+    <ClInclude Include="include\GUI.h" />
     <ClInclude Include="include\InfoPanel.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Layer.h" />

@@ -7,7 +7,7 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 	_camera = camera;
 	// The tilemaps loaded from game
 	_tilemaps = tmaps;
-	// Load button
+	// Load buttons
 	loadUtils();
 
 	// Init layer info texture with desired color
@@ -15,7 +15,9 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 	color.r = 0;
 	color.g = 0;
 	color.b = 0;
-	_layerText.loadFromRenderedText("Ground", color, 20);
+	_layerText[0].loadFromRenderedText("Layer: ", color, 31);
+	_layerText[1].loadFromRenderedText("Ground", color, 31);
+	_mode.loadFromRenderedText("MODE:", color, 31);
 
 	// The default selected tilemap, it's used to show the tilemap texture in the editor
 	_tilemapIndex = 2;
@@ -36,7 +38,9 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 	_tileType = 0;
 	
 	// How far the camera can go out of the map
-	_cameraOffset = 300;
+	_cameraOffset = 400;
+	// The tilemap separation to the borders
+	_tilemapOffset = 20;
 
 	// The distance between buttons
 	_buttonsOffset = 10;
@@ -47,26 +51,21 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 	// The current layer selected, by default is Ground
 	_currentLayer = Layers::ground;
 	// The Mode selected in Editor, default is Tile
-	_selectedMode = Mode::tile;
+	_selectedMode = Behaviour::tile;
 
 	// Load some utils
 	// TODO load this using file (as with buttons)
 	_actualTile.loadFromFile("utils/Selector.png");
 	_selector.loadFromFile("utils/whiteSelector.png");
-	_tilemapBackground.loadFromFile("utils/Tilemap_background.png");
-	_editorBackground.loadFromFile("utils/Editor_background.png");
-	_tileOptions.loadFromFile("utils/tileOptions.png");
 
 	// Where the world is shown in the editor
-	_worldRect.x = _tilemapBackground.getWidth();
+	_worldRect.x = 296;
 	_worldRect.y = 0;
-	_worldRect.w = SCREEN_WIDTH - _tilemapBackground.getWidth();
-	_worldRect.h = SCREEN_HEIGHT - _editorBackground.getHeight();
+	_worldRect.w = SCREEN_WIDTH - 296;
+	_worldRect.h = SCREEN_HEIGHT - 192;
 
 	// The alpha from the selector used to select a tile in the tilemap
 	_selector.setAlpha(100);
-	// Variable used to track button state changes
-	_changing = false;
 	// Variable used to track collision state changes
 	_changeCollision = false;
 	// Variable used to display the current selected tile inside the selector
@@ -78,10 +77,7 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 
 Editor::~Editor()
 {
-	for (unsigned i = 0; i < _buttons.size(); i++)
-	{
-		delete _buttons[i];
-	}
+
 }
 
 void Editor::putTile(Input &input, Window &gWindow)
@@ -103,7 +99,7 @@ void Editor::putTile(Input &input, Window &gWindow)
 			point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 		}
 
-		if (isInside(point, _worldRect) && _selectedMode == Mode::tile)
+		if (isInside(point, _worldRect) && _selectedMode == Behaviour::tile)
 		{
 			//Adjust to _camera
 			point.x += _camera.x;
@@ -160,7 +156,7 @@ void Editor::quitTile(Input &input, Window &gWindow)
 		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if (isInside(point, _worldRect) && _selectedMode == Mode::tile)
+	if (isInside(point, _worldRect) && _selectedMode == Behaviour::tile)
 	{
 		//Adjust to _camera
 		point.x += _camera.x;
@@ -200,7 +196,7 @@ void Editor::renderMainSelector(Input &input, Window &gWindow)
 		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if (isInside(point, _worldRect) && _selectedMode == Mode::tile)
+	if (isInside(point, _worldRect) && _selectedMode == Behaviour::tile)
 	{
 		//Go through tiles
 		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
@@ -217,7 +213,7 @@ void Editor::renderMainSelector(Input &input, Window &gWindow)
 			}
 		}
 	}
-	else if (point.y < _worldRect.h && _selectedMode != Mode::tile)
+	else if (point.y < _worldRect.h && _selectedMode != Behaviour::tile)
 	{
 		//Go through tiles
 		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
@@ -312,16 +308,10 @@ void Editor::setCamera(Input &input)
 	}
 }
 
-void Editor::addButton(string name, int behaviour, int x, int y)
-{
-	Button *button;
-	button = new Button(behaviour, name, x, y);
-	_buttons.push_back(button);
-}
 
 void Editor::handleTilemap(Input &input, Window &gWindow)
 {
-	if (_selectedMode == Mode::tile)
+	if (_selectedMode == Behaviour::tile)
 	{
 		//Mouse offsets
 		SDL_Point point;
@@ -339,18 +329,15 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 			point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 		}
 
-		int posX = 20;
-		int posY = 20;
-
-		_tilemaps[_tilemapIndex]->getTexture().render(posX, posY);
+		_tilemaps[_tilemapIndex]->getTexture().render(_tilemapOffset, _tilemapOffset);
 
 		if (_tileSelected)
 			_actualTile.render(_actualX, _actualY);
 
 		for (int i = 0; i < _tilemaps[_tilemapIndex]->getTotalTiles(); i++)
 		{
-			temp.x = _tilemaps[_tilemapIndex]->getClips()[i].x + posX;
-			temp.y = _tilemaps[_tilemapIndex]->getClips()[i].y + posY;
+			temp.x = _tilemaps[_tilemapIndex]->getClips()[i].x + _tilemapOffset;
+			temp.y = _tilemaps[_tilemapIndex]->getClips()[i].y + _tilemapOffset;
 			temp.w = TILE_SIZE;
 			temp.h = TILE_SIZE;
 
@@ -375,84 +362,47 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 	}
 }
 
-void Editor::handleButtons(Input &input, Window &gWindow)
+
+
+void Editor::manageStates(const int &behaviour)
 {
-	//Mouse offsets
-	SDL_Point point;
-
-	//Get mouse offsets
-	SDL_GetMouseState( &point.x, &point.y );
-
-	if (gWindow.isFullscreen())
+	if (behaviour == Behaviour::tile)
 	{
-		SDL_DisplayMode desktop;
-		SDL_GetDesktopDisplayMode(0, &desktop);
-
-		point.x = (int)round(point.x * SCREEN_WIDTH / desktop.w);
-		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
+		tileMode();
 	}
-
-	if (_selectedMode == Mode::tile)
+	else if (behaviour == Behaviour::collision)
 	{
-		_buttons[Mode::tile]->setFixedState(ButtonState::hover);
-		_buttons[Mode::collision]->removeFixedState();
-		_buttons[Mode::attribute]->removeFixedState();
+		collisionMode();
 	}
-	else if (_selectedMode == Mode::collision)
+	else if (behaviour == Behaviour::attribute)
 	{
-		_buttons[Mode::tile]->removeFixedState();
-		_buttons[Mode::collision]->setFixedState(ButtonState::hover);
-		_buttons[Mode::attribute]->removeFixedState();
+		attributeMode();
 	}
-	else if (_selectedMode == Mode::attribute)
+	else if (behaviour == Behaviour::newMap)
 	{
-		_buttons[Mode::tile]->removeFixedState();
-		_buttons[Mode::collision]->removeFixedState();
-		_buttons[Mode::attribute]->setFixedState(ButtonState::hover);
+		newMap();
 	}
-		
-	for(unsigned i = 0; i < _buttons.size(); i++)
+	else if (behaviour == Behaviour::nextTilemap)
 	{
-
-		if (_selectedMode != Mode::tile)
-		{
-			if (i == Behaviour::nextTilemap || i == Behaviour::previousTilemap || i == Behaviour::nextLayer || i == Behaviour::previousLayer)
-				_buttons[i]->disable();
-		}
-		else _buttons[i]->enable();
-
-		_buttons[i]->render();
-
-		if(isInside(point, _buttons[i]->getBox()))
-		{
-			if(!_changing) 
-				_buttons[i]->setState(ButtonState::hover);
-			if (input._mouseLClick && !_changing)
-			{
-				if (i == Mode::tile)
-					_selectedMode = Mode::tile;
-				else if (i == Mode::collision)
-					_selectedMode = Mode::collision;
-				else if (i == Mode::attribute)
-					_selectedMode = Mode::attribute;
-
-				_buttons[i]->setState(ButtonState::click);
-				_changing = true;
-				_buttons[i]->activate(*this);
-			}
-		} 
-		else _buttons[i]->setState(ButtonState::normal);
+		nextTilemap();
 	}
-	if (!input._mouseLClick && _changing)
+	else if (behaviour == Behaviour::previousTilemap)
 	{
-		_changing = false;
+		previousTilemap();
 	}
-		
+	else if (behaviour == Behaviour::nextLayer)
+	{
+		nextLayer();
+	}
+	else if (behaviour == Behaviour::previousLayer)
+	{
+		previousLayer();
+	}
 }
 
 void Editor::showCollision()
 {
-	if (_selectedMode == Mode::collision)
+	if (_selectedMode == Behaviour::collision)
 	{
 		for (int i = 0; i < _currentMap->TOTAL_TILES; i++)
 		{
@@ -497,7 +447,7 @@ void Editor::putCollision(Window &gWindow)
 		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if (point.y < _worldRect.h && _selectedMode == Mode::collision)
+	if (point.y < _worldRect.h && _selectedMode == Behaviour::collision)
 	{
 		//Adjust to _camera
 		point.x += _camera.x;
@@ -532,18 +482,121 @@ void Editor::putCollision(Window &gWindow)
 
 void Editor::newMap()
 {
-	/*int width, height;
-	cout << "Set width: ";
-	cin >> width;
-	cout << endl << "Set height: ";
-	cin >> height;
-	cout << endl;
+	/*
+	//Main loop flag
+	bool quit = false;
 
+	SDL_Rect dim;
+	dim.x = 200;
+	dim.y = 200;
+	dim.w = 200;
+	dim.h = 200;
+
+	//Event handler
+	SDL_Event e;
+
+	//Set text color as black
+	SDL_Color textColor = { 0, 0xFF, 0xFF, 0xFF };
+
+	//The current input text.
+	string inputText = "Some Text";
+	LTexture gInputTextTexture;
+	LTexture gPromptTextTexture;
+	gPromptTextTexture.loadFromRenderedText("Enter Text:", textColor, 31);
+	gInputTextTexture.loadFromRenderedText(inputText.c_str(), textColor, 31);
+
+	Frame newMapFrame("utils/frame_def.png", dim, 3);
+
+	//Enable text input
+	SDL_StartTextInput();
+
+	//While application is running
+	while (!quit)
+	{
+		//The rerender text flag
+		bool renderText = false;
+
+		//Handle events on queue
+		while (SDL_PollEvent(&e) != 0)
+		{
+			//User requests quit
+			if (e.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+			//Special key input
+			else if (e.type == SDL_KEYDOWN)
+			{
+				//Handle backspace
+				if (e.key.keysym.sym == SDLK_BACKSPACE && inputText.length() > 0)
+				{
+					//lop off character
+					inputText.pop_back();
+					renderText = true;
+				}
+				//Handle copy
+				else if (e.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+				{
+					SDL_SetClipboardText(inputText.c_str());
+				}
+				//Handle paste
+				else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+				{
+					inputText += SDL_GetClipboardText();
+					renderText = true;
+				}
+			}
+			//Special text input event
+			else if (e.type == SDL_TEXTINPUT)
+			{
+				//Not copy or pasting
+				if (!((e.text.text[0] == 'c' || e.text.text[0] == 'C') && (e.text.text[0] == 'v' || e.text.text[0] == 'V') && SDL_GetModState() & KMOD_CTRL))
+				{
+					//Append character
+					inputText += e.text.text;
+					renderText = true;
+				}
+			}
+		}
+
+		//Rerender text if needed
+		if (renderText)
+		{
+			//Text is not empty
+			if (inputText != "")
+			{
+				//Render new text
+				gInputTextTexture.loadFromRenderedText(inputText.c_str(), textColor, 12);
+			}
+			//Text is empty
+			else
+			{
+				//Render space texture
+				gInputTextTexture.loadFromRenderedText(" ", textColor, 12);
+			}
+		}
+
+		//Clear screen
+		SDL_RenderClear(Window::mRenderer);
+
+		newMapFrame.render();
+
+		//Render text textures
+		gPromptTextTexture.render((SCREEN_WIDTH - gPromptTextTexture.getWidth()) / 2, 0);
+		gInputTextTexture.render((SCREEN_WIDTH - gInputTextTexture.getWidth()) / 2, gPromptTextTexture.getHeight());
+
+		//Update screen
+		SDL_RenderPresent(Window::mRenderer);
+	}
+
+	//Disable text input
+	SDL_StopTextInput();
+	*/
+	/*
 	Map *newMap;
-	newMap = new Map(20, 20, "test");
-	newMap->addTilemap("tilesets/empty.png");
-	newMap->loadMap();
+	newMap = new Map(width, height, "test2");
 	_worldMaps.push_back(newMap);
+	newMap->setTilemaps(_tilemaps);
 	_currentMap = newMap;*/
 }
 
@@ -604,23 +657,23 @@ void Editor::changeLayerText()
 
 	if (_currentLayer == Layers::ground)
 	{
-		_layerText.loadFromRenderedText("Ground", color, 20);
+		_layerText[1].loadFromRenderedText("Ground", color, 31);
 	}
 	else if (_currentLayer == Layers::mask)
 	{
-		_layerText.loadFromRenderedText("Mask", color, 20);
+		_layerText[1].loadFromRenderedText("Mask", color, 31);
 	}
 	else if (_currentLayer == Layers::cover)
 	{
-		_layerText.loadFromRenderedText("Cover", color, 20);
+		_layerText[1].loadFromRenderedText("Cover", color, 31);
 	}
 	else if (_currentLayer == Layers::fringe)
 	{
-		_layerText.loadFromRenderedText("Fringe", color, 20);
+		_layerText[1].loadFromRenderedText("Fringe", color, 31);
 	}
 	else if (_currentLayer == Layers::roof)
 	{
-		_layerText.loadFromRenderedText("Roof", color, 20);
+		_layerText[1].loadFromRenderedText("Roof", color, 31);
 	}
 }
 
@@ -631,9 +684,16 @@ void Editor::loadUtils()
 	string type;
 	string temp;
 	string name;
+	SDL_Rect dim;
+	dim.h = 32;
+	dim.w = 128;
+	int style = -1;
 	int x = -1;
 	int y = -1;
+	int w = -1;
+	int h = -1;
 	int behaviour = -1;
+	int mode = -1;
 
 	while (utils >> type)
 	{
@@ -648,15 +708,22 @@ void Editor::loadUtils()
 				utils >> temp;
 			}
 
-			utils >> x >> y >> behaviour;
-			addButton(name, behaviour, x, y);
+			utils >> dim.x >> dim.y >> behaviour;
+			_gui.addButton(name, dim, GUI_STYLE::Default, behaviour, mode);
+		}
+		else if (type == "Frame")
+		{
+			utils >> style >> dim.x >> dim.y >> dim.w >> dim.h >> mode;
+			_gui.addFrame(dim, style, mode);
 		}
 	}
 }
 
-void Editor::printLayer()
+void Editor::printText()
 {
-	_layerText.render(390, 580);
+	_layerText[0].render(325, 581);
+	_layerText[1].render(400, 581);
+	_mode.render(412, 651);
 }
 
 void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
@@ -666,15 +733,10 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 	cout << "[INFO] Right click to quit tiles in the actual layer" << endl;
 
 	while(!input._f3 && !input._quit && e.type != SDL_QUIT && !gWindow.isClosed())
-	{
-		//Mouse offsets
-		int x = 0, y = 0;
-
-		//Get mouse offsets
-		
+	{		
 		if (input._mouseLClick)
 		{
-			if (_selectedMode == Mode::collision)
+			if (_selectedMode == Behaviour::collision)
 			{
 				putCollision(gWindow);
 			}
@@ -694,27 +756,29 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 		while (SDL_PollEvent(&e) != 0)
 		{
 			input.checkControls(&e);
-
 			gWindow.handleEvent(e);
 		}
 
+		int manageState = _gui.handleButtons(input, gWindow, _selectedMode);
+		manageStates(manageState);
+
 		setCamera(input);
+
+		// Render
 
 		gWindow.Clear();
 
 		_currentMap->renderMap(_camera, _currentLayer, LayerPos::All, true);
 		showCollision();
 		renderMainSelector(input, gWindow);
-		_editorBackground.render(0, 528);
-		if (_selectedMode == Mode::tile)
+		_gui.renderFrames(_selectedMode);
+		if (_selectedMode == Behaviour::tile)
 		{
-			_tilemapBackground.render(0, 0);
-			_tileOptions.render(156, 560);
-			printLayer();
+			printText();
 		}
 
 		handleTilemap(input, gWindow);
-		handleButtons(input, gWindow);
+		_gui.renderButtons();
 
 		gWindow.Present();
 	}

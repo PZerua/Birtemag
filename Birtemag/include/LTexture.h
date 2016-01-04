@@ -43,6 +43,8 @@ class LTexture
 
 		int getY();
 
+		SDL_Texture *getTexture();
+
 	private:
 		//The actual hardware texture
 		SDL_Texture* mTexture;

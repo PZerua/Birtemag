@@ -1,48 +1,37 @@
-#ifndef BUTTON_H
-#define BUTTON_H
-
+#pragma once
 #include "Common_libs.h"
 #include "LTexture.h"
 #include "window.h"
-#include "Common_functions.h"
-#include "Editor.h"
-#include "window.h"
-
-class Editor;
+#include "Frame.h"
 
 class Button
 {
-	public:
-	    Button(int behaviour, string name, int x, int y);
+public:
+		Button(const string &name, const SDL_Rect &dim, const int &behaviour, const string &path, const int &borderSize, const int &mode);
 	    virtual ~Button();
 
 	    void render();
 	    void setState(int state);
 	    SDL_Rect getBox();
-	    void activate(Editor &editor);
+	    int getBehaviour();
 	    void setPos(int x, int y);
 		void setFixedState(int state);
 		void removeFixedState();
 		void enable();
 		void disable();
 
-	protected:
-	private:
+private:
 
 	    LTexture _text;
-	    LTexture _normalState;
-	    LTexture _hoverState;
-	    LTexture _clickState;
+	    Frame *_normalState;
+		Frame *_hoverState;
+		Frame *_clickState;
 	    int _actualState;
 		int _fixedState;
 		bool _hasFixedState;
 		bool _isEnabled;
-	    SDL_Rect mBox;
 	    SDL_Rect mTextBox;
-
+		SDL_Rect mBox;
 	    int _behaviour;
 
-
 };
-
-#endif // BUTTOM_H

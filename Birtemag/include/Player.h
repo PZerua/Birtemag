@@ -5,7 +5,6 @@
 #include "Tile.h"
 #include "Map.h"
 #include "LTexture.h"
-#include "Common_functions.h"
 #include "window.h"
 
 class Player
