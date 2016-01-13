@@ -346,3 +346,10 @@ void Map::setTilemaps(map<int, Tilemap *> &tmaps)
 {
 	_tmaps = tmaps;
 }
+
+bool Map::hasTilemap(const int &tilemapID)
+{
+	if (_tmaps.count(tilemapID))
+		return true;
+	else return false;
+}

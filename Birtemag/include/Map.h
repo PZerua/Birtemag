@@ -42,6 +42,8 @@ public:
 
 	bool checkCollision(SDL_Rect a, SDL_Rect b);
 
+	bool hasTilemap(const int &tilemapID);
+
 protected:
 
 private:

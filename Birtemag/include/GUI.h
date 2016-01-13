@@ -25,6 +25,7 @@ public:
 	void renderFrames(const int &mode);
 	styleInfo checkFrameStyle(const int &style);
 	styleInfo checkButtonStyle(const int &style);
+	void loadUtils();
 
 private:
 	vector<Button *> _buttons;

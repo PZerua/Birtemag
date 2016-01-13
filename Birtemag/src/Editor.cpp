@@ -7,8 +7,8 @@ Editor::Editor(SDL_Rect &camera, map<int, Tilemap*> &tmaps)
 	_camera = camera;
 	// The tilemaps loaded from game
 	_tilemaps = tmaps;
-	// Load buttons
-	loadUtils();
+	// Load utilities
+	_gui.loadUtils();
 
 	// Init layer info texture with desired color
 	SDL_Color color;
@@ -99,7 +99,7 @@ void Editor::putTile(Input &input, Window &gWindow)
 			point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 		}
 
-		if (isInside(point, _worldRect) && _selectedMode == Behaviour::tile)
+		if (SDL_PointInRect(&point, &_worldRect) && _selectedMode == Behaviour::tile)
 		{
 			//Adjust to _camera
 			point.x += _camera.x;
@@ -113,20 +113,16 @@ void Editor::putTile(Input &input, Window &gWindow)
 				SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
 				//If the mouse is inside the tile
-				if (isInside(point, box))
+				if (SDL_PointInRect(&point, &box))
 				{
 					//Replace it with new one
-					if (_currentMap->getTiles()[t]->getTileMapID(_currentLayer) != _actualTmID || _currentMap->getTiles()[t]->getTileMapID(_currentLayer) == 0)
+					if (_currentMap->getTiles()[t]->hasTilemap(_currentLayer, _actualTmID))
 					{
-						if (!_currentMap->getTilemaps().count(_actualTmID))
+						if (!_currentMap->hasTilemap(_actualTmID))
 						{
 							_currentMap->addTilemap(_actualTmID);
-							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualTmID]->getTexture(), _currentLayer, _tileType, _actualTmID);
 						}
-						else 
-						{
-							_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualTmID]->getTexture(), _currentLayer, _tileType, _actualTmID);
-						}
+						_currentMap->getTiles()[t]->setLayer(_currentMap->getTilemaps()[_actualTmID]->getTexture(), _currentLayer, _tileType, _actualTmID);
 					}
 					else
 					{
@@ -156,7 +152,7 @@ void Editor::quitTile(Input &input, Window &gWindow)
 		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if (isInside(point, _worldRect) && _selectedMode == Behaviour::tile)
+	if (SDL_PointInRect(&point, &_worldRect) && _selectedMode == Behaviour::tile)
 	{
 		//Adjust to _camera
 		point.x += _camera.x;
@@ -170,7 +166,7 @@ void Editor::quitTile(Input &input, Window &gWindow)
 			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
 			//If the mouse is inside the tile
-			if (isInside(point, box))
+			if (SDL_PointInRect(&point, &box))
 			{
 				_currentMap->getTiles()[t]->eraseLayer(_currentLayer);
 				saveTiles();
@@ -196,7 +192,7 @@ void Editor::renderMainSelector(Input &input, Window &gWindow)
 		point.y = (int)round(point.y * SCREEN_HEIGHT / desktop.h);
 	}
 
-	if (isInside(point, _worldRect) && _selectedMode == Behaviour::tile)
+	if (SDL_PointInRect(&point, &_worldRect) && _selectedMode == Behaviour::tile)
 	{
 		//Go through tiles
 		for (int t = 0; t < _currentMap->TOTAL_TILES; t++)
@@ -207,7 +203,7 @@ void Editor::renderMainSelector(Input &input, Window &gWindow)
 			box.y = box.y - _camera.y;
 
 			//If the mouse is inside the tile
-			if (isInside(point, box))
+			if (SDL_PointInRect(&point, &box))
 			{
 				_mainSelector.render(box.x, box.y);
 			}
@@ -224,7 +220,7 @@ void Editor::renderMainSelector(Input &input, Window &gWindow)
 			box.y = box.y - _camera.y;
 
 			//If the mouse is inside the tile
-			if (isInside(point, box))
+			if (SDL_PointInRect(&point, &box))
 			{
 				_mainSelector.render(box.x, box.y);
 			}
@@ -341,7 +337,7 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 			temp.w = TILE_SIZE;
 			temp.h = TILE_SIZE;
 
-			if (isInside(point, temp))
+			if (SDL_PointInRect(&point, &temp))
 			{
 				_selector.render(temp.x, temp.y);
 				if (input._mouseLClick)
@@ -361,8 +357,6 @@ void Editor::handleTilemap(Input &input, Window &gWindow)
 		}
 	}
 }
-
-
 
 void Editor::manageStates(const int &behaviour)
 {
@@ -460,7 +454,7 @@ void Editor::putCollision(Window &gWindow)
 			SDL_Rect box = _currentMap->getTiles()[t]->getBox();
 
 			//If the mouse is inside the tile
-			if (isInside(point, box))
+			if (SDL_PointInRect(&point, &box))
 			{
 				if (!_changeCollision)
 				{
@@ -677,48 +671,6 @@ void Editor::changeLayerText()
 	}
 }
 
-void Editor::loadUtils()
-{
-	ifstream utils("utils/utils.txt");
-
-	string type;
-	string temp;
-	string name;
-	SDL_Rect dim;
-	dim.h = 32;
-	dim.w = 128;
-	int style = -1;
-	int x = -1;
-	int y = -1;
-	int w = -1;
-	int h = -1;
-	int behaviour = -1;
-	int mode = -1;
-
-	while (utils >> type)
-	{
-		if (type == "Button")
-		{
-			utils >> name;
-			utils >> temp;
-
-			while (temp != "|")
-			{
-				name += " " + temp;
-				utils >> temp;
-			}
-
-			utils >> dim.x >> dim.y >> behaviour;
-			_gui.addButton(name, dim, GUI_STYLE::Default, behaviour, mode);
-		}
-		else if (type == "Frame")
-		{
-			utils >> style >> dim.x >> dim.y >> dim.w >> dim.h >> mode;
-			_gui.addFrame(dim, style, mode);
-		}
-	}
-}
-
 void Editor::printText()
 {
 	_layerText[0].render(325, 581);
@@ -782,12 +734,4 @@ void Editor::init(Window &gWindow, Input &input, SDL_Event &e)
 
 		gWindow.Present();
 	}
-}
-
-bool Editor::isInside(const SDL_Point &point, const SDL_Rect &plane)
-{
-	if ((point.x > plane.x) && (point.x < plane.x + plane.w) &&
-		(point.y > plane.y) && (point.y < plane.y + plane.h))
-		return true;
-	else return false;
 }

@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile( int x, int y, bool collision, LTexture *hideLayer)
+Tile::Tile(const int &x, const int &y, bool collision, LTexture *hideLayer)
 {
 	//Get the offsets
 	mBox.x = x;
@@ -21,7 +21,7 @@ Tile::~Tile()
 	free();
 }
 
-void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int layersToDraw, const int &currentLayer)
+void Tile::render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &layersToDraw, const int &currentLayer)
 {
 	int begin, end;
 	bool hide = true;
@@ -131,17 +131,17 @@ SDL_Rect Tile::getBox()
 	return mBox;
 }
 
-void Tile::setLayer(LTexture &gTexture, int layer, int type, int id)
+void Tile::setLayer(LTexture &gTexture, const int &layer, const int &type, const int &tilemapID)
 {
 	if (!_layers.count(layer))
 	{
-		_layers[layer] = new Layer(id, type);
+		_layers[layer] = new Layer(tilemapID, type);
 		_layers[layer]->setTexture(gTexture);
 	}
 	else
 	{
 		_layers[layer]->setTexture(gTexture);
-		_layers[layer]->setType(type, id);
+		_layers[layer]->setType(type, tilemapID);
 	}
 }
 
@@ -155,11 +155,18 @@ void Tile::setCollision(bool coliss)
 	_hasCollision = coliss;
 }
 
-int Tile::getTileMapID(int layer)
+int Tile::getTileMapID(const int &layer)
 {
 	if(_layers.count(layer))
 		return _layers[layer]->getTilemapId();
 	else return 0;
+}
+
+bool Tile::hasTilemap(const int &layer, const int &tilemapID)
+{
+	if (getTileMapID(layer) != tilemapID || getTileMapID(layer) == 0)
+		return true;
+	else return false;
 }
 
 int Tile::getType(int layer)
@@ -169,13 +176,13 @@ int Tile::getType(int layer)
 	else return 0;
 }
 
-void Tile::setLayerType(int layer, int type, int id)
+void Tile::setLayerType(const int &layer, const int &type, const int &tilemapID)
 {
 	if (_layers.count(layer))
-		_layers[layer]->setType(type, id);
+		_layers[layer]->setType(type, tilemapID);
 }
 
-void Tile::eraseLayer(int layer)
+void Tile::eraseLayer(const int &layer)
 {
 	_layers.erase(layer);
 }

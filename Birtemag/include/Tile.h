@@ -11,13 +11,13 @@ class Tile
 {
 	public:
 		//Initializes position and type
-		Tile( int x, int y, bool collision, LTexture *hideLayer);
+		Tile(const int &x, const int &y, bool collision, LTexture *hideLayer);
 		~Tile();
 
 		//Shows the tile
-		void render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, int layersToDraw, const int &currentLayer);
+		void render(SDL_Rect& camera , map<int, Tilemap *> &tmaps, const int &layersToDraw, const int &currentLayer);
 
-		void setLayer(LTexture &gTexture, int layer, int type, int id);
+		void setLayer(LTexture &gTexture, const int &layer, const int &type, const int &tilemapID);
 		//Get the tile type
 		int getType(int layer);
 
@@ -30,13 +30,15 @@ class Tile
 
 		void free();
 
-		int getTileMapID(int layer);
+		int getTileMapID(const int &layer);
 
-		void setLayerType(int layer, int type, int id);
+		void setLayerType(const int &layer, const int &type, const int &tilemapID);
 
-		void eraseLayer(int layer);
+		void eraseLayer(const int &layer);
 
 		bool checkCollision(SDL_Rect a, SDL_Rect b);
+
+		bool hasTilemap(const int &layer, const int &tilemapID);
 
 	private:
 		//The attributes of the tile

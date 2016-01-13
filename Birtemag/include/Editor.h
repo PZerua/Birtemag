@@ -32,12 +32,10 @@ public:
 	void renderMainSelector(Input &input, Window &gWindow);
 	void nextTilemap();
 	void previousTilemap();
-	void loadUtils();
 	void nextLayer();
 	void previousLayer();
 	void printText();
 	void changeLayerText();
-	bool isInside(const SDL_Point &point, const SDL_Rect &plane);
 	void manageStates(const int &behaviour);
 
 private:

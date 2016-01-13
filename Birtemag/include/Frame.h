@@ -16,5 +16,4 @@ private:
 	int _borderSize;
 	SDL_Rect _dimensions;
 	LTexture _patch;
-	
 };

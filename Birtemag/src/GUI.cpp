@@ -167,3 +167,41 @@ styleInfo GUI::checkButtonStyle(const int &style)
 
 	return info;
 }
+
+void GUI::loadUtils()
+{
+	ifstream utils("utils/utils.txt");
+
+	string type;
+	string temp;
+	string name;
+	SDL_Rect dim;
+	dim.h = 32;
+	dim.w = 128;
+	int style = -1;
+	int behaviour = -1;
+	int mode = -1;
+
+	while (utils >> type)
+	{
+		if (type == "Button")
+		{
+			utils >> name;
+			utils >> temp;
+
+			while (temp != "|")
+			{
+				name += " " + temp;
+				utils >> temp;
+			}
+
+			utils >> dim.x >> dim.y >> behaviour;
+			addButton(name, dim, GUI_STYLE::Default, behaviour, mode);
+		}
+		else if (type == "Frame")
+		{
+			utils >> style >> dim.x >> dim.y >> dim.w >> dim.h >> mode;
+			addFrame(dim, style, mode);
+		}
+	}
+}
